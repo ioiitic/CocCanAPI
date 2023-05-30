@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="DTOs\Customer\" />
+    <Folder Include="DTOs\Location\" />
+    <Folder Include="DTOs\LocationStore\" />
+    <Folder Include="DTOs\Menu\" />
+    <Folder Include="DTOs\MenuDetail\" />
+    <Folder Include="DTOs\TimeSlot\" />
+    <Folder Include="DTOs\Store\" />
+    <Folder Include="DTOs\Session\" />
+    <Folder Include="DTOs\Product\" />
+    <Folder Include="DTOs\PickUpSpot\" />
+    <Folder Include="DTOs\Patch\" />
+    <Folder Include="DTOs\OrderDetail\" />
+    <Folder Include="DTOs\Order\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Repository\Repository.csproj" />
+  </ItemGroup>
+
+</Project>
