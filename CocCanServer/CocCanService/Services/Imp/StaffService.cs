@@ -112,7 +112,6 @@ namespace CocCanService.Services.Imp
             try
             {
                 var _existingStaff = await _staffRepo.GetStaffByGUIDAsync(id);
-                    ;
                 if (_existingStaff == null)
                 {
                     _response.Success = false;

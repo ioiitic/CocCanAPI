@@ -11,10 +11,10 @@ namespace CocCanService.Services
 {
     public interface IStaffService
     {
-        Task<ServiceResponse<List<DTOs.Staff.StaffDTO>>> GetAllStaffsAsync();
-        Task<ServiceResponse<DTOs.Staff.StaffDTO>> CheckStaffLoginsAsync(string Email, string Password);
-        Task<ServiceResponse<DTOs.Staff.StaffDTO>> CreateStaffAsync(CreateStaffDTO createStaffDTO);
-        Task<ServiceResponse<DTOs.Staff.StaffDTO>> UpdateStaffAsync(StaffDTO staffDTO);  
+        Task<ServiceResponse<List<StaffDTO>>> GetAllStaffsAsync();
+        Task<ServiceResponse<StaffDTO>> CheckStaffLoginsAsync(string Email, string Password);
+        Task<ServiceResponse<StaffDTO>> CreateStaffAsync(CreateStaffDTO createStaffDTO);
+        Task<ServiceResponse<StaffDTO>> UpdateStaffAsync(StaffDTO staffDTO);  
         Task<ServiceResponse<string>> SoftDeleteStaffAsync(Guid id);
     }
 }

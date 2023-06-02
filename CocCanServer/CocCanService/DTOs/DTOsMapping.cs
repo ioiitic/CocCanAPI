@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CocCanService.DTOs.Product;
 using CocCanService.DTOs.Staff;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,14 @@ namespace CocCanService.DTOs
                 .ForMember(
                     des => des.Role,
                     act => act.UseValue(0))
+                .ForMember(
+                    des => des.Status,
+                    act => act.UseValue(1));
+            CreateMap<Repository.Entities.Product, ProductDTO>();
+            CreateMap<CreateProductDTO, Repository.Entities.Product>()
+                .ForMember(
+                    des => des.Id,
+                    act => Guid.NewGuid())
                 .ForMember(
                     des => des.Status,
                     act => act.UseValue(1));

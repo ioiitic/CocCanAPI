@@ -18,23 +18,23 @@ namespace Repository.repositories.imp
 
         public async Task<Staff> CheckStaffLoginsAsync(string Email, string Password)
         {
-            return await _dataContext.Staff.SingleOrDefaultAsync(sta => sta.Email == Email && sta.Password == Password);
+            return await _dataContext.Staffs.SingleOrDefaultAsync(sta => sta.Email == Email && sta.Password == Password);
         }
 
         public async Task<bool> CreateStaffAsync(Staff staff)
         {
-            await _dataContext.Staff.AddAsync(staff);
+            await _dataContext.Staffs.AddAsync(staff);
             return await Save();
         }
 
         public async Task<ICollection<Staff>> GetAllStaffsAsync()
         {
-            return await _dataContext.Staff.ToListAsync();
+            return await _dataContext.Staffs.ToListAsync();
         }
 
         public async Task<bool> HardDeleteStaffAsync(Staff staff)
         {
-            _dataContext.Remove(staff);
+            _dataContext.Staffs.Remove(staff);
             return await Save();
         }
 
@@ -42,7 +42,7 @@ namespace Repository.repositories.imp
         {
             var _existingStaff = await GetStaffByGUIDAsync(id);
             
-            if (!(_existingStaff != null))
+            if (_existingStaff != null)
             {
                 _existingStaff.Status = 0;
                 return await Save();
@@ -50,15 +50,15 @@ namespace Repository.repositories.imp
             return false;
         }
 
-        public Task<bool> UpdateStaffAsync(Staff staff)
+        public async Task<bool> UpdateStaffAsync(Staff staff)
         {
-            _dataContext.Staff.Update(staff);
-            return Save();
+            _dataContext.Staffs.Update(staff);
+            return await Save();
         }
 
         public async Task<Staff> GetStaffByGUIDAsync(Guid id)
         {
-            return await _dataContext.Staff.SingleOrDefaultAsync(s => s.Id == id);
+            return await _dataContext.Staffs.SingleOrDefaultAsync(s => s.Id == id);
         }
 
         private async Task<bool> Save()

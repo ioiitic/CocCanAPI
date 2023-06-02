@@ -31,7 +31,7 @@ namespace Repository.Entities
         public virtual DbSet<Session> Sessions { get; set; }
         public virtual DbSet<Store> Stores { get; set; }
         public virtual DbSet<TimeSlot> TimeSlots { get; set; }
-        public virtual DbSet<Staff> Staff { get; set; }
+        public virtual DbSet<Staff> Staffs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
