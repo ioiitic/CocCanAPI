@@ -49,6 +49,9 @@ namespace CocCanServer
             
             services.AddScoped<IStaffRepository, StaffRepository>();
             services.AddScoped<IStaffService, StaffService>();
+            services.AddScoped<IStoreRepository, StoreRepository>();
+            services.AddScoped<IStoreService, StoreService>();
+          
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

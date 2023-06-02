@@ -10,10 +10,9 @@
     <Folder Include="DTOs\LocationStore\" />
     <Folder Include="DTOs\Menu\" />
     <Folder Include="DTOs\MenuDetail\" />
-    <Folder Include="DTOs\TimeSlot\" />
-    <Folder Include="DTOs\Store\" />
-    <Folder Include="DTOs\Session\" />
     <Folder Include="DTOs\Product\" />
+    <Folder Include="DTOs\TimeSlot\" />
+    <Folder Include="DTOs\Session\" />
     <Folder Include="DTOs\PickUpSpot\" />
     <Folder Include="DTOs\Patch\" />
     <Folder Include="DTOs\OrderDetail\" />
