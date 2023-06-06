@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using CocCanService.DTOs.Product;
+using CocCanService.DTOs.Category;
+using CocCanService.DTOs.Location;
+using CocCanService.DTOs.Menu;
 using CocCanService.DTOs.Staff;
 using CocCanService.DTOs.Store;
 using System;
@@ -37,6 +40,9 @@ namespace CocCanService.DTOs
                     des => des.Status,
                     act => act.UseValue(1));
             CreateMap<Repository.Entities.Store, StoreDTO>().ReverseMap();
+            CreateMap<Repository.Entities.Location, LocationDTO>().ReverseMap();
+            CreateMap<Repository.Entities.Category, CategoryDTO>().ReverseMap();
+            CreateMap<Repository.Entities.Menu, MenuDTO>().ReverseMap();
         }
     }
 }

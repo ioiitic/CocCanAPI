@@ -10,7 +10,6 @@
     <Folder Include="DTOs\Enum\" />
     <Folder Include="DTOs\Location\" />
     <Folder Include="DTOs\LocationStore\" />
-    <Folder Include="DTOs\Menu\" />
     <Folder Include="DTOs\MenuDetail\" />
     <Folder Include="DTOs\Order\" />
     <Folder Include="DTOs\OrderDetail\" />
