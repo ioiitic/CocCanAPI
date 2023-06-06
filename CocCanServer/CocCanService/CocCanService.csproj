@@ -6,9 +6,7 @@
 
   <ItemGroup>
     <Folder Include="DTOs\Customer\" />
-    <Folder Include="DTOs\Location\" />
     <Folder Include="DTOs\LocationStore\" />
-    <Folder Include="DTOs\Menu\" />
     <Folder Include="DTOs\MenuDetail\" />
     <Folder Include="DTOs\Product\" />
     <Folder Include="DTOs\TimeSlot\" />

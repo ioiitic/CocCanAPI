@@ -2,6 +2,7 @@
 using Repository.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Repository.repositories.imp
@@ -22,7 +23,7 @@ namespace Repository.repositories.imp
 
         public async Task<ICollection<Store>> GetAllStoresAsync()
         {
-            return await _dataContext.Stores.ToListAsync();
+            return await _dataContext.Stores.Where(e=>e.Status==1).ToListAsync();
         }
 
         public async Task<bool> HardDeleteStoreAsync(Store store)

@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CocCanService.dtos.Category
+namespace CocCanService.DTOs.Category
 {
-    internal class CategoryDto
+    public class CategoryDTO
     {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public int Status { get; set; }
     }
 }

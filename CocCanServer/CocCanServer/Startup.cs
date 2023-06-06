@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Repository.Entities;
 using Repository.repositories;
 using Repository.repositories.imp;
 using System;
@@ -33,6 +34,8 @@ namespace CocCanServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRouting(routeOptions => routeOptions.LowercaseUrls = true);
+
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new DTOsMapping());
@@ -51,7 +54,13 @@ namespace CocCanServer
             services.AddScoped<IStaffService, StaffService>();
             services.AddScoped<IStoreRepository, StoreRepository>();
             services.AddScoped<IStoreService, StoreService>();
-          
+            services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IMenuRepository, MenuRepository>();
+            services.AddScoped<IMenuService, MenuService>();
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
