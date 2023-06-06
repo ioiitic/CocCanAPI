@@ -33,6 +33,7 @@ namespace CocCanServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRouting(options => options.LowercaseUrls = true);
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new DTOsMapping());
@@ -51,6 +52,8 @@ namespace CocCanServer
             services.AddScoped<IStaffService, StaffService>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IStoreRepository, StoreRepository>();
+            services.AddScoped<IStoreService, StoreService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

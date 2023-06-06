@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CocCanService.DTOs.Product;
 using CocCanService.DTOs.Staff;
+using CocCanService.DTOs.Store;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,7 @@ namespace CocCanService.DTOs
                 .ForMember(
                     des => des.Status,
                     act => act.UseValue(1));
+            CreateMap<Repository.Entities.Store, StoreDTO>().ReverseMap();
         }
     }
 }

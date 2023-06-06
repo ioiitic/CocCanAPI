@@ -11,11 +11,11 @@ namespace CocCanAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StaffController : ControllerBase
+    public class StaffsController : ControllerBase
     {
         private readonly IStaffService _staffService;
 
-        public StaffController(IStaffService staffService)
+        public StaffsController(IStaffService staffService)
         {
             _staffService = staffService;
         }

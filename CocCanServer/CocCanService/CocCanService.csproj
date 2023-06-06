@@ -5,18 +5,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="DTOs\Category\" />
     <Folder Include="DTOs\Customer\" />
+    <Folder Include="DTOs\Enum\" />
     <Folder Include="DTOs\Location\" />
     <Folder Include="DTOs\LocationStore\" />
     <Folder Include="DTOs\Menu\" />
     <Folder Include="DTOs\MenuDetail\" />
-    <Folder Include="DTOs\TimeSlot\" />
-    <Folder Include="DTOs\Store\" />
-    <Folder Include="DTOs\Session\" />
-    <Folder Include="DTOs\PickUpSpot\" />
-    <Folder Include="DTOs\Patch\" />
-    <Folder Include="DTOs\OrderDetail\" />
     <Folder Include="DTOs\Order\" />
+    <Folder Include="DTOs\OrderDetail\" />
+    <Folder Include="DTOs\Patch\" />
+    <Folder Include="DTOs\PickUpSpot\" />
+    <Folder Include="DTOs\Product\" />
+    <Folder Include="DTOs\Session\" />
+    <Folder Include="DTOs\Staff\" />
+    <Folder Include="DTOs\Store\" />
+    <Folder Include="DTOs\TimeSlot\" />
   </ItemGroup>
 
   <ItemGroup>
