@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Repository.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,13 @@ using System.Threading.Tasks;
 
 namespace Repository.repositories
 {
-    internal class IOrderRepository
+    public interface IOrderRepository
     {
+        Task<ICollection<Order>> GetAllOrdersAsync();
+        Task<bool> CreateOrderAsync(Order order);
+        Task<bool> UpdateOrderAsync(Order order);
+        Task<bool> SoftDeleteOrderAsync(Guid id);
+        Task<bool> HardDeleteOrderAsync(Order order);
+        Task<Order> GetOrderByGUIDAsync(Guid id);
     }
 }

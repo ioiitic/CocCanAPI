@@ -62,6 +62,12 @@ namespace CocCanServer
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IMenuRepository, MenuRepository>();
             services.AddScoped<IMenuService, MenuService>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+            services.AddScoped<IOrderDetailService, OrderDetailService>();
+            services.AddScoped<IMenuDetailRepository, MenuDetailRepository>();
+            services.AddScoped<IMenuDetailService, MenuDetailService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

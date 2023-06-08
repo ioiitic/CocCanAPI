@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Repository.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,13 @@ using System.Threading.Tasks;
 
 namespace Repository.repositories
 {
-    internal class IMenuDetailRepository
+    public interface IMenuDetailRepository
     {
+        Task<ICollection<MenuDetail>> GetAllMenuDetailsAsync();
+        Task<bool> CreateMenuDetailAsync(MenuDetail menuDetail);
+        Task<bool> UpdateMenuDetailAsync(MenuDetail menuDetail);
+        //Task<bool> SoftDeleteMenuDetailAsync(Guid id);
+        Task<bool> HardDeleteMenuDetailAsync(Guid id);
+        Task<MenuDetail> GetMenuDetailByGUIDAsync(Guid id);
     }
 }
