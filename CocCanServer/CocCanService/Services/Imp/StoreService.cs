@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using CocCanService.DTOs.Staff;
 using CocCanService.DTOs.Store;
+using Newtonsoft.Json.Linq;
 using Repository.Entities;
 using Repository.repositories;
+using Repository.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,13 +55,47 @@ namespace CocCanService.Services.Imp
         }
 
         public async Task<ServiceResponse<List<StoreDTO>>> 
-            GetAllStoresWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending)
+            GetAllStoresWithStatusAsync(string filter, string range, string sort)
         {
             ServiceResponse<List<StoreDTO>> _response = new ServiceResponse<List<StoreDTO>>();
             try
             {
+                string checkQuery = QueryConverter.CheckQuery(filter, range, sort);
+
+                if (checkQuery != "Valid")
+                {
+                    _response.Status = false;
+                    _response.Title = "BadRequest";
+                    _response.ErrorMessages.Add(checkQuery);
+                    _response.Data = null;
+                    return _response;
+                }
+                Dictionary<string, string> _filter;
+                List<int> _range;
+                List<string> _sort;
+                try
+                {
+                    _filter = QueryConverter.getFilter(filter);
+                    if (_filter.Any(
+                        f => f.Key != "name" && f.Key != "search"))
+                        throw new Exception("Filter is wrong format!");
+                    _range = QueryConverter.getRange(range);
+                    _sort = QueryConverter.getSort(sort);
+                    if (_sort[0] != "name" && _sort[0] != "id")
+                        throw new Exception("Sort is wrong format!");
+                } catch (Exception ex)
+                {
+                    _response.Status = false;
+                    _response.Title = "BadRequest";
+                    _response.ErrorMessages.Add(ex.Message);
+                    _response.Data = null;
+                    return _response;
+                }
+
                 var _StoreList = await _storeRepo
-                    .GetAllStoresWithStatusAsync(search, from, to, filter, orderBy, ascending);
+                    .GetAllStoresWithStatusAsync(
+                        _filter, _range[0]+1, _range[1]+1, _sort[0], (_sort[1]=="ASC")
+                    );
 
                 var _StoreListDTO = new List<StoreDTO>();
 

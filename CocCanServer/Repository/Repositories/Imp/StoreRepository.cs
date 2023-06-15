@@ -23,20 +23,34 @@ namespace Repository.repositories.imp
 
         public async Task<ICollection<Store>> 
             GetAllStoresWithStatusAsync
-            (string search, int from, int to, string filter, string orderBy, bool ascending)
+            (Dictionary<string, string> filter, int from, int to, string orderBy, bool ascending)
         {
             IQueryable<Store>  _stores = 
                 _dataContext.Stores.Where(s => s.Status == 1);
 
-            var stores = _stores
-                .Join(_dataContext.Products, s => s.Id, p => p.StoreId, (s,p) => new { s = s, p = p });
+            //var stores = _stores
+            //    .Join(_dataContext.Products, s => s.Id, p => p.StoreId, (s,p) => new { s = s, p = p });
 
-            if (search != "" && search != null)
-                _stores = _stores.Where(s => s.Name.Contains(search));
+            foreach (KeyValuePair<string, string> filterIte in filter)
+            {
+                switch (filterIte.Key)
+                {
+                    case "search":
+                        string search = filterIte.Value;
+                        if (search != "" && search != null)
+                            _stores = _stores.Where(s => s.Name.Contains(search));
+                        break;
+                    case "name":
+                        string name = filterIte.Value;
+                        if (name != "" && name != null)
+                            _stores = _stores.Where(s => s.Name == name);
+                        break;
+                }
+            }
 
             switch (orderBy)
             {
-                case "Name":
+                case "name":
                     if (ascending)
                         _stores = _stores.OrderBy(s => s.Name);
                     else

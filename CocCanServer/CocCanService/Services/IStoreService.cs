@@ -12,7 +12,7 @@ namespace CocCanService.Services
     public interface IStoreService
     {
         Task<ServiceResponse<List<StoreDTO>>> 
-            GetAllStoresWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
+            GetAllStoresWithStatusAsync(string filter, string range, string sort);
         Task<ServiceResponse<StoreDTO>> CreateStoreAsync(CreateStoreDTO createStoreDTO);
         Task<ServiceResponse<StoreDTO>> UpdateStoreAsync(Guid id, UpdateStoreDTO UpdateStoreDTO);
         Task<ServiceResponse<StoreDTO>> GetStoreByIdAsync(Guid id);

@@ -23,9 +23,11 @@ namespace CocCanAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StoreDTO>))]
-        public async Task<IActionResult> GetAll(string search, int from, int to, string filter, string orderBy, bool ascending)
+        public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
-            var stores = await _storeService.GetAllStoresWithStatusAsync(search, from, to, filter, orderBy, ascending);
+            var stores = await _storeService.GetAllStoresWithStatusAsync(filter, range, sort);
+            HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
+            HttpContext.Response.Headers.Add("Content-Range", "stores 0-1/2");
             return Ok(stores.Data);
         }
 
@@ -67,7 +69,7 @@ namespace CocCanAPI.Controllers
             return Ok(_newStore.Data);
         }
 
-        [HttpPatch("{id:Guid}", Name = "UpdateStore")]
+        [HttpPut("{id:Guid}", Name = "UpdateStore")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found

@@ -35,6 +35,19 @@ namespace CocCanServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("_myAllowSpecificOrigins",
+                    policy =>
+                    {
+                        policy
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                       
+                    });
+            });
+
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddRouting(routeOptions => routeOptions.LowercaseUrls = true);
 
@@ -88,7 +101,9 @@ namespace CocCanServer
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
+            app.UseRouting(); 
+
+            app.UseCors("_myAllowSpecificOrigins");
 
             app.UseAuthorization();
 

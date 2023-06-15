@@ -10,7 +10,7 @@ namespace Repository.repositories
     public interface IStoreRepository
     {
         Task<ICollection<Store>> 
-            GetAllStoresWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
+            GetAllStoresWithStatusAsync(Dictionary<string, string> filter, int from, int to, string orderBy, bool ascending);
         Task<bool> CreateStoreAsync(Store store);
         Task<bool> UpdateStoreAsync(Store store);
         Task<bool> SoftDeleteStoreAsync(Guid id);
