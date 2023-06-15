@@ -17,6 +17,7 @@ namespace CocCanService.DTOs
     {
         public DTOsMapping()
         {
+            //Staff
             CreateMap<Repository.Entities.Staff, StaffDTO>()
                 .ForMember(
                     des => des.Role,
@@ -31,6 +32,7 @@ namespace CocCanService.DTOs
                 .ForMember(
                     des => des.Status,
                     act => act.UseValue(1));
+            //Product
             CreateMap<Repository.Entities.Product, ProductDTO>();
             CreateMap<CreateProductDTO, Repository.Entities.Product>()
                 .ForMember(
@@ -39,9 +41,61 @@ namespace CocCanService.DTOs
                 .ForMember(
                     des => des.Status,
                     act => act.UseValue(1));
-            CreateMap<Repository.Entities.Store, StoreDTO>().ReverseMap();
+            //Store
+            CreateMap<Repository.Entities.Store, StoreDTO>()
+                .ForMember(
+                    des => des.Products,
+                    act => act.MapFrom(src => src.Products));
+            CreateMap<CreateStoreDTO, Repository.Entities.Store>()
+                .ForMember(
+                    des => des.Id,
+                    act => Guid.NewGuid())
+                .ForMember(
+                    des => des.Status,
+                    act => act.UseValue(1));
+            CreateMap<UpdateStoreDTO, Repository.Entities.Store>()
+                .ForMember(
+                    des => des.Name,
+                    act =>
+                        {
+                            act.UseDestinationValue();
+                            act.PreCondition(src => src.Name != "");
+                            act.MapFrom(src => src.Name);
+                        })
+                .ForMember(
+                    des => des.Image,
+                    act =>
+                    {
+                        act.UseDestinationValue();
+                        act.PreCondition(src => src.Image != "");
+                        act.MapFrom(src => src.Image);
+                    })
+                .ForMember(
+                    des => des.Id,
+                    act =>
+                        {
+                            act.UseDestinationValue();
+                            act.Ignore();
+                        })
+                .ForMember(
+                    des => des.Status,
+                    act =>
+                    {
+                        act.UseDestinationValue();
+                        act.Ignore();
+                    });
+            //Location
             CreateMap<Repository.Entities.Location, LocationDTO>().ReverseMap();
+            //Category
             CreateMap<Repository.Entities.Category, CategoryDTO>().ReverseMap();
+            CreateMap<CreateProductDTO, Repository.Entities.Product>()
+                .ForMember(
+                    des => des.Id,
+                    act => Guid.NewGuid())
+                .ForMember(
+                    des => des.Status,
+                    act => act.UseValue(1));
+            //Menu
             CreateMap<Repository.Entities.Menu, MenuDTO>().ReverseMap();
         }
     }

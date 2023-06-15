@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Repository.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,13 @@ using System.Threading.Tasks;
 
 namespace Repository.repositories
 {
-    internal class ISessionRepository
+    public interface ISessionRepository
     {
+        Task<ICollection<Session>>
+            GetAllSessionsWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
+        Task<bool> CreateSessionAsync(Session session);
+        Task<bool> UpdateSessionAsync(Session session);
+        Task<bool> SoftDeleteSessionAsync(Guid id);
+        Task<Session> GetSessionByGUIDAsync(Guid id);
     }
 }

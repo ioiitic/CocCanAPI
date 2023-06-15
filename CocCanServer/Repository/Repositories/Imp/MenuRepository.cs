@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Repository.repositories.imp
 {
@@ -15,21 +16,28 @@ namespace Repository.repositories.imp
         {
             this._dataContext = dataContext;
         }
+
         public async Task<bool> CreateMenuAsync(Menu menu)
         {
             await _dataContext.Menus.AddAsync(menu);
             return await Save();
         }
 
-        public async Task<ICollection<Menu>> GetAllMenusAsync()
+        public async Task<ICollection<Menu>> 
+            GetAllMenusWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending)
         {
-            return await _dataContext.Menus.Where(e => e.Status==1).ToListAsync();
+            IQueryable<Menu> _menus =
+                _dataContext.Menus.Where(s => s.Status == 1);
+
+            return await _menus
+                .ToListAsync();
         }
 
-        public async Task<bool> HardDeleteMenuAsync(Menu menu)
+        public async Task<Menu> GetMenuByGUIDAsync(Guid id)
         {
-            _dataContext.Remove(menu);
-            return await Save();
+            return await _dataContext.Menus
+                .Where(s => s.Status == 1)
+                .SingleOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task<bool> SoftDeleteMenuAsync(Guid id)
@@ -44,15 +52,10 @@ namespace Repository.repositories.imp
             return false;
         }
 
-        public Task<bool> UpdateMenuAsync(Menu menu)
+        public async Task<bool> UpdateMenuAsync(Menu menu)
         {
             _dataContext.Menus.Update(menu);
-            return Save();
-        }
-
-        public async Task<Menu> GetMenuByGUIDAsync(Guid id)
-        {
-            return await _dataContext.Menus.SingleOrDefaultAsync(s => s.Id == id);
+            return await Save();
         }
 
         private async Task<bool> Save()

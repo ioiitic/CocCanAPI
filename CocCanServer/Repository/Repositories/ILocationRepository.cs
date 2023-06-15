@@ -9,11 +9,11 @@ namespace Repository.repositories
 {
     public interface ILocationRepository
     {
-        Task<ICollection<Location>> GetAllLocationsAsync();
+        Task<ICollection<Location>>
+            GetAllLocationsWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
         Task<bool> CreateLocationAsync(Location location);
         Task<bool> UpdateLocationAsync(Location location);
         Task<bool> SoftDeleteLocationAsync(Guid id);
-        Task<bool> HardDeleteLocationAsync(Location location);
         Task<Location> GetLocationByGUIDAsync(Guid id);
     }
 }

@@ -7,7 +7,6 @@
   <ItemGroup>
     <Folder Include="DTOs\Category\" />
     <Folder Include="DTOs\Customer\" />
-    <Folder Include="DTOs\Enum\" />
     <Folder Include="DTOs\Location\" />
     <Folder Include="DTOs\LocationStore\" />
     <Folder Include="DTOs\MenuDetail\" />
@@ -18,7 +17,6 @@
     <Folder Include="DTOs\Product\" />
     <Folder Include="DTOs\Session\" />
     <Folder Include="DTOs\Staff\" />
-    <Folder Include="DTOs\Store\" />
     <Folder Include="DTOs\TimeSlot\" />
   </ItemGroup>
 

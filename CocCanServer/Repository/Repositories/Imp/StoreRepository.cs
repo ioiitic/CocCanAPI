@@ -21,15 +21,48 @@ namespace Repository.repositories.imp
             return await Save();
         }
 
-        public async Task<ICollection<Store>> GetAllStoresWithStatusAsync()
+        public async Task<ICollection<Store>> 
+            GetAllStoresWithStatusAsync
+            (string search, int from, int to, string filter, string orderBy, bool ascending)
         {
-            return await _dataContext.Stores.Where(e=>e.Status==1).ToListAsync();
+            IQueryable<Store>  _stores = 
+                _dataContext.Stores.Where(s => s.Status == 1);
+
+            var stores = _stores
+                .Join(_dataContext.Products, s => s.Id, p => p.StoreId, (s,p) => new { s = s, p = p });
+
+            if (search != "" && search != null)
+                _stores = _stores.Where(s => s.Name.Contains(search));
+
+            switch (orderBy)
+            {
+                case "Name":
+                    if (ascending)
+                        _stores = _stores.OrderBy(s => s.Name);
+                    else
+                        _stores = _stores.OrderByDescending(s => s.Name);
+                    break;
+                default:
+                    if (ascending)
+                        _stores = _stores.OrderBy(s => s.Id);
+                    else
+                        _stores = _stores.OrderByDescending(s => s.Id);
+                    break;
+            }
+
+            if (from <= to & from > 0)
+                _stores = _stores.Skip(from - 1).Take(to - from + 1);
+
+            return await _stores
+                .ToListAsync();
         }
 
-        public async Task<bool> HardDeleteStoreAsync(Store store)
+        public async Task<Store> GetStoreByGUIDAsync(Guid id)
         {
-            _dataContext.Remove(store);
-            return await Save();
+            return await _dataContext.Stores
+                .Where(s => s.Status == 1)
+                .Include(s => s.Products)
+                .SingleOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task<bool> SoftDeleteStoreAsync(Guid id)
@@ -44,15 +77,10 @@ namespace Repository.repositories.imp
             return false;
         }
 
-        public Task<bool> UpdateStoreAsync(Store store)
+        public async Task<bool> UpdateStoreAsync(Store store)
         {
             _dataContext.Stores.Update(store);
-            return Save();
-        }
-
-        public async Task<Store> GetStoreByGUIDAsync(Guid id)
-        {
-            return await _dataContext.Stores.SingleOrDefaultAsync(s => s.Id == id);
+            return await Save();
         }
 
         private async Task<bool> Save()

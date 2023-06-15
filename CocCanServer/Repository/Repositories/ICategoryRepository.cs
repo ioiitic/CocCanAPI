@@ -9,11 +9,11 @@ namespace Repository.repositories
 {
     public interface ICategoryRepository
     {
-        Task<ICollection<Category>> GetAllCategoriesAsync();
+        Task<ICollection<Category>>
+            GetAllCategorysWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
         Task<bool> CreateCategoryAsync(Category category);
         Task<bool> UpdateCategoryAsync(Category category);
         Task<bool> SoftDeleteCategoryAsync(Guid id);
-        Task<bool> HardDeleteCategoryAsync(Category category);
         Task<Category> GetCategoryByGUIDAsync(Guid id);
     }
 }

@@ -9,11 +9,11 @@ namespace Repository.repositories
 {
     public interface IStoreRepository
     {
-        Task<ICollection<Store>> GetAllStoresWithStatusAsync();
+        Task<ICollection<Store>> 
+            GetAllStoresWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
         Task<bool> CreateStoreAsync(Store store);
         Task<bool> UpdateStoreAsync(Store store);
         Task<bool> SoftDeleteStoreAsync(Guid id);
-        Task<bool> HardDeleteStoreAsync(Store store);
         Task<Store> GetStoreByGUIDAsync(Guid id);
     }
 }

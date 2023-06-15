@@ -28,135 +28,135 @@ namespace CocCanAPI.Controllers
             var companies = await _productService.GetAllProductsAsync();
             return Ok(companies);
         }
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDTO))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult<ProductDTO>> CreateProduct([FromBody] CreateProductDTO createProductDTO)
-        {
-            if (createProductDTO == null)
-            {
-                return BadRequest(ModelState);
-            }
+        //[HttpPost]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDTO))]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //[ProducesDefaultResponseType]
+        //public async Task<ActionResult<ProductDTO>> CreateProduct([FromBody] CreateProductDTO createProductDTO)
+        //{
+        //    if (createProductDTO == null)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            if (!ModelState.IsValid) { return BadRequest(ModelState); }
+        //    if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-            var _newProduct = await _productService.CreateProductAsync(createProductDTO);
+        //    var _newProduct = await _productService.CreateProductAsync(createProductDTO);
 
-            if (_newProduct.Success == false && _newProduct.Message == "Exist")
-            {
-                return Ok(_newProduct);
-            }
-
-
-            if (_newProduct.Success == false && _newProduct.Message == "RepoError")
-            {
-                ModelState.AddModelError("", $"Some thing went wrong in respository layer when adding product {createProductDTO}");
-                return StatusCode(500, ModelState);
-            }
-
-            if (_newProduct.Success == false && _newProduct.Message == "Error")
-            {
-                ModelState.AddModelError("", $"Some thing went wrong in service layer when adding product {createProductDTO}");
-                return StatusCode(500, ModelState);
-            }
-
-            //Return new company created
-            return Ok(_newProduct);
-        }
-
-        [HttpPatch("{id:Guid}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] ProductDTO productDTO)
-        {
-            if (productDTO == null || productDTO.Id != id)
-            {
-                return BadRequest(ModelState);
-            }
+        //    if (_newProduct.Success == false && _newProduct.Message == "Exist")
+        //    {
+        //        return Ok(_newProduct);
+        //    }
 
 
-            var _updateProduct = await _productService.UpdateProductAsync(productDTO);
+        //    if (_newProduct.Success == false && _newProduct.Message == "RepoError")
+        //    {
+        //        ModelState.AddModelError("", $"Some thing went wrong in respository layer when adding product {createProductDTO}");
+        //        return StatusCode(500, ModelState);
+        //    }
 
-            if (_updateProduct.Success == false && _updateProduct.Message == "NotFound")
-            {
-                return Ok(_updateProduct);
-            }
+        //    if (_newProduct.Success == false && _newProduct.Message == "Error")
+        //    {
+        //        ModelState.AddModelError("", $"Some thing went wrong in service layer when adding product {createProductDTO}");
+        //        return StatusCode(500, ModelState);
+        //    }
 
-            if (_updateProduct.Success == false && _updateProduct.Message == "RepoError")
-            {
-                ModelState.AddModelError("", $"Some thing went wrong in respository layer when updating product {productDTO}");
-                return StatusCode(500, ModelState);
-            }
+        //    //Return new company created
+        //    return Ok(_newProduct);
+        //}
 
-            if (_updateProduct.Success == false && _updateProduct.Message == "Error")
-            {
-                ModelState.AddModelError("", $"Some thing went wrong in service layer when updating product {productDTO}");
-                return StatusCode(500, ModelState);
-            }
+        //[HttpPatch("{id:Guid}")]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] ProductDTO productDTO)
+        //{
+        //    if (productDTO == null || productDTO.Id != id)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            return Ok(_updateProduct);
-        }
 
-        [HttpGet("{id:Guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDTO))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult<ProductDTO>> GetByGUID(Guid id)
-        {
+        //    var _updateProduct = await _productService.UpdateProductAsync(productDTO);
 
-            if (id == Guid.Empty)
-            {
-                return BadRequest(id);
-            }
+        //    if (_updateProduct.Success == false && _updateProduct.Message == "NotFound")
+        //    {
+        //        return Ok(_updateProduct);
+        //    }
 
-            var product = await _productService.GetProductByGUIDAsync(id);
+        //    if (_updateProduct.Success == false && _updateProduct.Message == "RepoError")
+        //    {
+        //        ModelState.AddModelError("", $"Some thing went wrong in respository layer when updating product {productDTO}");
+        //        return StatusCode(500, ModelState);
+        //    }
 
-            if (product.Data == null)
-            {
+        //    if (_updateProduct.Success == false && _updateProduct.Message == "Error")
+        //    {
+        //        ModelState.AddModelError("", $"Some thing went wrong in service layer when updating product {productDTO}");
+        //        return StatusCode(500, ModelState);
+        //    }
 
-                return NotFound();
-            }
+        //    return Ok(_updateProduct);
+        //}
 
-            return Ok(product);
-        }
+        //[HttpGet("{id:Guid}")]
+        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDTO))]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
+        //[ProducesDefaultResponseType]
+        //public async Task<ActionResult<ProductDTO>> GetByGUID(Guid id)
+        //{
 
-        [HttpDelete("{id:Guid}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
-        [ProducesResponseType(StatusCodes.Status409Conflict)] //Can not be removed 
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> DeleteCompany(Guid id)
-        {
+        //    if (id == Guid.Empty)
+        //    {
+        //        return BadRequest(id);
+        //    }
 
-            var _deleteProduct = await _productService.SoftDeleteProductAsync(id);
+        //    var product = await _productService.GetProductByGUIDAsync(id);
 
-            if (_deleteProduct.Success == false && _deleteProduct.Message == "NotFound")
-            {
-                ModelState.AddModelError("", "Product Not found");
-                return StatusCode(404, ModelState);
-            }
+        //    if (product.Data == null)
+        //    {
 
-            if (_deleteProduct.Success == false && _deleteProduct.Message == "RepoError")
-            {
-                ModelState.AddModelError("", $"Some thing went wrong in Repository when deleting product");
-                return StatusCode(500, ModelState);
-            }
+        //        return NotFound();
+        //    }
 
-            if (_deleteProduct.Success == false && _deleteProduct.Message == "Error")
-            {
-                ModelState.AddModelError("", $"Some thing went wrong in service layer when deleting product");
-                return StatusCode(500, ModelState);
-            }
+        //    return Ok(product);
+        //}
 
-            return NoContent();
+        //[HttpDelete("{id:Guid}")]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
+        //[ProducesResponseType(StatusCodes.Status409Conflict)] //Can not be removed 
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<IActionResult> DeleteCompany(Guid id)
+        //{
 
-        }
+        //    var _deleteProduct = await _productService.SoftDeleteProductAsync(id);
+
+        //    if (_deleteProduct.Success == false && _deleteProduct.Message == "NotFound")
+        //    {
+        //        ModelState.AddModelError("", "Product Not found");
+        //        return StatusCode(404, ModelState);
+        //    }
+
+        //    if (_deleteProduct.Success == false && _deleteProduct.Message == "RepoError")
+        //    {
+        //        ModelState.AddModelError("", $"Some thing went wrong in Repository when deleting product");
+        //        return StatusCode(500, ModelState);
+        //    }
+
+        //    if (_deleteProduct.Success == false && _deleteProduct.Message == "Error")
+        //    {
+        //        ModelState.AddModelError("", $"Some thing went wrong in service layer when deleting product");
+        //        return StatusCode(500, ModelState);
+        //    }
+
+        //    return NoContent();
+
+        //}
 
     }
 }

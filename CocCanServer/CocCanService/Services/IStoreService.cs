@@ -11,10 +11,11 @@ namespace CocCanService.Services
 {
     public interface IStoreService
     {
-        Task<ServiceResponse<List<DTOs.Store.StoreDTO>>> GetAllStoresWithStatusAsync();
-        Task<ServiceResponse<DTOs.Store.StoreDTO>> CreateStoreAsync(CreateStoreDTO createStoreDTO);
-        Task<ServiceResponse<DTOs.Store.StoreDTO>> UpdateStoreAsync(StoreDTO storeDTO);
-        Task<ServiceResponse<DTOs.Store.StoreDTO>> GetStoreByIdAsync(Guid id);
+        Task<ServiceResponse<List<StoreDTO>>> 
+            GetAllStoresWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
+        Task<ServiceResponse<StoreDTO>> CreateStoreAsync(CreateStoreDTO createStoreDTO);
+        Task<ServiceResponse<StoreDTO>> UpdateStoreAsync(Guid id, UpdateStoreDTO UpdateStoreDTO);
+        Task<ServiceResponse<StoreDTO>> GetStoreByIdAsync(Guid id);
         Task<ServiceResponse<string>> SoftDeleteStoreAsync(Guid id);
     }
 }

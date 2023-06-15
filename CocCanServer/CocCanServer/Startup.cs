@@ -1,4 +1,5 @@
 using AutoMapper;
+using CocCanAPI.Filter;
 using CocCanService.DTOs;
 using CocCanService.Services;
 using CocCanService.Services.Imp;
@@ -36,6 +37,7 @@ namespace CocCanServer
         {
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddRouting(routeOptions => routeOptions.LowercaseUrls = true);
+
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new DTOsMapping());
@@ -62,8 +64,12 @@ namespace CocCanServer
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IMenuRepository, MenuRepository>();
             services.AddScoped<IMenuService, MenuService>();
+            services.AddScoped<ISessionRepository, SessionRepository>();
+            services.AddScoped<ISessionService, SessionService>();
+            services.AddScoped<ValidationFilterAttribute>();
 
-            services.AddControllers();
+            services.AddControllers(
+                options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CocCanServer", Version = "v1" });

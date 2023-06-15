@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Repository.repositories.imp
 {
@@ -21,15 +22,45 @@ namespace Repository.repositories.imp
             return await Save();
         }
 
-        public async Task<ICollection<Location>> GetAllLocationsAsync()
+        public async Task<ICollection<Location>> GetAllLocationsWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending)
         {
-            return await _dataContext.Locations.Where(e => e.Status==1).ToListAsync();
+            IQueryable<Location> _locations =
+                _dataContext.Locations.Where(s => s.Status == 1);
+
+            if (search != "" && search != null)
+                _locations = _locations.Where(s => s.Name.Contains(search));
+
+            if (filter != "" && filter != null)
+                _locations = _locations.Where(s => s.Name == filter);
+
+            switch (orderBy)
+            {
+                case "Name":
+                    if (ascending)
+                        _locations = _locations.OrderBy(s => s.Name);
+                    else
+                        _locations = _locations.OrderByDescending(s => s.Name);
+                    break;
+                default:
+                    if (ascending)
+                        _locations = _locations.OrderBy(s => s.Id);
+                    else
+                        _locations = _locations.OrderByDescending(s => s.Id);
+                    break;
+            }
+
+            if (from <= to & from > 0)
+                _locations = _locations.Skip(from - 1).Take(to - from + 1);
+
+            return await _locations
+                .ToListAsync();
         }
 
-        public async Task<bool> HardDeleteLocationAsync(Location location)
+        public async Task<Location> GetLocationByGUIDAsync(Guid id)
         {
-            _dataContext.Remove(location);
-            return await Save();
+            return await _dataContext.Locations
+                .Where(s => s.Status == 1)
+                .SingleOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task<bool> SoftDeleteLocationAsync(Guid id)
@@ -44,15 +75,10 @@ namespace Repository.repositories.imp
             return false;
         }
 
-        public Task<bool> UpdateLocationAsync(Location location)
+        public async Task<bool> UpdateLocationAsync(Location location)
         {
             _dataContext.Locations.Update(location);
-            return Save();
-        }
-
-        public async Task<Location> GetLocationByGUIDAsync(Guid id)
-        {
-            return await _dataContext.Locations.SingleOrDefaultAsync(s => s.Id == id);
+            return await Save();
         }
 
         private async Task<bool> Save()

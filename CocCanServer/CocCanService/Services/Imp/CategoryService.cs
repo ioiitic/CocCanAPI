@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CocCanService.DTOs.Category;
+using CocCanService.DTOs.Store;
 using Repository.Entities;
 using Repository.repositories;
 using System;
@@ -26,31 +27,27 @@ namespace CocCanService.Services.Imp
             ServiceResponse<CategoryDTO> _response = new();
             try
             {
-                Repository.Entities.Category _newCategory = new()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = createCategoryDTO.Name,
-                    Status = createCategoryDTO.Status
-                };
+                var _newCategory = _mapper.Map<Category>(createCategoryDTO);
 
                 if (!await _categoryRepo.CreateCategoryAsync(_newCategory))
                 {
-                    _response.Success = false;
-                    _response.Message = "RepoError";
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Some error occur in Category Repository when trying to create store!");
                     _response.Data = null;
                     return _response;
                 }
 
-                _response.Success = true;
-                _response.Message = "Created";
+                _response.Status = true;
+                _response.Title = "Created";
                 _response.Data = _mapper.Map<CategoryDTO>(_newCategory);
             }
             catch (Exception ex)
             {
-                _response.Success = false;
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-                _response.Message = "Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
             }
             return _response;
         }
@@ -58,28 +55,28 @@ namespace CocCanService.Services.Imp
         public async Task<ServiceResponse<List<CategoryDTO>>> GetAllCategoriesAsync()
         {
             ServiceResponse<List<CategoryDTO>> _response = new();
-            try
-            {
-                var _CategoryList = await _categoryRepo.GetAllCategoriesAsync();
+            //try
+            //{
+            //    var _CategoryList = await _categoryRepo.GetAllCategoriesAsync();
 
-                var _CategoryListDTO = new List<CategoryDTO>();
+            //    var _CategoryListDTO = new List<CategoryDTO>();
 
-                foreach (var item in _CategoryList)
-                {
-                    _CategoryListDTO.Add(_mapper.Map<CategoryDTO>(item));
-                }
+            //    foreach (var item in _CategoryList)
+            //    {
+            //        _CategoryListDTO.Add(_mapper.Map<CategoryDTO>(item));
+            //    }
 
-                _response.Success = true;
-                _response.Data = _CategoryListDTO;
-                _response.Message = "OK";
-            }
-            catch (Exception ex)
-            {
-                _response.Success = false;
-                _response.Data = null;
-                _response.Message = "Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
-            }
+            //    _response.Status = true;
+            //    _response.Title = "Got all categories";
+            //    _response.Data = _CategoryListDTO;
+            //}
+            //catch (Exception ex)
+            //{
+            //    _response.Status = false;
+            //    _response.Title = "Error";
+            //    _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
+            //    _response.Data = null;
+            //}
             return _response;
         }
 
@@ -92,24 +89,26 @@ namespace CocCanService.Services.Imp
 
                 if (_CategoryList == null)
                 {
-                    _response.Success = false;
-                    _response.Message = "NotFound";
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Not Found!");
+                    _response.Data = null;
                     return _response;
                 }
 
                 var _CategoryDto = _mapper.Map<CategoryDTO>(_CategoryList);
 
-                _response.Success = true;
-                _response.Message = "ok";
+                _response.Status = true;
+                _response.Title = "Got store";
                 _response.Data = _CategoryDto;
 
             }
             catch (Exception ex)
             {
-                _response.Success = false;
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-                _response.Message = "Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
             }
             return _response;
         }
@@ -123,29 +122,31 @@ namespace CocCanService.Services.Imp
 
                 if (_existingCategory == null)
                 {
-                    _response.Success = false;
-                    _response.Message = "NotFound";
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Not Found!");
                     _response.Data = null;
                     return _response;
                 }
 
                 if (!await _categoryRepo.SoftDeleteCategoryAsync(id))
                 {
-                    _response.Success = false;
-                    _response.Message = "RepoError";
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Some error occur in Store Repository when trying to delete category!");
+                    _response.Data = null;
                     return _response;
                 }
 
-
-                _response.Success = true;
-                _response.Message = "SoftDeleted";
+                _response.Status = true;
+                _response.Title = "Deleted category";
             }
             catch (Exception ex)
             {
-                _response.Success = false;
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-                _response.Message = "Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
             }
             return _response;
         }
@@ -159,34 +160,34 @@ namespace CocCanService.Services.Imp
 
                 if (_existingCategory == null)
                 {
-                    _response.Success = false;
-                    _response.Message = "NotFound";
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Not Found!");
                     _response.Data = null;
                     return _response;
                 }
 
                 _existingCategory.Name = categoryDTO.Name;
-                _existingCategory.Status = categoryDTO.Status;
 
                 if (!await _categoryRepo.UpdateCategoryAsync(_existingCategory))
                 {
-                    _response.Success = false;
-                    _response.Message = "RepoError";
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Some error occur in Store Repository when trying to update category!");
                     _response.Data = null;
                     return _response;
                 }
 
-
-                _response.Success = true;
-                _response.Message = "Updated";
+                _response.Status = true;
+                _response.Title = "Updated category";
                 _response.Data = _mapper.Map<CategoryDTO>(_existingCategory);
             }
             catch (Exception ex)
             {
-                _response.Success = false;
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-                _response.Message = "Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
             }
             return _response;
         }

@@ -24,46 +24,42 @@ namespace CocCanService.Services.Imp
 
         public async Task<ServiceResponse<StoreDTO>> CreateStoreAsync(CreateStoreDTO createStoreDTO)
         {
-            ServiceResponse<StoreDTO> _response = new();
+            ServiceResponse<StoreDTO> _response = new ServiceResponse<StoreDTO>();
             try
             {
-                //var _newStore = _mapper.Map<Store>(createStoreDTO);
-            
-                Repository.Entities.Store _newStore = new()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = createStoreDTO.Name,
-                    Status = createStoreDTO.Status
-                };
+                var _newStore = _mapper.Map<Store>(createStoreDTO);
 
                 if (!await _storeRepo.CreateStoreAsync(_newStore))
                 {
-                    _response.Success = false;
-                    _response.Message = "RepoError";
+                    _response.Status = false;
+                    _response.Title = "RepoError";
+                    _response.ErrorMessages.Add("Some error occur in Store Repository when trying to create store!");
                     _response.Data = null;
                     return _response;
                 }
 
-                _response.Success = true;
-                _response.Message = "Created";
+                _response.Status = true;
+                _response.Title = "Created";
                 _response.Data = _mapper.Map<StoreDTO>(_newStore);
             }
             catch (Exception ex)
             {
-                _response.Success = false;
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-                _response.Message = "Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
             }
             return _response;
         }
 
-        public async Task<ServiceResponse<List<StoreDTO>>> GetAllStoresWithStatusAsync()
+        public async Task<ServiceResponse<List<StoreDTO>>> 
+            GetAllStoresWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending)
         {
-            ServiceResponse<List<StoreDTO>> _response = new();
+            ServiceResponse<List<StoreDTO>> _response = new ServiceResponse<List<StoreDTO>>();
             try
             {
-                var _StoreList = await _storeRepo.GetAllStoresWithStatusAsync();
+                var _StoreList = await _storeRepo
+                    .GetAllStoresWithStatusAsync(search, from, to, filter, orderBy, ascending);
 
                 var _StoreListDTO = new List<StoreDTO>();
 
@@ -72,125 +68,132 @@ namespace CocCanService.Services.Imp
                     _StoreListDTO.Add(_mapper.Map<StoreDTO>(item));
                 }
 
-                _response.Success = true;
+                _response.Status = true;
+                _response.Title = "Got all stores";
                 _response.Data = _StoreListDTO;
-                _response.Message = "OK";
             }
             catch (Exception ex)
             {
-                _response.Success = false;
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-                _response.Message = "Error";
-                _response.Error = "StoreService Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
             }
             return _response;
         }
 
         public async Task<ServiceResponse<StoreDTO>> GetStoreByIdAsync(Guid id)
         {
-            ServiceResponse<StoreDTO> _response = new();
+            ServiceResponse<StoreDTO> _response = new ServiceResponse<StoreDTO>();
             try
             {
                 var _StoreList = await _storeRepo.GetStoreByGUIDAsync(id);
 
                 if (_StoreList == null)
                 {
-                    _response.Success = false;
-                    _response.Message = "NotFound";
+                    _response.Status = false;
+                    _response.Title = "NotFound";
+                    _response.ErrorMessages.Add("Not Found!");
+                    _response.Data = null;
                     return _response;
                 }
 
                 var _StoreDto = _mapper.Map<StoreDTO>(_StoreList);
 
-                _response.Success = true;
-                _response.Message = "ok";
+                _response.Status = true;
+                _response.Title = "Got store";
                 _response.Data = _StoreDto;
 
             }
             catch (Exception ex)
             {
-                _response.Success = false;
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-                _response.Message = "Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
             }
             return _response;
         }
 
         public async Task<ServiceResponse<string>> SoftDeleteStoreAsync(Guid id)
         {
-            ServiceResponse<string> _response = new();
+            ServiceResponse<string> _response = new ServiceResponse<string>();
             try
             {
                 var _existingStore = await _storeRepo.GetStoreByGUIDAsync(id);
                 
                 if (_existingStore == null)
                 {
-                    _response.Success = false;
-                    _response.Message = "NotFound";
+                    _response.Status = false;
+                    _response.Title = "NotFound";
+                    _response.ErrorMessages.Add("Not Found!");
                     _response.Data = null;
                     return _response;
                 }
 
                 if (!await _storeRepo.SoftDeleteStoreAsync(id))
                 {
-                    _response.Success = false;
-                    _response.Message = "RepoError";
+                    _response.Status = false;
+                    _response.Title = "RepoError";
+                    _response.ErrorMessages.Add("Some error occur in Store Repository when trying to delete store!");
+                    _response.Data = null;
                     return _response;
                 }
 
-
-                _response.Success = true;
-                _response.Message = "SoftDeleted";
+                _response.Status = true;
+                _response.Title = "Deleted store";
             }
             catch (Exception ex)
             {
-                _response.Success = false;
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-                _response.Message = "Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
             }
             return _response;
         }
 
-        public async Task<ServiceResponse<StoreDTO>> UpdateStoreAsync(StoreDTO storeDTO)
+        public async Task<ServiceResponse<StoreDTO>> UpdateStoreAsync(Guid id, UpdateStoreDTO updateStoreDTO)
         {
-            ServiceResponse<StoreDTO> _response = new();
+            ServiceResponse<StoreDTO> _response = new ServiceResponse<StoreDTO>();
             try
             {
-                var _existingStore = await _storeRepo.GetStoreByGUIDAsync(storeDTO.Id);
+                var _existingStore = await _storeRepo.GetStoreByGUIDAsync(id);
 
                 if (_existingStore == null)
                 {
-                    _response.Success = false;
-                    _response.Message = "NotFound";
+                    _response.Status = false;
+                    _response.Title = "NotFound";
+                    _response.ErrorMessages.Add("Not Found!");
                     _response.Data = null;
                     return _response;
                 }
 
-                _existingStore.Name = storeDTO.Name;
-                _existingStore.Status = storeDTO.Status;
+                _existingStore = _mapper.Map<Store>(updateStoreDTO);
+                //if (UpdateStoreDTO.Name != "")
+                //    _existingStore.Name = UpdateStoreDTO.Name;
+                //if (UpdateStoreDTO.Image != "")
+                //    _existingStore.Image = UpdateStoreDTO.Image;
 
                 if (!await _storeRepo.UpdateStoreAsync(_existingStore))
                 {
-                    _response.Success = false;
-                    _response.Message = "RepoError";
+                    _response.Status = false;
+                    _response.Title = "RepoError";
+                    _response.ErrorMessages.Add("Some error occur in Store Repository when trying to update store!");
                     _response.Data = null;
                     return _response;
                 }
 
-
-                _response.Success = true;
-                _response.Message = "Updated";
+                _response.Status = true;
+                _response.Title = "Updated store";
                 _response.Data = _mapper.Map<StoreDTO>(_existingStore);
             }
             catch (Exception ex)
             {
-                _response.Success = false;
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-                _response.Message = "Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
             }
             return _response;
         }

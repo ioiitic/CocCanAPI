@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CocCanService.DTOs.Category;
 using CocCanService.DTOs.Product;
 using CocCanService.DTOs.Staff;
 using Repository.Entities;
@@ -30,22 +31,23 @@ namespace CocCanService.Services.Imp
                 var _newProduct = _mapper.Map<Product>(createProductDTO);
                 if (!await _productRepo.CreateProductAsync(_newProduct))
                 {
-                    _response.Success = false;
-                    _response.Message = "RepoError";
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Some error occur in Category Repository when trying to create store!");
                     _response.Data = null;
                     return _response;
                 }
 
-                _response.Success = true;
-                _response.Message = "Created";
+                _response.Status = true;
+                _response.Title = "Created";
                 _response.Data = _mapper.Map<ProductDTO>(_newProduct);
             }
             catch (Exception ex)
             {
-                _response.Success = false;
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-                _response.Message = "Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
             }
             return _response;
         }
@@ -53,28 +55,28 @@ namespace CocCanService.Services.Imp
         public async Task<ServiceResponse<List<ProductDTO>>> GetAllProductsAsync()
         {
             ServiceResponse<List<ProductDTO>> _response = new();
-            try
-            {
-                var _SProductList = await _productRepo.GetAllProductsAsync();
+            //    try
+            //    {
+            //        var _SProductList = await _productRepo.GetAllProductsAsync();
 
-                var _SProductListDTO = new List<ProductDTO>();
+            //        var _SProductListDTO = new List<ProductDTO>();
 
-                foreach (var item in _SProductList)
-                {
-                    _SProductListDTO.Add(_mapper.Map<ProductDTO>(item));
-                }
+            //        foreach (var item in _SProductList)
+            //        {
+            //            _SProductListDTO.Add(_mapper.Map<ProductDTO>(item));
+            //        }
 
-                _response.Success = true;
-                _response.Data = _SProductListDTO;
-                _response.Message = "OK";
-            }
-            catch (Exception ex)
-            {
-                _response.Success = false;
-                _response.Data = null;
-                _response.Message = "Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
-            }
+            //        _response.Status = true;
+            //        _response.Title = "Got all products";
+            //        _response.Data = _SProductListDTO;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        _response.Status = false;
+            //        _response.Title = "Error";
+            //        _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
+            //        _response.Data = null;
+            //    }
             return _response;
         }
 
@@ -89,25 +91,27 @@ namespace CocCanService.Services.Imp
 
                 if (_product == null)
                 {
-                    _response.Success = false;
-                    _response.Message = "NotFound";
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Not Found!");
+                    _response.Data = null;
                     return _response;
                 }
 
-                var _CompanyDto = _mapper.Map<ProductDTO>(_product);
+                var _ProductDto = _mapper.Map<ProductDTO>(_product);
 
-                _response.Success = true;
-                _response.Message = "ok";
-                _response.Data = _CompanyDto;
+                _response.Status = true;
+                _response.Title = "Got Product";
+                _response.Data = _ProductDto;
 
 
             }
             catch (Exception ex)
             {
-                _response.Success = false;
-                _response.Data = null;
-                _response.Message = "Error";
+                _response.Status = false;
+                _response.Title = "Error";
                 _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
+                _response.Data = null;
             }
 
             return _response;
@@ -126,30 +130,32 @@ namespace CocCanService.Services.Imp
                 var _existingProduct = await _productRepo.GetProductByGUIDAsync(id);
                 if (_existingProduct == null)
                 {
-                    _response.Success = false;
-                    _response.Message = "NotFound";
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Not Found!");
                     _response.Data = null;
                     return _response;
                 }
 
                 if (!await _productRepo.SoftDeleteProductAsync(id))
                 {
-                    _response.Success = false;
-                    _response.Message = "RepoError";
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Some error occur in Store Repository when trying to delete category!");
                     _response.Data = null;
                     return _response;
                 }
 
 
-                _response.Success = true;
-                _response.Message = "SoftDeleted";
+                _response.Status = true;
+                _response.Title = "Deleted product";
             }
             catch (Exception ex)
             {
-                _response.Success = false;
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-                _response.Message = "Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
             }
             return _response;
         }
@@ -163,8 +169,9 @@ namespace CocCanService.Services.Imp
                     ;
                 if (_existingProduct == null)
                 {
-                    _response.Success = false;
-                    _response.Message = "NotFound";
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Not Found!");
                     _response.Data = null;
                     return _response;
                 }
@@ -174,23 +181,23 @@ namespace CocCanService.Services.Imp
 
                 if (!await _productRepo.UpdateProductAsync(_existingProduct))
                 {
-                    _response.Success = false;
-                    _response.Message = "RepoError";
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Some error occur in Store Repository when trying to update category!");
                     _response.Data = null;
                     return _response;
                 }
 
-
-                _response.Success = true;
-                _response.Message = "Updated";
+                _response.Status = true;
+                _response.Title = "Updated category";
                 _response.Data = _mapper.Map<ProductDTO>(_existingProduct);
             }
             catch (Exception ex)
             {
-                _response.Success = false;
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-                _response.Message = "Error";
-                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
             }
             return _response;
         }

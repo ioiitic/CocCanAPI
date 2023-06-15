@@ -43,6 +43,10 @@ namespace Repository.Entities
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
+                entity.Property(e => e.Image)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(40);
@@ -52,7 +56,7 @@ namespace Repository.Entities
             {
                 entity.ToTable("Customer");
 
-                entity.HasIndex(e => e.Email, "UQ__Customer__A9D10534F831C940")
+                entity.HasIndex(e => e.Email, "UQ__Customer__A9D1053459994720")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
@@ -237,7 +241,7 @@ namespace Repository.Entities
 
                 entity.Property(e => e.Image)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -246,13 +250,11 @@ namespace Repository.Entities
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.CategoryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PRODUCT_CATEGORYID");
 
                 entity.HasOne(d => d.Store)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.StoreId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PRODUCT_STOREID");
             });
 
@@ -289,6 +291,10 @@ namespace Repository.Entities
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
+                entity.Property(e => e.Image)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(40);
@@ -305,7 +311,10 @@ namespace Repository.Entities
             {
                 entity.ToTable("Staff");
 
-                entity.HasIndex(e => e.Email, "UQ__Staff__A9D105347A8C422C")
+                entity.HasIndex(e => e.Username, "UQ__Staff__536C85E4D8440BB7")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Email, "UQ__Staff__A9D105341F28534E")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");

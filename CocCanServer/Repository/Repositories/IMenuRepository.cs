@@ -9,11 +9,11 @@ namespace Repository.repositories
 {
     public interface IMenuRepository
     {
-        Task<ICollection<Menu>> GetAllMenusAsync();
+        Task<ICollection<Menu>>
+            GetAllMenusWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
         Task<bool> CreateMenuAsync(Menu menu);
         Task<bool> UpdateMenuAsync(Menu menu);
         Task<bool> SoftDeleteMenuAsync(Guid id);
-        Task<bool> HardDeleteMenuAsync(Menu menu);
         Task<Menu> GetMenuByGUIDAsync(Guid id);
     }
 }

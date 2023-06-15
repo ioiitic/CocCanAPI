@@ -23,14 +23,51 @@ namespace Repository.repositories.imp
             return await Save();
         }
 
-        public async Task<ICollection<Product>> GetAllProductsAsync()
+        public async Task<ICollection<Product>> 
+            GetAllProductsAsync(string search, int from, int to, string filter, string orderBy, bool ascending)
         {
-            return await _dataContext.Products.Where(p => p.Status == 1).ToListAsync();
+            IQueryable<Product> _products = 
+                _dataContext.Products
+                .Where(p => p.Status == 1);
+
+            if (search != "" && search != null)
+                _products = _products.Where(s => s.Name.Contains(search));
+
+            if (filter != "" && filter != null)
+                _products = _products.Where(s => s.Category.Name == filter);
+
+            switch (orderBy)
+            {
+                case "Name":
+                    if (ascending)
+                        _products = _products.OrderBy(s => s.Name);
+                    else
+                        _products = _products.OrderByDescending(s => s.Name);
+                    break;
+                default:
+                    if (ascending)
+                        _products = _products.OrderBy(s => s.Id);
+                    else
+                        _products = _products.OrderByDescending(s => s.Id);
+                    break;
+            }
+
+            if (from <= to & from > 0)
+                _products = _products.Skip(from - 1).Take(to - from + 1);
+
+            return await _products
+                .Include(p => p.Store)
+                .Include(p => p.Category)
+                .ToListAsync();
         }
 
         public async Task<Product> GetProductByGUIDAsync(Guid id)
         {
-            return await _dataContext.Products.SingleOrDefaultAsync(s => s.Id == id && s.Status == 1);
+            return await _dataContext.Products
+                .Where(p => p.Status == 1)
+                .Include(p => p.Store)
+                .Include(p => p.Category)
+                .SingleOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<bool> HardDeleteProductAsync(Product product)
