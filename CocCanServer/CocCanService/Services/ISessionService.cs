@@ -11,6 +11,6 @@ namespace CocCanService.Services
     public interface ISessionService
     {
         Task<ServiceResponse<List<Session>>>
-            GetAllSessionsWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
+            GetAllSessionsWithStatusAsync(string filter);
     }
 }

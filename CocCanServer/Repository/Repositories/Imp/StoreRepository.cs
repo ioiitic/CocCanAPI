@@ -98,6 +98,7 @@ namespace Repository.repositories.imp
                     }
                 }
             return await _stores
+                .Include(s => s.Products)
                 .ToListAsync();
         }
 

@@ -22,7 +22,7 @@ namespace Repository.repositories.imp
         }
 
         public async Task<ICollection<Session>>
-            GetAllSessionsWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending)
+            GetAllSessionsWithStatusAsync(Dictionary<string, List<string>> filter)
         {
             IQueryable<Session> _sessions =
                 _dataContext.Sessions

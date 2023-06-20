@@ -10,7 +10,7 @@ namespace Repository.repositories
     public interface ISessionRepository
     {
         Task<ICollection<Session>>
-            GetAllSessionsWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
+            GetAllSessionsWithStatusAsync(Dictionary<string, List<string>> filter);
         Task<bool> CreateSessionAsync(Session session);
         Task<bool> UpdateSessionAsync(Session session);
         Task<bool> SoftDeleteSessionAsync(Guid id);

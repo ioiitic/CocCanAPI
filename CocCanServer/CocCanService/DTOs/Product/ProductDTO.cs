@@ -1,4 +1,5 @@
-﻿using Repository.Entities;
+﻿using CocCanService.DTOs.Category;
+using Repository.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -20,5 +21,8 @@ namespace CocCanService.DTOs.Product
         [Required(ErrorMessage = "[Image] field is required!")]
         [MaxLength(40, ErrorMessage = "[Image] field is 40 characters max length!")]
         public string Image { get; set; }
+
+        [Required(ErrorMessage = "[Categories] field is required!")]
+        public virtual ICollection<CategoryDTO> Categories { get; set; }
     }
 }

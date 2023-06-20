@@ -20,13 +20,29 @@ namespace CocCanService.Services.Imp
             this._mapper = mapper;
         }
 
-        public async Task<ServiceResponse<List<Session>>> GetAllSessionsWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending)
+        public async Task<ServiceResponse<List<Session>>> GetAllSessionsWithStatusAsync(string filter)
         {
             ServiceResponse<List<Session>> _response = new ServiceResponse<List<Session>>();
             try
             {
+                Dictionary<string, List<string>> _filter = null;
+                try
+                {
+                    if (filter != null)
+                        _filter = System.Text.Json.JsonSerializer
+                            .Deserialize<Dictionary<string, List<string>>>(filter);
+                }
+                catch
+                {
+                    var raw = System.Text.Json.JsonSerializer
+                        .Deserialize<Dictionary<string, string>>(filter);
+                    _filter = new Dictionary<string, List<string>>();
+                    foreach (var item in raw)
+                        _filter.Add(item.Key, new List<string>() { item.Value });
+                }
+
                 var _SessionList = await _SessionRepo
-                    .GetAllSessionsWithStatusAsync(search, from, to, filter, orderBy, ascending);
+                    .GetAllSessionsWithStatusAsync(_filter);
 
 
                 _response.Status = true;

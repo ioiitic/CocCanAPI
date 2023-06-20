@@ -1,13 +1,13 @@
 ﻿using Repository.Entities;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repository.repositories.imp
 {
-    public class MenuDetailRepository
+    public class MenuDetailRepository : IMenuDetailRepository
     {
         private readonly CocCanDBContext _dataContext;
 
@@ -21,38 +21,39 @@ namespace Repository.repositories.imp
             return await Save();
         }
 
-        public async Task<ICollection<MenuDetail>>
-            GetAllMenuDetailsWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending)
+        public async Task<ICollection<MenuDetail>> GetAllMenuDetailsAsync()
         {
-            IQueryable<MenuDetail> _menuDetails =
-                _dataContext.MenuDetails.Include(md => md.Product);
+            return await _dataContext.MenuDetails.ToListAsync();
+        }
 
-            return await _menuDetails
-                .ToListAsync();
+        public async Task<bool> HardDeleteMenuDetailAsync(Guid id)
+        {
+            var _existingMenuDetail = await GetMenuDetailByGUIDAsync(id);
+            _dataContext.Remove(_existingMenuDetail);
+            return await Save();
+        }
+
+        //public async Task<bool> SoftDeleteMenuDetailAsync(Guid id)
+        //{
+        //    var _existingMenu = await GetMenuByGUIDAsync(id);
+
+        //    if (_existingMenu != null)
+        //    {
+        //        _existingMenu.Status = 0;
+        //        return await Save();
+        //    }
+        //    return false;
+        //}
+
+        public Task<bool> UpdateMenuDetailAsync(MenuDetail menuDetail)
+        {
+            _dataContext.MenuDetails.Update(menuDetail);
+            return Save();
         }
 
         public async Task<MenuDetail> GetMenuDetailByGUIDAsync(Guid id)
         {
-            return await _dataContext.MenuDetails
-                .Include(s => s.Product)
-                .SingleOrDefaultAsync(s => s.Id == id);
-        }
-
-        public async Task<bool> SoftDeleteMenuDetailAsync(Guid id)
-        {
-            var _existingMenuDetail = await GetMenuDetailByGUIDAsync(id);
-
-            if (_existingMenuDetail != null)
-            {
-                return await Save();
-            }
-            return false;
-        }
-
-        public async Task<bool> UpdateMenuDetailAsync(MenuDetail MenuDetail)
-        {
-            _dataContext.MenuDetails.Update(MenuDetail);
-            return await Save();
+            return await _dataContext.MenuDetails.SingleOrDefaultAsync(s => s.Id == id);
         }
 
         private async Task<bool> Save()

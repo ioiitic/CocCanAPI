@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CocCanService.DTOs.Order;
+using CocCanService.DTOs.OrderDetail;
+using CocCanService.DTOs.MenuDetail;
 
 namespace CocCanService.DTOs
 {
@@ -87,7 +90,7 @@ namespace CocCanService.DTOs
             //Location
             //CreateMap<Repository.Entities.Location, LocationDTO>().ReverseMap();
             //Category
-            //CreateMap<Repository.Entities.Category, CategoryDTO>().ReverseMap();
+            CreateMap<Repository.Entities.Category, CategoryDTO>().ReverseMap();
             //CreateMap<CreateProductDTO, Repository.Entities.Product>()
             //    .ForMember(
             //        des => des.Id,

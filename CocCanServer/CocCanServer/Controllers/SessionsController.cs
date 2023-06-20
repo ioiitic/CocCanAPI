@@ -22,9 +22,9 @@ namespace CocCanAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Session>))]
-        public async Task<IActionResult> GetAll(string search, int from, int to, string filter, string orderBy, bool ascending)
+        public async Task<IActionResult> GetAll(string filter)
         {
-            var Sessions = await _SessionService.GetAllSessionsWithStatusAsync(search, from, to, filter, orderBy, ascending);
+            var Sessions = await _SessionService.GetAllSessionsWithStatusAsync(filter);
             return Ok(Sessions);
         }
     }

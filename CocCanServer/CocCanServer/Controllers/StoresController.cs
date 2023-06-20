@@ -18,7 +18,7 @@ namespace CocCanAPI.Controllers
 
         public StoresController(IStoreService storeService)
         {
-            _storeService = storeService;
+            _storeService = storeService;   
         }
 
         [HttpGet]
