@@ -52,7 +52,10 @@ namespace Repository.repositories.imp
 
         public async Task<Order> GetOrderByGUIDAsync(Guid id)
         {
-            return await _dataContext.Orders.SingleOrDefaultAsync(s => s.Id == id);
+            return await _dataContext.Orders
+                .Where(s => s.Status == 1)
+                .Include(s => s.Customer)
+                .SingleOrDefaultAsync(s => s.Id == id);
         }
 
         private async Task<bool> Save()
