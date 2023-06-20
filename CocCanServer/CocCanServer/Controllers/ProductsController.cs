@@ -23,49 +23,47 @@ namespace CocCanAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductDTO>))]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
             var companies = await _productService.GetAllProductsAsync();
             return Ok(companies);
         }
-        //[HttpPost]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDTO))]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[ProducesDefaultResponseType]
-        //public async Task<ActionResult<ProductDTO>> CreateProduct([FromBody] CreateProductDTO createProductDTO)
-        //{
-        //    if (createProductDTO == null)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<ProductDTO>> CreateProduct([FromBody] CreateProductDTO createProductDTO)
+        {
+            if (createProductDTO == null)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    if (!ModelState.IsValid) { return BadRequest(ModelState); }
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-        //    var _newProduct = await _productService.CreateProductAsync(createProductDTO);
+            var _newProduct = await _productService.CreateProductAsync(createProductDTO);
 
-        //    if (_newProduct.Success == false && _newProduct.Message == "Exist")
-        //    {
-        //        return Ok(_newProduct);
-        //    }
+            if (_newProduct.Status == false && _newProduct.Title == "RepoError")
+            {
+                foreach (string error in _newProduct.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
 
-
-        //    if (_newProduct.Success == false && _newProduct.Message == "RepoError")
-        //    {
-        //        ModelState.AddModelError("", $"Some thing went wrong in respository layer when adding product {createProductDTO}");
-        //        return StatusCode(500, ModelState);
-        //    }
-
-        //    if (_newProduct.Success == false && _newProduct.Message == "Error")
-        //    {
-        //        ModelState.AddModelError("", $"Some thing went wrong in service layer when adding product {createProductDTO}");
-        //        return StatusCode(500, ModelState);
-        //    }
-
-        //    //Return new company created
-        //    return Ok(_newProduct);
-        //}
+            if (_newProduct.Status == false && _newProduct.Title == "Error")
+            {
+                foreach (string error in _newProduct.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
+            return Ok(_newProduct.Data);
+        }
 
         //[HttpPatch("{id:Guid}")]
         //[ProducesResponseType(StatusCodes.Status204NoContent)]

@@ -25,10 +25,20 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StoreDTO>))]
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
-            var stores = await _storeService.GetAllStoresWithStatusAsync(filter, range, sort);
+            var _stores = await _storeService.GetAllStoresWithStatusAsync(filter, range, sort);
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "stores 0-1/2");
-            return Ok(stores.Data);
+
+            if (_stores.Status == false && _stores.Title == "Error")
+            {
+                foreach (string error in _stores.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok(_stores.Data);
         }
 
         [HttpPost]

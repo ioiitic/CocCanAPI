@@ -10,7 +10,7 @@ namespace Repository.repositories
     public interface IProductRepository
     {
         Task<ICollection<Product>> 
-            GetAllProductsAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
+            GetAllProductsAsync();
         Task<bool> CreateProductAsync(Product product);
         Task<bool> UpdateProductAsync(Product product);
         Task<bool> SoftDeleteProductAsync(Guid id);

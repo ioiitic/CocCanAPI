@@ -4,12 +4,13 @@ using CocCanService.DTOs.Store;
 using Newtonsoft.Json.Linq;
 using Repository.Entities;
 using Repository.repositories;
-using Repository.Utils;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CocCanService.Services.Imp
 {
@@ -22,7 +23,7 @@ namespace CocCanService.Services.Imp
         {
             this._storeRepo = storeRepo;
             this._mapper = mapper;
-        }      
+        }
 
         public async Task<ServiceResponse<StoreDTO>> CreateStoreAsync(CreateStoreDTO createStoreDTO)
         {
@@ -60,44 +61,40 @@ namespace CocCanService.Services.Imp
             ServiceResponse<List<StoreDTO>> _response = new ServiceResponse<List<StoreDTO>>();
             try
             {
-                string checkQuery = QueryConverter.CheckQuery(filter, range, sort);
-
-                if (checkQuery != "Valid")
-                {
-                    _response.Status = false;
-                    _response.Title = "BadRequest";
-                    _response.ErrorMessages.Add(checkQuery);
-                    _response.Data = null;
-                    return _response;
-                }
-                Dictionary<string, string> _filter;
+                Dictionary<string, List<string>> _filter = null;
                 List<int> _range;
                 List<string> _sort;
                 try
                 {
-                    _filter = QueryConverter.getFilter(filter);
-                    if (_filter.Any(
-                        f => f.Key != "name" && f.Key != "search"))
-                        throw new Exception("Filter is wrong format!");
-                    _range = QueryConverter.getRange(range);
-                    _sort = QueryConverter.getSort(sort);
-                    if (_sort[0] != "name" && _sort[0] != "id")
-                        throw new Exception("Sort is wrong format!");
-                } catch (Exception ex)
-                {
-                    _response.Status = false;
-                    _response.Title = "BadRequest";
-                    _response.ErrorMessages.Add(ex.Message);
-                    _response.Data = null;
-                    return _response;
+                    if (filter != null)
+                        _filter = System.Text.Json.JsonSerializer
+                            .Deserialize<Dictionary<string, List<string>>>(filter);
                 }
+                catch
+                {
+                    var raw = System.Text.Json.JsonSerializer
+                        .Deserialize<Dictionary<string, string>>(filter);
+                    _filter = new Dictionary<string, List<string>>();
+                    foreach (var item in raw)
+                        _filter.Add(item.Key, new List<string>() { item.Value });
+                }
+                if (range != null)
+                    _range = System.Text.Json.JsonSerializer.Deserialize<List<int>>(range);
+                else 
+                    _range = new List<int>() { -1,-1};
+                if (sort != null)
+                    _sort = System.Text.Json.JsonSerializer.Deserialize<List<string>>(sort);
+                else
+                    _sort = new List<string>() { "default", "" };
 
                 var _StoreList = await _storeRepo
                     .GetAllStoresWithStatusAsync(
-                        _filter, _range[0]+1, _range[1]+1, _sort[0], (_sort[1]=="ASC")
+                        _filter, _range[0] + 1, _range[1] + 1, _sort[0], (_sort[1] == "ASC")
                     );
+                if (_filter != null && _filter.ContainsKey("search"))
+                    _StoreList = _StoreList.Where(s => _filter["search"].Any(f => s.Name.Contains(f))).ToList();
 
-                var _StoreListDTO = new List<StoreDTO>();
+                var _StoreListDTO = new List<StoreDTO>();   
 
                 foreach (var item in _StoreList)
                 {

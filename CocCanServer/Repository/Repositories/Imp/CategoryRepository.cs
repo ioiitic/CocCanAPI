@@ -24,35 +24,10 @@ namespace Repository.repositories.imp
         }
 
         public async Task<ICollection<Category>> 
-            GetAllCategorysWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending)
+            GetAllCategorysWithStatusAsync()
         {
             IQueryable<Category> _categories =
                 _dataContext.Categories.Where(c => c.Status == 1);
-
-            if (search != "" && search != null)
-                _categories = _categories.Where(s => s.Name.Contains(search));
-
-            if (filter != "" && filter != null)
-                _categories = _categories.Where(s => s.Name == filter);
-
-            switch (orderBy)
-            {
-                case "Name":
-                    if (ascending)
-                        _categories = _categories.OrderBy(s => s.Name);
-                    else
-                        _categories = _categories.OrderByDescending(s => s.Name);
-                    break;
-                default:
-                    if (ascending)
-                        _categories = _categories.OrderBy(s => s.Id);
-                    else
-                        _categories = _categories.OrderByDescending(s => s.Id);
-                    break;
-            }
-
-            if (from <= to & from > 0)
-                _categories = _categories.Skip(from - 1).Take(to - from + 1);
 
             return await _categories
                 .ToListAsync();

@@ -55,28 +55,28 @@ namespace CocCanService.Services.Imp
         public async Task<ServiceResponse<List<ProductDTO>>> GetAllProductsAsync()
         {
             ServiceResponse<List<ProductDTO>> _response = new();
-            //    try
-            //    {
-            //        var _SProductList = await _productRepo.GetAllProductsAsync();
+            try
+            {
+                var _SProductList = await _productRepo.GetAllProductsAsync();
 
-            //        var _SProductListDTO = new List<ProductDTO>();
+                var _SProductListDTO = new List<ProductDTO>();
 
-            //        foreach (var item in _SProductList)
-            //        {
-            //            _SProductListDTO.Add(_mapper.Map<ProductDTO>(item));
-            //        }
+                foreach (var item in _SProductList)
+                {
+                    _SProductListDTO.Add(_mapper.Map<ProductDTO>(item));
+                }
 
-            //        _response.Status = true;
-            //        _response.Title = "Got all products";
-            //        _response.Data = _SProductListDTO;
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        _response.Status = false;
-            //        _response.Title = "Error";
-            //        _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
-            //        _response.Data = null;
-            //    }
+                _response.Status = true;
+                _response.Title = "Got all products";
+                _response.Data = _SProductListDTO;
+            }
+            catch (Exception ex)
+            {
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
+                _response.Data = null;
+            }
             return _response;
         }
 

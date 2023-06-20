@@ -20,50 +20,51 @@ namespace CocCanAPI.Controllers
             _categoryService = categoryService;
         }
 
-        //[HttpGet]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CategoryDTO>))]
-        //public async Task<IActionResult> GetAll()
-        //{
-        //    var categories = await _categoryService.GetAllCategoriesAsync();
-        //    return Ok(categories);
-        //}
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CategoryDTO>))]
+        public async Task<IActionResult> GetAll(string filter, string range, string sort)
+        {
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            return Ok(categories.Data);
+        }
 
-        //[HttpPost]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDTO))]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[ProducesDefaultResponseType]
-        //public async Task<ActionResult<CategoryDTO>> CreateCategory([FromBody] CreateCategoryDTO createCategoryDTO)
-        //{
-        //    if (createCategoryDTO == null)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<CategoryDTO>> CreateCategory([FromBody] CreateCategoryDTO createCategoryDTO)
+        {
+            if (createCategoryDTO == null)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    if (!ModelState.IsValid) { return BadRequest(ModelState); }
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-        //    var _newCategory = await _categoryService.CreateCategoryAsync(createCategoryDTO);
-
-        //    if (_newCategory.Success == false && _newCategory.Message == "Exist")
-        //    {
-        //        return Ok(_newCategory);
-        //    }
+            var _newCategory = await _categoryService.CreateCategoryAsync(createCategoryDTO);
 
 
-        //    if (_newCategory.Success == false && _newCategory.Message == "RepoError")
-        //    {
-        //        ModelState.AddModelError("", $"Some thing went wrong in respository layer when adding category {createCategoryDTO}");
-        //        return StatusCode(500, ModelState);
-        //    }
+            if (_newCategory.Status == false && _newCategory.Title == "RepoError")
+            {
+                foreach (string error in _newCategory.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
 
-        //    if (_newCategory.Success == false && _newCategory.Message == "Error")
-        //    {
-        //        ModelState.AddModelError("", $"Some thing went wrong in service layer when adding category {createCategoryDTO}");
-        //        return StatusCode(500, ModelState);
-        //    }
-        //    return Ok(_newCategory);
-        //}
+            if (_newCategory.Status == false && _newCategory.Title == "Error")
+            {
+                foreach (string error in _newCategory.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
+            return Ok(_newCategory.Data);
+        }
 
         //[HttpPatch("{id:Guid}", Name = "UpdateCategory")]
         //[ProducesResponseType(StatusCodes.Status204NoContent)]

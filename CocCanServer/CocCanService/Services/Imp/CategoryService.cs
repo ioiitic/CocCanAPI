@@ -55,28 +55,28 @@ namespace CocCanService.Services.Imp
         public async Task<ServiceResponse<List<CategoryDTO>>> GetAllCategoriesAsync()
         {
             ServiceResponse<List<CategoryDTO>> _response = new();
-            //try
-            //{
-            //    var _CategoryList = await _categoryRepo.GetAllCategoriesAsync();
+            try
+            {
+                var _CategoryList = await _categoryRepo.GetAllCategorysWithStatusAsync();
 
-            //    var _CategoryListDTO = new List<CategoryDTO>();
+                var _CategoryListDTO = new List<CategoryDTO>();
 
-            //    foreach (var item in _CategoryList)
-            //    {
-            //        _CategoryListDTO.Add(_mapper.Map<CategoryDTO>(item));
-            //    }
+                foreach (var item in _CategoryList)
+                {
+                    _CategoryListDTO.Add(_mapper.Map<CategoryDTO>(item));
+                }
 
-            //    _response.Status = true;
-            //    _response.Title = "Got all categories";
-            //    _response.Data = _CategoryListDTO;
-            //}
-            //catch (Exception ex)
-            //{
-            //    _response.Status = false;
-            //    _response.Title = "Error";
-            //    _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
-            //    _response.Data = null;
-            //}
+                _response.Status = true;
+                _response.Title = "Got all categories";
+                _response.Data = _CategoryListDTO;
+            }
+            catch (Exception ex)
+            {
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
+                _response.Data = null;
+            }
             return _response;
         }
 

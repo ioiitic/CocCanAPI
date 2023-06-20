@@ -24,36 +24,11 @@ namespace Repository.repositories.imp
         }
 
         public async Task<ICollection<Product>> 
-            GetAllProductsAsync(string search, int from, int to, string filter, string orderBy, bool ascending)
+            GetAllProductsAsync()
         {
             IQueryable<Product> _products = 
                 _dataContext.Products
                 .Where(p => p.Status == 1);
-
-            if (search != "" && search != null)
-                _products = _products.Where(s => s.Name.Contains(search));
-
-            if (filter != "" && filter != null)
-                _products = _products.Where(s => s.Category.Name == filter);
-
-            switch (orderBy)
-            {
-                case "Name":
-                    if (ascending)
-                        _products = _products.OrderBy(s => s.Name);
-                    else
-                        _products = _products.OrderByDescending(s => s.Name);
-                    break;
-                default:
-                    if (ascending)
-                        _products = _products.OrderBy(s => s.Id);
-                    else
-                        _products = _products.OrderByDescending(s => s.Id);
-                    break;
-            }
-
-            if (from <= to & from > 0)
-                _products = _products.Skip(from - 1).Take(to - from + 1);
 
             return await _products
                 .Include(p => p.Store)

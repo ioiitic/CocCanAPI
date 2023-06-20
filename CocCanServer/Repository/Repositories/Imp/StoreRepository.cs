@@ -23,30 +23,13 @@ namespace Repository.repositories.imp
 
         public async Task<ICollection<Store>> 
             GetAllStoresWithStatusAsync
-            (Dictionary<string, string> filter, int from, int to, string orderBy, bool ascending)
+            (Dictionary<string, List<string>> filter, int from, int to, string orderBy, bool ascending)
         {
-            IQueryable<Store>  _stores = 
+            IQueryable<Store> _stores =
                 _dataContext.Stores.Where(s => s.Status == 1);
 
             //var stores = _stores
             //    .Join(_dataContext.Products, s => s.Id, p => p.StoreId, (s,p) => new { s = s, p = p });
-
-            foreach (KeyValuePair<string, string> filterIte in filter)
-            {
-                switch (filterIte.Key)
-                {
-                    case "search":
-                        string search = filterIte.Value;
-                        if (search != "" && search != null)
-                            _stores = _stores.Where(s => s.Name.Contains(search));
-                        break;
-                    case "name":
-                        string name = filterIte.Value;
-                        if (name != "" && name != null)
-                            _stores = _stores.Where(s => s.Name == name);
-                        break;
-                }
-            }
 
             switch (orderBy)
             {
@@ -55,6 +38,9 @@ namespace Repository.repositories.imp
                         _stores = _stores.OrderBy(s => s.Name);
                     else
                         _stores = _stores.OrderByDescending(s => s.Name);
+                    break;
+                case "default":
+                    _stores = _stores.OrderBy(s => s.Id);
                     break;
                 default:
                     if (ascending)
@@ -67,6 +53,50 @@ namespace Repository.repositories.imp
             if (from <= to & from > 0)
                 _stores = _stores.Skip(from - 1).Take(to - from + 1);
 
+            if (filter != null)
+                foreach (KeyValuePair<string, List<string>> filterIte in filter)
+                {
+                    switch (filterIte.Key)
+                    {
+                        case "session":
+                            _stores = _stores
+                                .Join(_dataContext.Products
+                                    .Join(_dataContext.MenuDetails
+                                        .Join(_dataContext.Menus
+                                            .Join(_dataContext.Sessions.Where(s => filterIte.Value.Any(fi => s.Id.ToString() == fi)),
+                                            m => m.Id,
+                                            s => s.MenuId,
+                                            (s, m) => s),
+                                        md => md.MenuId,
+                                        m => m.Id,
+                                        (m, md) => m),
+                                    p => p.Id,
+                                    md => md.ProductId,
+                                    (p, md) => p),
+                            s => s.Id,
+                            p => p.StoreId,
+                            (s, p) => s);
+                            break;
+                        case "menu":
+                            _stores = _stores
+                                .Join(_dataContext.Products
+                                    .Join(_dataContext.MenuDetails
+                                        .Join(_dataContext.Menus.Where(m => filterIte.Value.Any(fi => m.Id.ToString() == fi)),
+                                        md => md.MenuId,
+                                        m => m.Id,
+                                        (m, md) => m),
+                                    p => p.Id,
+                                    md => md.ProductId,
+                                    (p, md) => p),
+                            s => s.Id,
+                            p => p.StoreId,
+                            (s, p) => s);
+                            break;
+                        case "name":
+                            _stores = _stores.Where(s => filterIte.Value.Any(fi => s.Name == fi));
+                            break;
+                    }
+                }
             return await _stores
                 .ToListAsync();
         }
@@ -100,6 +130,13 @@ namespace Repository.repositories.imp
         private async Task<bool> Save()
         {
             return await _dataContext.SaveChangesAsync() >= 0 ? true : false;
+        }
+
+        private bool CheckSearch(string source, List<string> filterStrings)
+        {
+            foreach (string filterString in filterStrings)
+                if (source.Contains(filterString)) return true;
+            return false;
         }
     }
 }

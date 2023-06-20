@@ -10,7 +10,7 @@ namespace Repository.repositories
     public interface ICategoryRepository
     {
         Task<ICollection<Category>>
-            GetAllCategorysWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
+            GetAllCategorysWithStatusAsync();
         Task<bool> CreateCategoryAsync(Category category);
         Task<bool> UpdateCategoryAsync(Category category);
         Task<bool> SoftDeleteCategoryAsync(Guid id);
