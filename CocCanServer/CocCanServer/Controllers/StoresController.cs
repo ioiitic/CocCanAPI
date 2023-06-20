@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using CocCanAPI.Filter;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace CocCanAPI.Controllers
 {
@@ -16,22 +18,35 @@ namespace CocCanAPI.Controllers
 
         public StoresController(IStoreService storeService)
         {
-            _storeService = storeService;
+            _storeService = storeService;   
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StoreDTO>))]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
-            var stores = await _storeService.GetAllStoresWithStatusAsync();
-            return Ok(stores);
+            var _stores = await _storeService.GetAllStoresWithStatusAsync(filter, range, sort);
+            HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
+            HttpContext.Response.Headers.Add("Content-Range", "stores 0-1/2");
+
+            if (_stores.Status == false && _stores.Title == "Error")
+            {
+                foreach (string error in _stores.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok(_stores.Data);
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StoreDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         [ProducesDefaultResponseType]
         public async Task<ActionResult<StoreDTO>> CreateStore([FromBody] CreateStoreDTO createStoreDTO)
         {
@@ -40,63 +55,67 @@ namespace CocCanAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!ModelState.IsValid) { return BadRequest(ModelState); }
+            if (!ModelState.IsValid) { return UnprocessableEntity(ModelState); }
 
             var _newStore = await _storeService.CreateStoreAsync(createStoreDTO);
 
-            if (_newStore.Success == false && _newStore.Message == "Exist")
+            if (_newStore.Status == false && _newStore.Title == "RepoError")
             {
-                return Ok(_newStore);
-            }
-
-
-            if (_newStore.Success == false && _newStore.Message == "RepoError")
-            {
-                ModelState.AddModelError("", $"Some thing went wrong in respository layer when adding store {createStoreDTO}");
+                foreach (string error in _newStore.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
                 return StatusCode(500, ModelState);
             }
 
-            if (_newStore.Success == false && _newStore.Message == "Error")
+            if (_newStore.Status == false && _newStore.Title == "Error")
             {
-                ModelState.AddModelError("", $"Some thing went wrong in service layer when adding store {createStoreDTO}");
+                foreach (string error in _newStore.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
                 return StatusCode(500, ModelState);
             }
-            return Ok(_newStore);
+            return Ok(_newStore.Data);
         }
 
-        [HttpPatch("{id:Guid}", Name = "UpdateStore")]
+        [HttpPut("{id:Guid}", Name = "UpdateStore")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateStore(Guid id, [FromBody] StoreDTO storeDTO)
+        public async Task<IActionResult> UpdateStore(Guid id, [FromBody] UpdateStoreDTO updateStoreDTO)
         {
-            if (storeDTO == null || storeDTO.Id != id)
+            var _updateStore = await _storeService.UpdateStoreAsync(id, updateStoreDTO);
+
+            if (_updateStore.Status == false && _updateStore.Title == "NotFound")
             {
-                return BadRequest(ModelState);
-            }
-
-
-            var _updateStore = await _storeService.UpdateStoreAsync(storeDTO);
-
-            if (_updateStore.Success == false && _updateStore.Message == "NotFound")
-            {
-                return Ok(_updateStore);
-            }
-
-            if (_updateStore.Success == false && _updateStore.Message == "RepoError")
-            {
-                ModelState.AddModelError("", $"Some thing went wrong in respository layer when updating Store {storeDTO}");
+                foreach (string error in _updateStore.ErrorMessages)
+                {
+                    ModelState.AddModelError("id", error);
+                }
                 return StatusCode(500, ModelState);
             }
 
-            if (_updateStore.Success == false && _updateStore.Message == "Error")
+            if (_updateStore.Status == false && _updateStore.Title == "RepoError")
             {
-                ModelState.AddModelError("", $"Some thing went wrong in respository layer when updating Store  {storeDTO}");
+                foreach (string error in _updateStore.ErrorMessages)
+                {
+                    ModelState.AddModelError("StoreRepo", error);
+                }
                 return StatusCode(500, ModelState);
             }
 
-            return Ok(_updateStore);
+            if (_updateStore.Status == false && _updateStore.Title == "Error")
+            {
+                foreach (string error in _updateStore.ErrorMessages)
+                {
+                    ModelState.AddModelError("Exception", error);
+                }
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok(_updateStore.Data);
         }
 
         [HttpDelete("{id:Guid}", Name = "DeleteStore")]
@@ -109,22 +128,30 @@ namespace CocCanAPI.Controllers
 
             var _deleteStore = await _storeService.SoftDeleteStoreAsync(id);
 
-
-            if (_deleteStore.Success == false && _deleteStore.Data == "NotFound")
+            if (_deleteStore.Status == false && _deleteStore.Title == "NotFound")
             {
-                ModelState.AddModelError("", "Store Not found");
+                foreach (string error in _deleteStore.ErrorMessages)
+                {
+                    ModelState.AddModelError("StoreRepo", error);
+                }
                 return StatusCode(404, ModelState);
             }
 
-            if (_deleteStore.Success == false && _deleteStore.Data == "RepoError")
+            if (_deleteStore.Status == false && _deleteStore.Title == "RepoError")
             {
-                ModelState.AddModelError("", $"Some thing went wrong in Repository when deleting Store");
+                foreach (string error in _deleteStore.ErrorMessages)
+                {
+                    ModelState.AddModelError("StoreRepo", error);
+                }
                 return StatusCode(500, ModelState);
             }
 
-            if (_deleteStore.Success == false && _deleteStore.Data == "Error")
+            if (_deleteStore.Status == false && _deleteStore.Title == "Error")
             {
-                ModelState.AddModelError("", $"Some thing went wrong in service layer when deleting store");
+                foreach (string error in _deleteStore.ErrorMessages)
+                {
+                    ModelState.AddModelError("StoreRepo", error);
+                }
                 return StatusCode(500, ModelState);
             }
 
@@ -140,21 +167,18 @@ namespace CocCanAPI.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult<StoreDTO>> GetByGUID(Guid id)
         {
+            var _store = await _storeService.GetStoreByIdAsync(id);
 
-            if (id == Guid.Empty)
+            if (_store.Status == false && _store.Title == "NotFound")
             {
-                return BadRequest(id);
+                foreach (string error in _store.ErrorMessages)
+                {
+                    ModelState.AddModelError("StoreRepo", error);
+                }
+                return StatusCode(404, ModelState);
             }
 
-            var company = await _storeService.GetStoreByIdAsync(id);
-
-            if (company.Data == null)
-            {
-
-                return NotFound();
-            }
-
-            return Ok(company);
+            return Ok(_store.Data);
         }
     }
 }
