@@ -98,7 +98,6 @@ namespace Repository.repositories.imp
                     }
                 }
             return await _stores
-                .Include(s => s.Products)
                 .ToListAsync();
         }
 
@@ -107,6 +106,7 @@ namespace Repository.repositories.imp
             return await _dataContext.Stores
                 .Where(s => s.Status == 1)
                 .Include(s => s.Products)
+                    .ThenInclude(p => p.Category)
                 .SingleOrDefaultAsync(s => s.Id == id);
         }
 

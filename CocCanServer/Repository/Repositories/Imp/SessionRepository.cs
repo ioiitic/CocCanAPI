@@ -28,6 +28,17 @@ namespace Repository.repositories.imp
                 _dataContext.Sessions
                 .Where(s => s.Status == 1);
 
+            if (filter != null)
+                _sessions = _sessions
+                    .Join(_dataContext.TimeSlots.Where(ts => ts.StarTtime.ToString() == filter["timeslot"][0]),
+                    s => s.TimeSlotId,
+                    ts => ts.Id,
+                    (s, ts) => s)
+                    .Join(_dataContext.Locations.Where(l => l.Name.ToString() == filter["location"][0]),
+                    s => s.LocationId,
+                    ts => ts.Id,
+                    (s, ts) => s);
+
             _sessions = _sessions
                 .Include(s => s.Menu);
 

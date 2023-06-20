@@ -23,6 +23,6 @@ namespace CocCanService.DTOs.Product
         public string Image { get; set; }
 
         [Required(ErrorMessage = "[Categories] field is required!")]
-        public virtual ICollection<CategoryDTO> Categories { get; set; }
+        public virtual CategoryDTO Category { get; set; }
     }
 }
