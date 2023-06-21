@@ -9,7 +9,7 @@ namespace Repository.Entities
     {
         public PickUpSpot()
         {
-            Patches = new HashSet<Patch>();
+            Orders = new HashSet<Order>();
         }
 
         public Guid Id { get; set; }
@@ -19,6 +19,6 @@ namespace Repository.Entities
         public int Status { get; set; }
 
         public virtual Location Location { get; set; }
-        public virtual ICollection<Patch> Patches { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

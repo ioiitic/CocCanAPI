@@ -34,16 +34,16 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<OrderDetailDTO>> Create([FromBody] CreateOrderDetailDTO createOrderDetailDTO)
+        public async Task<ActionResult<OrderDetailDTO>> Create(Guid orderID, [FromBody] List<CreateOrderDetailDTO> createOrderDetailDTOList)
         {
-            if (createOrderDetailDTO == null)
+            if (createOrderDetailDTOList == null)
             {
                 return BadRequest(ModelState);
             }
 
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-            var _newOrderDetail = await _orderDetailService.CreateOrderDetailAsync(createOrderDetailDTO);
+            var _newOrderDetail = await _orderDetailService.CreateOrderDetailAsync(orderID, createOrderDetailDTOList);
 
             if (_newOrderDetail.Status == false && _newOrderDetail.Title == "RepoError")
             {

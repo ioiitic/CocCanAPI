@@ -18,9 +18,11 @@ namespace Repository.Entities
         public decimal TotalPrice { get; set; }
         public Guid CustomerId { get; set; }
         public Guid SessionId { get; set; }
+        public Guid PickUpSpotId { get; set; }
         public int Status { get; set; }
 
         public virtual Customer Customer { get; set; }
+        public virtual PickUpSpot PickUpSpot { get; set; }
         public virtual Session Session { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }

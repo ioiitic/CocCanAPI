@@ -12,9 +12,9 @@ namespace CocCanService.Services.Imp
 {
     public class OrderService : IOrderService
     {
-        private readonly IOrderRepository _orderRepo;
+        private readonly IOrderRepository _orderRepo;      
         private readonly IMapper _mapper;
-
+        
         public OrderService(IOrderRepository orderRepo, IMapper mapper)
         {
             this._orderRepo = orderRepo;
@@ -22,7 +22,7 @@ namespace CocCanService.Services.Imp
         }
 
         public async Task<ServiceResponse<OrderDTO>> CreateOrderAsync(CreateOrderDTO createOrderDTO)
-        {
+        {            
             ServiceResponse<OrderDTO> _response = new();
             try
             {
@@ -56,7 +56,7 @@ namespace CocCanService.Services.Imp
                 _response.Title = "Error";
                 _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-            }
+            }     
             return _response;
         }
 

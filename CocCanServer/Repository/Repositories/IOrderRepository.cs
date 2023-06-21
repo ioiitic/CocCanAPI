@@ -10,6 +10,7 @@ namespace Repository.repositories
     public interface IOrderRepository
     {
         Task<ICollection<Order>> GetAllOrdersAsync();
+        Task<ICollection<Order>> GetAllOrdersByCustomerAsync(Guid id);
         Task<bool> CreateOrderAsync(Order order);
         Task<bool> UpdateOrderAsync(Order order);
         Task<bool> SoftDeleteOrderAsync(Guid id);
