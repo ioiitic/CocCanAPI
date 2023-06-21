@@ -14,7 +14,7 @@ namespace CocCanService.DTOs.Store
         public string Name { get; set; }
 
         [Required(AllowEmptyStrings = true)]
-        [MaxLength(100, ErrorMessage = "[Image] field in StoreDTO is 100 characters max length!")]
+        [MaxLength(200, ErrorMessage = "[Image] field in StoreDTO is 200 characters max length!")]
         public string Image { get; set; }
     }
 }

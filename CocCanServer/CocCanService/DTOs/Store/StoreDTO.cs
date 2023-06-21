@@ -14,14 +14,14 @@ namespace CocCanService.DTOs.Store
         public Guid Id { get; set; }
 
         [Required(ErrorMessage="[Name] field is required!")]
-        [MaxLength(40,ErrorMessage="[Name] field is 40 characters max length!")]
+        [MaxLength(100,ErrorMessage= "[Name] field is 100 characters max length!")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "[Image] field is required!")]
-        [MaxLength(40, ErrorMessage = "[Image] field is 40 characters max length!")]
+        [MaxLength(200, ErrorMessage = "[Image] field is 200 characters max length!")]
         public string Image { get; set; }
 
         [Required(ErrorMessage = "[Products] field is required!")]
-        public virtual ICollection<ProductDTO> Products { get; set; }
+        public virtual ICollection<SessionDTO> Products { get; set; }
     }
 }

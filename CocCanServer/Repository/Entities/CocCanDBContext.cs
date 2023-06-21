@@ -33,6 +33,15 @@ namespace Repository.Entities
         public virtual DbSet<TimeSlot> TimeSlots { get; set; }
         public virtual DbSet<Staff> Staffs { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=localhost,1433;Initial Catalog=CocCanDB;User ID=sa;Password=12345");
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
@@ -45,33 +54,33 @@ namespace Repository.Entities
 
                 entity.Property(e => e.Image)
                     .IsRequired()
-                    .HasMaxLength(100);
+                    .HasMaxLength(200);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<Customer>(entity =>
             {
                 entity.ToTable("Customer");
 
-                entity.HasIndex(e => e.Email, "UQ__Customer__A9D1053459994720")
+                entity.HasIndex(e => e.Email, "UQ__Customer__A9D105345A31E47B")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Email)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Fullname)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Image)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Phone)
                     .IsRequired()
@@ -85,9 +94,9 @@ namespace Repository.Entities
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Address).HasMaxLength(40);
+                entity.Property(e => e.Address).HasMaxLength(100);
 
-                entity.Property(e => e.Name).HasMaxLength(40);
+                entity.Property(e => e.Name).HasMaxLength(100);
             });
 
             modelBuilder.Entity<LocationStore>(entity =>
@@ -220,11 +229,11 @@ namespace Repository.Entities
 
                 entity.Property(e => e.Address)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Fullname)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(100);
 
                 entity.HasOne(d => d.Location)
                     .WithMany(p => p.PickUpSpots)
@@ -241,11 +250,11 @@ namespace Repository.Entities
 
                 entity.Property(e => e.Image)
                     .IsRequired()
-                    .HasMaxLength(100);
+                    .HasMaxLength(200);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(100);
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
@@ -293,11 +302,11 @@ namespace Repository.Entities
 
                 entity.Property(e => e.Image)
                     .IsRequired()
-                    .HasMaxLength(100);
+                    .HasMaxLength(200);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<TimeSlot>(entity =>
@@ -311,29 +320,29 @@ namespace Repository.Entities
             {
                 entity.ToTable("Staff");
 
-                entity.HasIndex(e => e.Username, "UQ__Staff__536C85E4D8440BB7")
+                entity.HasIndex(e => e.Username, "UQ__Staff__536C85E4F87D1F5D")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Email, "UQ__Staff__A9D105341F28534E")
+                entity.HasIndex(e => e.Email, "UQ__Staff__A9D10534A6C311BF")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Email)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Fullname)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Image)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(200);
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Phone)
                     .IsRequired()
@@ -342,7 +351,7 @@ namespace Repository.Entities
 
                 entity.Property(e => e.Username)
                     .IsRequired()
-                    .HasMaxLength(40);
+                    .HasMaxLength(100);
             });
 
             OnModelCreatingPartial(modelBuilder);

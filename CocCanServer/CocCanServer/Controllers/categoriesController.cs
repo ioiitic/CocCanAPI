@@ -66,72 +66,72 @@ namespace CocCanAPI.Controllers
             return Ok(_newCategory.Data);
         }
 
-        //[HttpPatch("{id:Guid}", Name = "UpdateCategory")]
-        //[ProducesResponseType(StatusCodes.Status204NoContent)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CategoryDTO categoryDTO)
-        //{
-        //    if (categoryDTO == null || categoryDTO.Id != id)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [HttpPatch("{id:Guid}", Name = "UpdateCategory")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CategoryDTO categoryDTO)
+        {
+            if (categoryDTO == null || categoryDTO.Id != id)
+            {
+                return BadRequest(ModelState);
+            }
 
 
-        //    var _updateCategory = await _categoryService.UpdateCategoryAsync(categoryDTO);
+            var _updateCategory = await _categoryService.UpdateCategoryAsync(categoryDTO);
 
-        //    if (_updateCategory.Success == false && _updateCategory.Message == "NotFound")
-        //    {
-        //        return Ok(_updateCategory);
-        //    }
+            if (_updateCategory.Status == false && _updateCategory.Title == "RepoError")
+            {
+                foreach (string error in _updateCategory.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
 
-        //    if (_updateCategory.Success == false && _updateCategory.Message == "RepoError")
-        //    {
-        //        ModelState.AddModelError("", $"Some thing went wrong in respository layer when updating category {categoryDTO}");
-        //        return StatusCode(500, ModelState);
-        //    }
+            if (_updateCategory.Status == false && _updateCategory.Title == "Error")
+            {
+                foreach (string error in _updateCategory.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
 
-        //    if (_updateCategory.Success == false && _updateCategory.Message == "Error")
-        //    {
-        //        ModelState.AddModelError("", $"Some thing went wrong in respository layer when updating category {categoryDTO}");
-        //        return StatusCode(500, ModelState);
-        //    }
+            return Ok(_updateCategory);
+        }
 
-        //    return Ok(_updateCategory);
-        //}
+        [HttpDelete("{id:Guid}", Name = "DeleteCategory")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
+        [ProducesResponseType(StatusCodes.Status409Conflict)] //Can not be removed 
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteCategory(Guid id)
+        {
 
-        //[HttpDelete("{id:Guid}", Name = "DeleteCategory")]
-        //[ProducesResponseType(StatusCodes.Status204NoContent)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
-        //[ProducesResponseType(StatusCodes.Status409Conflict)] //Can not be removed 
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<IActionResult> DeleteCategory(Guid id)
-        //{
+            var _deleteCategory = await _categoryService.SoftDeleteCategoryAsync(id);
 
-        //    var _deleteCategory = await _categoryService.SoftDeleteCategoryAsync(id);
+            if (_deleteCategory.Status == false && _deleteCategory.Title == "RepoError")
+            {
+                foreach (string error in _deleteCategory.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
 
+            if (_deleteCategory.Status == false && _deleteCategory.Title == "Error")
+            {   
+                foreach (string error in _deleteCategory.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
 
-        //    if (_deleteCategory.Success == false && _deleteCategory.Data == "NotFound")
-        //    {
-        //        ModelState.AddModelError("", "Category Not found");
-        //        return StatusCode(404, ModelState);
-        //    }
+            return NoContent();
 
-        //    if (_deleteCategory.Success == false && _deleteCategory.Data == "RepoError")
-        //    {
-        //        ModelState.AddModelError("", $"Some thing went wrong in Repository when deleting category");
-        //        return StatusCode(500, ModelState);
-        //    }
-
-        //    if (_deleteCategory.Success == false && _deleteCategory.Data == "Error")
-        //    {
-        //        ModelState.AddModelError("", $"Some thing went wrong in service layer when deleting category");
-        //        return StatusCode(500, ModelState);
-        //    }
-
-        //    return NoContent();
-
-        //}
+        }
     }
 }

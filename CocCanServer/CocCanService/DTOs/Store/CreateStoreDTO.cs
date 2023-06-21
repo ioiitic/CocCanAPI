@@ -10,11 +10,11 @@ namespace CocCanService.DTOs.Store
     public class CreateStoreDTO
     {
         [Required(ErrorMessage = "[Name] field in Store is required!")]
-        [MaxLength(40, ErrorMessage = "[Name] field in Store is 40 characters max length!")]
+        [MaxLength(100, ErrorMessage = "[Name] field in Store is 100 characters max length!")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "[Image] field in Store is required!")]
-        [MaxLength(40, ErrorMessage = "[Image] field in Store is 40 characters max length!")]
+        [MaxLength(200, ErrorMessage = "[Image] field in Store is 200 characters max length!")]
         public string Image { get; set; }
     }
 }

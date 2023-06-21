@@ -36,11 +36,11 @@ namespace CocCanService.DTOs
             //        des => des.Status,
             //        act => act.UseValue(1));
             //Product
-            CreateMap<Repository.Entities.Product, ProductDTO>().ReverseMap()
+            CreateMap<Repository.Entities.Product, SessionDTO>().ReverseMap()
                 .ForMember(
                     des => des.Category,
                     act => act.MapFrom(src => src.Category));
-            CreateMap<CreateProductDTO, Repository.Entities.Product>()
+            CreateMap<CreateSessionDTO, Repository.Entities.Product>()
                 .ForMember(
                     des => des.Id,
                     act => Guid.NewGuid())
