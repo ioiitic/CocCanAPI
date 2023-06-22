@@ -10,7 +10,7 @@ namespace Repository.repositories
     public interface ILocationRepository
     {
         Task<ICollection<Location>>
-            GetAllLocationsWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
+            GetAllLocationsWithStatusAsync();
         Task<bool> CreateLocationAsync(Location location);
         Task<bool> UpdateLocationAsync(Location location);
         Task<bool> SoftDeleteLocationAsync(Guid id);

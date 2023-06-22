@@ -14,7 +14,7 @@ namespace CocCanService.DTOs.Category
         public string Name { get; set; }
 
         [Required(ErrorMessage = "[Image] field is required!")]
-        [MaxLength(100, ErrorMessage = "[Image] field is 100 characters max length!")]
+        [MaxLength(200, ErrorMessage = "[Image] field is 200 characters max length!")]
         public string Image { get; set; }
     }
 }

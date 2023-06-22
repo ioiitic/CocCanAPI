@@ -10,7 +10,6 @@ namespace Repository.Entities
         public Product()
         {
             MenuDetails = new HashSet<MenuDetail>();
-            OrderDetails = new HashSet<OrderDetail>();
         }
 
         public Guid Id { get; set; }
@@ -23,6 +22,5 @@ namespace Repository.Entities
         public virtual Category Category { get; set; }
         public virtual Store Store { get; set; }
         public virtual ICollection<MenuDetail> MenuDetails { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

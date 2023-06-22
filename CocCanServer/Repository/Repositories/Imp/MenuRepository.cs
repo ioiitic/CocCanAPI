@@ -24,7 +24,7 @@ namespace Repository.repositories.imp
         }
 
         public async Task<ICollection<Menu>> 
-            GetAllMenusWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending)
+            GetAllMenusWithStatusAsync()
         {
             IQueryable<Menu> _menus =
                 _dataContext.Menus.Where(s => s.Status == 1);

@@ -17,6 +17,7 @@ namespace Repository.Entities
         {
         }
 
+        public virtual DbSet<Batch> Batches { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
@@ -25,7 +26,6 @@ namespace Repository.Entities
         public virtual DbSet<MenuDetail> MenuDetails { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
-        public virtual DbSet<Patch> Patches { get; set; }
         public virtual DbSet<PickUpSpot> PickUpSpots { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Session> Sessions { get; set; }
@@ -46,6 +46,31 @@ namespace Repository.Entities
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
+            modelBuilder.Entity<Batch>(entity =>
+            {
+                entity.ToTable("Batch");
+
+                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+
+                entity.HasOne(d => d.Session)
+                    .WithMany(p => p.Batches)
+                    .HasForeignKey(d => d.SessionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BATCH_SESSIONID");
+
+                entity.HasOne(d => d.Staff)
+                    .WithMany(p => p.Batches)
+                    .HasForeignKey(d => d.StaffId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BATCH_STAFFID");
+
+                entity.HasOne(d => d.Store)
+                    .WithMany(p => p.Batches)
+                    .HasForeignKey(d => d.StoreId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BATCH_STOREID");
+            });
+
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.ToTable("Category");
@@ -65,7 +90,7 @@ namespace Repository.Entities
             {
                 entity.ToTable("Customer");
 
-                entity.HasIndex(e => e.Email, "UQ__Customer__A9D105345A31E47B")
+                entity.HasIndex(e => e.Email, "UQ__Customer__A9D10534DAA231B2")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
@@ -164,6 +189,12 @@ namespace Repository.Entities
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ORDER_CUSTOMERID");
 
+                entity.HasOne(d => d.PickUpSpot)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.PickUpSpotId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ORDER_PICKUPSPOTID");
+
                 entity.HasOne(d => d.Session)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.SessionId)
@@ -177,48 +208,17 @@ namespace Repository.Entities
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
+                entity.HasOne(d => d.MenuDetail)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.MenuDetailId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ORDERDETAIL_MENUDETAILID");
+
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ORDERDETAIL_ORDERID");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.OrderDetails)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ORDERDETAIL_PRODUCTID");
-            });
-
-            modelBuilder.Entity<Patch>(entity =>
-            {
-                entity.ToTable("Patch");
-
-                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
-
-                entity.HasOne(d => d.PickUpSpot)
-                    .WithMany(p => p.Patches)
-                    .HasForeignKey(d => d.PickUpSpotId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ASSIGNSHIP_PICKUPSPOTID");
-
-                entity.HasOne(d => d.Session)
-                    .WithMany(p => p.Patches)
-                    .HasForeignKey(d => d.SessionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ASSIGNSHIP_SESSIONID");
-
-                entity.HasOne(d => d.Staff)
-                    .WithMany(p => p.Patches)
-                    .HasForeignKey(d => d.StaffId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ASSIGNSHIP_STAFFID");
-
-                entity.HasOne(d => d.Store)
-                    .WithMany(p => p.Patches)
-                    .HasForeignKey(d => d.StoreId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ASSIGNSHIP_STOREID");
             });
 
             modelBuilder.Entity<PickUpSpot>(entity =>
@@ -320,10 +320,10 @@ namespace Repository.Entities
             {
                 entity.ToTable("Staff");
 
-                entity.HasIndex(e => e.Username, "UQ__Staff__536C85E4F87D1F5D")
+                entity.HasIndex(e => e.Username, "UQ__Staff__536C85E432E55133")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Email, "UQ__Staff__A9D10534A6C311BF")
+                entity.HasIndex(e => e.Email, "UQ__Staff__A9D10534EB207A4C")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");

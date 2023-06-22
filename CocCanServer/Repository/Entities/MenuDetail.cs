@@ -7,6 +7,11 @@ namespace Repository.Entities
 {
     public partial class MenuDetail
     {
+        public MenuDetail()
+        {
+            OrderDetails = new HashSet<OrderDetail>();
+        }
+
         public Guid Id { get; set; }
         public decimal Price { get; set; }
         public Guid MenuId { get; set; }
@@ -14,5 +19,6 @@ namespace Repository.Entities
 
         public virtual Menu Menu { get; set; }
         public virtual Product Product { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

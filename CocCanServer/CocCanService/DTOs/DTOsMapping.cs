@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using CocCanService.DTOs.Order;
 using CocCanService.DTOs.OrderDetail;
 using CocCanService.DTOs.MenuDetail;
+using CocCanService.DTOs.TimeSlot;
+using CocCanService.DTOs.Session;
 
 namespace CocCanService.DTOs
 {
@@ -35,12 +37,13 @@ namespace CocCanService.DTOs
             //    .ForMember(
             //        des => des.Status,
             //        act => act.UseValue(1));
+
             //Product
-            CreateMap<Repository.Entities.Product, SessionDTO>().ReverseMap()
+            CreateMap<Repository.Entities.Product, ProductDTO>().ReverseMap()
                 .ForMember(
                     des => des.Category,
                     act => act.MapFrom(src => src.Category));
-            CreateMap<CreateSessionDTO, Repository.Entities.Product>()
+            CreateMap<CreateProductDTO, Repository.Entities.Product>()
                 .ForMember(
                     des => des.Id,
                     act => Guid.NewGuid())
@@ -59,6 +62,75 @@ namespace CocCanService.DTOs
                 .ForMember(
                     des => des.Status,
                     act => act.UseValue(1));
+            //Location
+            CreateMap<Repository.Entities.Location, LocationDTO>().ReverseMap();
+            CreateMap<CreateLocationDTO, Repository.Entities.Location>()
+                .ForMember(
+                    des => des.Id,
+                    act => Guid.NewGuid())
+                .ForMember(
+                    des => des.Status,
+                    act => act.UseValue(1));
+            //TimeSlot
+            CreateMap<Repository.Entities.TimeSlot, TimeSlotDTO>().ReverseMap()
+                .ForMember(
+                    des => des.StartTime,
+                    act => act.MapFrom(src => TimeSpan.Parse(src.StartTime))
+                )
+                .ForMember(
+                    des => des.EndTime,
+                    act => act.MapFrom(src => TimeSpan.Parse(src.EndTime))
+                );
+            CreateMap<CreateTimeSlotDTO, Repository.Entities.TimeSlot>()
+                .ForMember(
+                    des => des.Id,
+                    act => Guid.NewGuid())
+                .ForMember(
+                    des => des.StartTime,
+                    act => act.MapFrom(src => TimeSpan.Parse(src.StartTime))
+                )
+                .ForMember(
+                    des => des.EndTime,
+                    act => act.MapFrom(src => TimeSpan.Parse(src.EndTime))
+                )
+                .ForMember(
+                    des => des.Status,
+                    act => act.UseValue(1));
+            //Session
+            CreateMap<Repository.Entities.Session, SessionDTO>().ReverseMap();
+            CreateMap<CreateSessionDTO, Repository.Entities.Session>()
+                .ForMember(
+                    des => des.Id,
+                    act => Guid.NewGuid())
+                .ForMember(
+                    des => des.Status,
+                    act => act.UseValue(1));
+            //Menu
+            CreateMap<Repository.Entities.Menu, MenuDTO>().ReverseMap();
+            CreateMap<CreateMenuDTO, Repository.Entities.Menu>()
+                .ForMember(
+                    des => des.Id,
+                    act => Guid.NewGuid())
+                .ForMember(
+                    des => des.Status,
+                    act => act.UseValue(1));
+            //MenuDetail
+            CreateMap<Repository.Entities.MenuDetail, MenuDetailDTO>().ReverseMap();
+            CreateMap<CreateStoreDTO, Repository.Entities.MenuDetail>()
+                .ForMember(
+                    des => des.Id,
+                    act => Guid.NewGuid());
+            //Category
+            CreateMap<Repository.Entities.Category, CategoryDTO>().ReverseMap();
+            CreateMap<CreateCategoryDTO, Repository.Entities.Category>()
+                .ForMember(
+                    des => des.Id,
+                    act => Guid.NewGuid())
+                .ForMember(
+                    des => des.Status,
+                    act => act.UseValue(1));
+
+
             //CreateMap<UpdateStoreDTO, Repository.Entities.Store>()
             //    .ForMember(
             //        des => des.Name,

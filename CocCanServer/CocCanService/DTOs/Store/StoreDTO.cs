@@ -22,6 +22,6 @@ namespace CocCanService.DTOs.Store
         public string Image { get; set; }
 
         [Required(ErrorMessage = "[Products] field is required!")]
-        public virtual ICollection<SessionDTO> Products { get; set; }
+        public virtual ICollection<ProductDTO> Products { get; set; }
     }
 }

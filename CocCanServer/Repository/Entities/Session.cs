@@ -9,8 +9,8 @@ namespace Repository.Entities
     {
         public Session()
         {
+            Batches = new HashSet<Batch>();
             Orders = new HashSet<Order>();
-            Patches = new HashSet<Patch>();
         }
 
         public Guid Id { get; set; }
@@ -23,7 +23,7 @@ namespace Repository.Entities
         public virtual Location Location { get; set; }
         public virtual Menu Menu { get; set; }
         public virtual TimeSlot TimeSlot { get; set; }
+        public virtual ICollection<Batch> Batches { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
-        public virtual ICollection<Patch> Patches { get; set; }
     }
 }

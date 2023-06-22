@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CocCanService.DTOs.Product
 {
-    public class CreateSessionDTO
+    public class CreateProductDTO
     {
 
         [Required(ErrorMessage = "[Name] field is required!")]
@@ -15,7 +15,7 @@ namespace CocCanService.DTOs.Product
         public string Name { get; set; }
 
         [Required(ErrorMessage = "[Image] field is required!")]
-        [MaxLength(100, ErrorMessage = "[Image] field is 100 characters max length!")]
+        [MaxLength(200, ErrorMessage = "[Image] field is 200 characters max length!")]
         public string Image { get; set; }
 
         [Required(ErrorMessage = "[CategoryId] field is required!")]

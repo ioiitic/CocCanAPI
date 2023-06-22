@@ -10,7 +10,7 @@ namespace Repository.repositories
     public interface ITimeSlotRepository
     {
         Task<ICollection<TimeSlot>>
-            GetAllTimeSlotWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending);
+            GetAllTimeSlotWithStatusAsync();
         Task<bool> CreateTimeSlotAsync(TimeSlot timeSlot);
         Task<bool> UpdateTimeSlotAsync(TimeSlot timeSlot);
         Task<bool> SoftDeleteTimeSlotAsync(Guid id);

@@ -30,11 +30,11 @@ namespace Repository.repositories.imp
 
             if (filter != null)
                 _sessions = _sessions
-                    .Join(_dataContext.TimeSlots.Where(ts => ts.StarTtime.ToString() == filter["timeslot"][0]),
+                    .Join(_dataContext.TimeSlots.Where(ts => ts.Id.ToString() == filter["timeslot"][0]),
                     s => s.TimeSlotId,
                     ts => ts.Id,
                     (s, ts) => s)
-                    .Join(_dataContext.Locations.Where(l => l.Name.ToString() == filter["location"][0]),
+                    .Join(_dataContext.Locations.Where(l => l.Id.ToString() == filter["location"][0]),
                     s => s.LocationId,
                     ts => ts.Id,
                     (s, ts) => s);

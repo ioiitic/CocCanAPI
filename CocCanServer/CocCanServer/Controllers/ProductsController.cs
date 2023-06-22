@@ -22,19 +22,19 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<SessionDTO>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductDTO>))]
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
             var companies = await _productService.GetAllProductsAsync();
             return Ok(companies);
         }
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SessionDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<SessionDTO>> CreateProduct([FromBody] CreateSessionDTO createProductDTO)
+        public async Task<ActionResult<ProductDTO>> CreateProduct([FromBody] CreateProductDTO createProductDTO)
         {
             if (createProductDTO == null)
             {
@@ -70,7 +70,7 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] SessionDTO productDTO)
+        public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] ProductDTO productDTO)
         {
             if (productDTO == null || productDTO.Id != id)
             {
@@ -101,11 +101,11 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpGet("{id:Guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SessionDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<SessionDTO>> GetByGUID(Guid id)
+        public async Task<ActionResult<ProductDTO>> GetByGUID(Guid id)
         {
 
             if (id == Guid.Empty)

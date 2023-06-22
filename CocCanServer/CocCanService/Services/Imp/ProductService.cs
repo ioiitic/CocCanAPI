@@ -23,9 +23,9 @@ namespace CocCanService.Services.Imp
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<SessionDTO>> CreateProductAsync(CreateSessionDTO createProductDTO)
+        public async Task<ServiceResponse<ProductDTO>> CreateProductAsync(CreateProductDTO createProductDTO)
         {
-            ServiceResponse<SessionDTO> _response = new();
+            ServiceResponse<ProductDTO> _response = new();
             try
             {
                 var _newProduct = _mapper.Map<Product>(createProductDTO);
@@ -40,7 +40,7 @@ namespace CocCanService.Services.Imp
 
                 _response.Status = true;
                 _response.Title = "Created";
-                _response.Data = _mapper.Map<SessionDTO>(_newProduct);
+                _response.Data = _mapper.Map<ProductDTO>(_newProduct);
             }
             catch (Exception ex)
             {
@@ -52,23 +52,23 @@ namespace CocCanService.Services.Imp
             return _response;
         }
 
-        public async Task<ServiceResponse<List<SessionDTO>>> GetAllProductsAsync()
+        public async Task<ServiceResponse<List<ProductDTO>>> GetAllProductsAsync()
         {
-            ServiceResponse<List<SessionDTO>> _response = new();
+            ServiceResponse<List<ProductDTO>> _response = new();
             try
             {
-                var _SProductList = await _productRepo.GetAllProductsAsync();
+                var _productList = await _productRepo.GetAllProductsAsync();
 
-                var _SProductListDTO = new List<SessionDTO>();
+                var _productListDTO = new List<ProductDTO>();
 
-                foreach (var item in _SProductList)
+                foreach (var item in _productList)
                 {
-                    _SProductListDTO.Add(_mapper.Map<SessionDTO>(item));
+                    _productListDTO.Add(_mapper.Map<ProductDTO>(item));
                 }
 
                 _response.Status = true;
                 _response.Title = "Got all products";
-                _response.Data = _SProductListDTO;
+                _response.Data = _productListDTO;
             }
             catch (Exception ex)
             {
@@ -80,9 +80,9 @@ namespace CocCanService.Services.Imp
             return _response;
         }
 
-        public async Task<ServiceResponse<SessionDTO>> GetProductByGUIDAsync(Guid id)
+        public async Task<ServiceResponse<ProductDTO>> GetProductByGUIDAsync(Guid id)
         {
-            ServiceResponse<SessionDTO> _response = new();
+            ServiceResponse<ProductDTO> _response = new();
 
             try
             {
@@ -98,7 +98,7 @@ namespace CocCanService.Services.Imp
                     return _response;
                 }
 
-                var _ProductDto = _mapper.Map<SessionDTO>(_product);
+                var _ProductDto = _mapper.Map<ProductDTO>(_product);
 
                 _response.Status = true;
                 _response.Title = "Got Product";
@@ -117,7 +117,7 @@ namespace CocCanService.Services.Imp
             return _response;
         }
 
-        public Task<ServiceResponse<bool>> HardDeleteProductAsync(SessionDTO productDTO)
+        public Task<ServiceResponse<bool>> HardDeleteProductAsync(ProductDTO productDTO)
         {
             throw new NotImplementedException();
         }
@@ -160,9 +160,9 @@ namespace CocCanService.Services.Imp
             return _response;
         }
 
-        public async Task<ServiceResponse<SessionDTO>> UpdateProductAsync(SessionDTO productDTO)
+        public async Task<ServiceResponse<ProductDTO>> UpdateProductAsync(ProductDTO productDTO)
         {
-            ServiceResponse<SessionDTO> _response = new();
+            ServiceResponse<ProductDTO> _response = new();
             try
             {
                 var _existingProduct = await _productRepo.GetProductByGUIDAsync(productDTO.Id)
@@ -190,7 +190,7 @@ namespace CocCanService.Services.Imp
 
                 _response.Status = true;
                 _response.Title = "Updated category";
-                _response.Data = _mapper.Map<SessionDTO>(_existingProduct);
+                _response.Data = _mapper.Map<ProductDTO>(_existingProduct);
             }
             catch (Exception ex)
             {

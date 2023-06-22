@@ -10,18 +10,13 @@ namespace CocCanService.DTOs.Session
     public class CreateSessionDTO
     {
 
-        [Required(ErrorMessage = "[Name] field is required!")]
-        [MaxLength(100, ErrorMessage = "[Name] field is 100 characters max length!")]
-        public string Name { get; set; }
+        [Required(ErrorMessage = "[TimeSlotId] field is required!")]
+        public Guid TimeSlotId { get; set; }
 
-        [Required(ErrorMessage = "[Image] field is required!")]
-        [MaxLength(100, ErrorMessage = "[Image] field is 100 characters max length!")]
-        public string Image { get; set; }
+        [Required(ErrorMessage = "[LocationId] field is required!")]
+        public Guid LocationId { get; set; }
 
-        [Required(ErrorMessage = "[CategoryId] field is required!")]
-        public Guid CategoryId { get; set; }
-
-        [Required(ErrorMessage = "[StoreId] field is required!")]
-        public Guid StoreId { get; set; }
+        [Required(ErrorMessage = "[MenuId] field is required!")]
+        public Guid MenuId { get; set; }
     }
 }

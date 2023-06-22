@@ -9,7 +9,7 @@ namespace Repository.Entities
     {
         public Staff()
         {
-            Patches = new HashSet<Patch>();
+            Batches = new HashSet<Batch>();
         }
 
         public Guid Id { get; set; }
@@ -22,6 +22,6 @@ namespace Repository.Entities
         public int Role { get; set; }
         public int Status { get; set; }
 
-        public virtual ICollection<Patch> Patches { get; set; }
+        public virtual ICollection<Batch> Batches { get; set; }
     }
 }

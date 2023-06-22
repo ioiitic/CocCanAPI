@@ -9,7 +9,7 @@ namespace Repository.Entities
     {
         public Store()
         {
-            Patches = new HashSet<Patch>();
+            Batches = new HashSet<Batch>();
             Products = new HashSet<Product>();
         }
 
@@ -18,7 +18,7 @@ namespace Repository.Entities
         public string Image { get; set; }
         public int Status { get; set; }
 
-        public virtual ICollection<Patch> Patches { get; set; }
+        public virtual ICollection<Batch> Batches { get; set; }
         public virtual ICollection<Product> Products { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace Repository.repositories.imp
         }
 
         public async Task<ICollection<TimeSlot>>
-            GetAllTimeSlotWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending)
+            GetAllTimeSlotWithStatusAsync()
         {
             IQueryable<TimeSlot> _timeSlots =
                 _dataContext.TimeSlots.Where(s => s.Status == 1);

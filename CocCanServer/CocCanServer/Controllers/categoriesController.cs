@@ -25,6 +25,14 @@ namespace CocCanAPI.Controllers
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
             var categories = await _categoryService.GetAllCategoriesAsync();
+            if (categories.Status == false && categories.Title == "Error")
+            {
+                foreach (string error in categories.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
             return Ok(categories.Data);
         }
 
@@ -44,16 +52,6 @@ namespace CocCanAPI.Controllers
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
             var _newCategory = await _categoryService.CreateCategoryAsync(createCategoryDTO);
-
-
-            if (_newCategory.Status == false && _newCategory.Title == "RepoError")
-            {
-                foreach (string error in _newCategory.ErrorMessages)
-                {
-                    ModelState.AddModelError("", error);
-                }
-                return StatusCode(500, ModelState);
-            }
 
             if (_newCategory.Status == false && _newCategory.Title == "Error")
             {
@@ -81,15 +79,6 @@ namespace CocCanAPI.Controllers
 
             var _updateCategory = await _categoryService.UpdateCategoryAsync(categoryDTO);
 
-            if (_updateCategory.Status == false && _updateCategory.Title == "RepoError")
-            {
-                foreach (string error in _updateCategory.ErrorMessages)
-                {
-                    ModelState.AddModelError("", error);
-                }
-                return StatusCode(500, ModelState);
-            }
-
             if (_updateCategory.Status == false && _updateCategory.Title == "Error")
             {
                 foreach (string error in _updateCategory.ErrorMessages)
@@ -111,15 +100,6 @@ namespace CocCanAPI.Controllers
         {
 
             var _deleteCategory = await _categoryService.SoftDeleteCategoryAsync(id);
-
-            if (_deleteCategory.Status == false && _deleteCategory.Title == "RepoError")
-            {
-                foreach (string error in _deleteCategory.ErrorMessages)
-                {
-                    ModelState.AddModelError("", error);
-                }
-                return StatusCode(500, ModelState);
-            }
 
             if (_deleteCategory.Status == false && _deleteCategory.Title == "Error")
             {   

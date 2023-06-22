@@ -53,7 +53,7 @@ namespace CocCanAPI.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            if (_newLocation.Status == false && _newProduct.Title == "Error")
+            if (_newLocation.Status == false && _newLocation.Title == "Error")
             {
                 foreach (string error in _newLocation.ErrorMessages)
                 {

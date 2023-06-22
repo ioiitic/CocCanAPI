@@ -22,35 +22,10 @@ namespace Repository.repositories.imp
             return await Save();
         }
 
-        public async Task<ICollection<Location>> GetAllLocationsWithStatusAsync(string search, int from, int to, string filter, string orderBy, bool ascending)
+        public async Task<ICollection<Location>> GetAllLocationsWithStatusAsync()
         {
             IQueryable<Location> _locations =
                 _dataContext.Locations.Where(s => s.Status == 1);
-
-            if (search != "" && search != null)
-                _locations = _locations.Where(s => s.Name.Contains(search));
-
-            if (filter != "" && filter != null)
-                _locations = _locations.Where(s => s.Name == filter);
-
-            switch (orderBy)
-            {
-                case "Name":
-                    if (ascending)
-                        _locations = _locations.OrderBy(s => s.Name);
-                    else
-                        _locations = _locations.OrderByDescending(s => s.Name);
-                    break;
-                default:
-                    if (ascending)
-                        _locations = _locations.OrderBy(s => s.Id);
-                    else
-                        _locations = _locations.OrderByDescending(s => s.Id);
-                    break;
-            }
-
-            if (from <= to & from > 0)
-                _locations = _locations.Skip(from - 1).Take(to - from + 1);
 
             return await _locations
                 .ToListAsync();

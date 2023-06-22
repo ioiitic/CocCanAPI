@@ -11,7 +11,7 @@ namespace CocCanService.Services
 {
     public interface ISessionService
     {
-        Task<ServiceResponse<List<SessionDTO>>> GetAllSessionsAsync();
+        Task<ServiceResponse<List<SessionDTO>>> GetAllSessionsAsync(string filter);
         Task<ServiceResponse<SessionDTO>> CreateSessionAsync(CreateSessionDTO createSessionDTO);
         Task<ServiceResponse<SessionDTO>> UpdateSessionAsync(SessionDTO SessionDTO);
         Task<ServiceResponse<string>> SoftDeleteSessionAsync(Guid id);
