@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using CocCanService.DTOs.Order;
 using CocCanService.DTOs.OrderDetail;
 using CocCanService.DTOs.MenuDetail;
+using CocCanService.DTOs.PickUpSpot;
 
 namespace CocCanService.DTOs
 {
@@ -100,6 +101,9 @@ namespace CocCanService.DTOs
             //        act => act.UseValue(1));
             //Menu
             //CreateMap<Repository.Entities.Menu, MenuDTO>().ReverseMap();
+            //PickUpSpot
+            CreateMap<Repository.Entities.PickUpSpot, PickUpSpotDTO>().ReverseMap();
+
         }
     }
 }

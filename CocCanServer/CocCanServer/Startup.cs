@@ -86,6 +86,8 @@ namespace CocCanServer
             services.AddScoped<IOrderDetailService, OrderDetailService>();
             services.AddScoped<IMenuDetailRepository, MenuDetailRepository>();
             services.AddScoped<IMenuDetailService, MenuDetailService>();
+            services.AddScoped<IPickUpSpotRepository, PickUpSpotRepository>();
+            services.AddScoped<IPickUpSpotService, PickUpSpotService>();
 
             services.AddControllers(
                 options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
