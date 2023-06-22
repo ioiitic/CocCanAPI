@@ -12,9 +12,9 @@ namespace CocCanService.Services.Imp
 {
     public class OrderService : IOrderService
     {
-        private readonly IOrderRepository _orderRepo;
+        private readonly IOrderRepository _orderRepo;      
         private readonly IMapper _mapper;
-
+        
         public OrderService(IOrderRepository orderRepo, IMapper mapper)
         {
             this._orderRepo = orderRepo;
@@ -22,7 +22,7 @@ namespace CocCanService.Services.Imp
         }
 
         public async Task<ServiceResponse<OrderDTO>> CreateOrderAsync(CreateOrderDTO createOrderDTO)
-        {
+        {            
             ServiceResponse<OrderDTO> _response = new();
             try
             {
@@ -34,6 +34,7 @@ namespace CocCanService.Services.Imp
                     TotalPrice = createOrderDTO.TotalPrice,
                     CustomerId = createOrderDTO.CustomerId,
                     SessionId = createOrderDTO.SessionId,
+                    PickUpSpotId = createOrderDTO.PickUpSpotId,
                     Status = createOrderDTO.Status
                 };
 
@@ -56,7 +57,7 @@ namespace CocCanService.Services.Imp
                 _response.Title = "Error";
                 _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
                 _response.Data = null;
-            }
+            }     
             return _response;
         }
 
@@ -178,6 +179,7 @@ namespace CocCanService.Services.Imp
                 _existingOrder.TotalPrice = orderDTO.TotalPrice;
                 _existingOrder.CustomerId = orderDTO.CustomerId;
                 _existingOrder.SessionId = orderDTO.SessionId;
+                _existingOrder.PickUpSpotId = orderDTO.PickUpSpotId;
                 _existingOrder.Status = orderDTO.Status;
 
                 if (!await _orderRepo.UpdateOrderAsync(_existingOrder))

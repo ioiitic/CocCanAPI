@@ -8,8 +8,9 @@ namespace CocCanService.DTOs.OrderDetail
 {
     public class CreateOrderDetailDTO
     {
+        public int Quantity { get; set; }
         public Guid ProductId { get; set; }
-        public Guid OrderId { get; set; }
-        public int Status { get; set; }
+        //public Guid OrderId { get; set; }
+        //public int Status { get; set; }
     }
 }

@@ -90,7 +90,11 @@ namespace Repository.Entities
             {
                 entity.ToTable("Customer");
 
+<<<<<<< HEAD
                 entity.HasIndex(e => e.Email, "UQ__Customer__A9D10534DAA231B2")
+=======
+                entity.HasIndex(e => e.Email, "UQ__Customer__A9D1053449F6FE6E")
+>>>>>>> NT2
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
@@ -219,6 +223,15 @@ namespace Repository.Entities
                     .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ORDERDETAIL_ORDERID");
+<<<<<<< HEAD
+=======
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ORDERDETAIL_PRODUCTID");
+>>>>>>> NT2
             });
 
             modelBuilder.Entity<PickUpSpot>(entity =>
@@ -320,10 +333,17 @@ namespace Repository.Entities
             {
                 entity.ToTable("Staff");
 
+<<<<<<< HEAD
                 entity.HasIndex(e => e.Username, "UQ__Staff__536C85E432E55133")
                     .IsUnique();
 
                 entity.HasIndex(e => e.Email, "UQ__Staff__A9D10534EB207A4C")
+=======
+                entity.HasIndex(e => e.Username, "UQ__Staff__536C85E43B85036B")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Email, "UQ__Staff__A9D10534F6581A5C")
+>>>>>>> NT2
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");

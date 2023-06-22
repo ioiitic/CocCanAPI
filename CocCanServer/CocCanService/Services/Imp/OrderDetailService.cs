@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CocCanService.Services.Imp
 {
-    public class OrderDetailService:IOrderDetailService
+    public class OrderDetailService : IOrderDetailService
     {
         private readonly IOrderDetailRepository _orderDetailRepo;
         private readonly IMapper _mapper;
@@ -20,31 +20,36 @@ namespace CocCanService.Services.Imp
             this._mapper = mapper;
         }
 
-        public async Task<ServiceResponse<OrderDetailDTO>> CreateOrderDetailAsync(CreateOrderDetailDTO createOrderDetailDTO)
+        public async Task<ServiceResponse<OrderDetailDTO>> CreateOrderDetailAsync(Guid orderID, List<CreateOrderDetailDTO> createOrderDetailDTOList)
         {
             ServiceResponse<OrderDetailDTO> _response = new();
             try
             {
-                Repository.Entities.OrderDetail _newOrderDetail = new()
+                foreach (var orderDetailDto in createOrderDetailDTOList)
                 {
-                    Id = Guid.NewGuid(),
-                    ProductId = createOrderDetailDTO.ProductId,
-                    OrderId = createOrderDetailDTO.OrderId,
-                    Status = createOrderDetailDTO.Status
-                };
+                    Repository.Entities.OrderDetail _newOrderDetail = new()
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = orderDetailDto.ProductId,
+                        OrderId = orderID,
+                        Quantity = orderDetailDto.Quantity,
+                        Status = 1
+                    };
 
-                if (!await _orderDetailRepo.CreateOrderDetailAsync(_newOrderDetail))
-                {
-                    _response.Status = false;
-                    _response.Title = "Error";
-                    _response.ErrorMessages.Add("Some error occur in Category Repository when trying to create store!");
-                    _response.Data = null;
-                    return _response;
+                    if (!await _orderDetailRepo.CreateOrderDetailAsync(_newOrderDetail))
+                    {
+                        _response.Status = false;
+                        _response.Title = "Error";
+                        _response.ErrorMessages.Add("Some error occur in Category Repository when trying to create store!");
+                        _response.Data = null;
+                        return _response;
+                    }
+
+                    _response.Status = true;
+                    _response.Title = "Created";
+                    _response.Data = _mapper.Map<OrderDetailDTO>(_newOrderDetail);
                 }
 
-                _response.Status = true;
-                _response.Title = "Created";
-                _response.Data = _mapper.Map<OrderDetailDTO>(_newOrderDetail);
             }
             catch (Exception ex)
             {

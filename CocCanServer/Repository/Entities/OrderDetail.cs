@@ -9,7 +9,11 @@ namespace Repository.Entities
     {
         public Guid Id { get; set; }
         public int Quantity { get; set; }
+<<<<<<< HEAD
         public Guid MenuDetailId { get; set; }
+=======
+        public Guid ProductId { get; set; }
+>>>>>>> NT2
         public Guid OrderId { get; set; }
         public int Status { get; set; }
 

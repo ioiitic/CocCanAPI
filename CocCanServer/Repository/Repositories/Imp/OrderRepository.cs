@@ -62,5 +62,10 @@ namespace Repository.repositories.imp
         {
             return await _dataContext.SaveChangesAsync() >= 0 ? true : false;
         }
+
+        public async Task<ICollection<Order>> GetAllOrdersByCustomerAsync(Guid id)
+        {
+            return await _dataContext.Orders.Where(s => s.CustomerId == id).ToListAsync();
+        }
     }
 }
