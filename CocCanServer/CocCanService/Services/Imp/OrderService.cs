@@ -34,6 +34,7 @@ namespace CocCanService.Services.Imp
                     TotalPrice = createOrderDTO.TotalPrice,
                     CustomerId = createOrderDTO.CustomerId,
                     SessionId = createOrderDTO.SessionId,
+                    PickUpSpotId = createOrderDTO.PickUpSpotId,
                     Status = createOrderDTO.Status
                 };
 
@@ -178,6 +179,7 @@ namespace CocCanService.Services.Imp
                 _existingOrder.TotalPrice = orderDTO.TotalPrice;
                 _existingOrder.CustomerId = orderDTO.CustomerId;
                 _existingOrder.SessionId = orderDTO.SessionId;
+                _existingOrder.PickUpSpotId = orderDTO.PickUpSpotId;
                 _existingOrder.Status = orderDTO.Status;
 
                 if (!await _orderRepo.UpdateOrderAsync(_existingOrder))

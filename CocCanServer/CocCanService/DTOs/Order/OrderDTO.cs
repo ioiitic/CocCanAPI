@@ -14,6 +14,7 @@ namespace CocCanService.DTOs.Order
         public decimal TotalPrice { get; set; }
         public Guid CustomerId { get; set; }
         public Guid SessionId { get; set; }
+        public Guid PickUpSpotId { get; set; }
         public int Status { get; set; }
     }
 }
