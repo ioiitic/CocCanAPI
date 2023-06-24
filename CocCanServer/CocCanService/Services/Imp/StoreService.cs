@@ -203,10 +203,6 @@ namespace CocCanService.Services.Imp
                 }
 
                 _existingStore = _mapper.Map<Store>(updateStoreDTO);
-                //if (UpdateStoreDTO.Name != "")
-                //    _existingStore.Name = UpdateStoreDTO.Name;
-                //if (UpdateStoreDTO.Image != "")
-                //    _existingStore.Image = UpdateStoreDTO.Image;
 
                 if (!await _storeRepo.UpdateStoreAsync(_existingStore))
                 {

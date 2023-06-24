@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace CocCanService.DTOs.OrderDetail
 {
-    public class CreateOrderDetailDTO
+    public class UpdateOrderDetailDTO
     {
-        [Required(ErrorMessage = "[Quantity] field is required!")]
+        [Required(AllowEmptyStrings = true)]
         public int Quantity { get; set; }
 
-        [Required(ErrorMessage = "[ProductId] field is required!")]
+        [Required(AllowEmptyStrings = true)]
         public Guid MenuDetailId { get; set; }
 
-        [Required(ErrorMessage = "[OrderId] field is required!")]
+        [Required(AllowEmptyStrings = true)]
         public Guid OrderId { get; set; }
     }
 }

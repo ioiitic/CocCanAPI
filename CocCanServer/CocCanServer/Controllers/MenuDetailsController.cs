@@ -28,13 +28,13 @@ namespace CocCanAPI.Controllers
             return Ok(menuDetail);
         }
 
-        [HttpPost]
+        [HttpPost("{Guid:id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MenuDetailDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<MenuDetailDTO>> CreateMenuDetail([FromBody] CreateMenuDetailDTO createMenuDetailDTO)
+        public async Task<ActionResult<MenuDetailDTO>> CreateMenuDetail(Guid id, [FromBody] List<CreateMenuDetailDTO> createMenuDetailDTO)
         {
             if (createMenuDetailDTO == null)
             {
@@ -43,7 +43,7 @@ namespace CocCanAPI.Controllers
 
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-            var _newMenuDetail = await _menuDetailService.CreateMenuDetailAsync(createMenuDetailDTO);
+            var _newMenuDetail = await _menuDetailService.CreateMenuDetailAsync(id, createMenuDetailDTO);
 
             if (_newMenuDetail.Status == false && _newMenuDetail.Title == "RepoError")
             {

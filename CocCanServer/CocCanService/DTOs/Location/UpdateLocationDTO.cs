@@ -5,17 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CocCanService.DTOs.Store
+namespace CocCanService.DTOs.Location
 {
-    public class UpdateStoreDTO
+    public class UpdateLocationDTO
     {
-        [Required(AllowEmptyStrings = true)]
-        [MaxLength(100, ErrorMessage = "[Name] field in StoreDTO is 100 characters max length!")]
+        [Required(ErrorMessage = "[Name] field is required!")]
+        [MaxLength(200, ErrorMessage = "[Name] field is 200 characters max length!")]
         public string Name { get; set; }
-
-        [Required(AllowEmptyStrings = true)]
-        [MaxLength(200, ErrorMessage = "[Image] field in StoreDTO is 200 characters max length!")]
-        public string Image { get; set; }
 
         [Required(ErrorMessage = "[Address] field is required!")]
         [MaxLength(200, ErrorMessage = "[Address] field is 200 characters max length!")]

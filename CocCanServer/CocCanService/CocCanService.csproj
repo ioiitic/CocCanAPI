@@ -5,10 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\Customer\" />
-    <Folder Include="DTOs\Location\" />
     <Folder Include="DTOs\LocationStore\" />
-    <Folder Include="DTOs\Batch\" />
     <Folder Include="DTOs\Product\" />
     <Folder Include="DTOs\Session\" />
     <Folder Include="DTOs\Staff\" />

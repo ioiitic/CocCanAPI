@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using CocCanService.DTOs.MenuDetail;
+using CocCanService.DTOs.OrderDetail;
+using Repository.Entities;
 using Repository.repositories;
 using System;
 using System.Collections.Generic;
@@ -20,31 +22,29 @@ namespace CocCanService.Services.Imp
             this._mapper = mapper;
         }
 
-        public async Task<ServiceResponse<MenuDetailDTO>> CreateMenuDetailAsync(CreateMenuDetailDTO createMenuDetailDTO)
+        public async Task<ServiceResponse<List<CreateMenuDetailDTO>>> CreateMenuDetailAsync(Guid menuID, List<CreateMenuDetailDTO> createMenuDetailDTOList)
         {
-            ServiceResponse<MenuDetailDTO> _response = new();
+            ServiceResponse<List<CreateMenuDetailDTO>> _response = new();
             try
             {
-                Repository.Entities.MenuDetail _newMenuDetail = new()
+                List<CreateMenuDetailDTO> list = new List<CreateMenuDetailDTO>();
+                foreach (var createMenuDetailDTO in  createMenuDetailDTOList)
                 {
-                    Id = Guid.NewGuid(),
-                    Price = createMenuDetailDTO.Price,
-                    MenuId = createMenuDetailDTO.MenuId,
-                    ProductId = createMenuDetailDTO.ProductId,
-                };
+                    var _newMenuDetail = _mapper.Map<MenuDetail>(createMenuDetailDTO);
 
-                if (!await _menuDetailRepo.CreateMenuDetailAsync(_newMenuDetail))
-                {
-                    _response.Status = false;
-                    _response.Title = "Error";
-                    _response.ErrorMessages.Add("Some error occur in Category Repository when trying to create store!");
-                    _response.Data = null;
-                    return _response;
+                    if (!await _menuDetailRepo.CreateMenuDetailAsync(_newMenuDetail))
+                    {
+                        _response.Status = false;
+                        _response.Title = "Error";
+                        _response.ErrorMessages.Add("Some error occur in Category Repository when trying to create store!");
+                        _response.Data = null;
+                        return _response;
+                    }
                 }
 
                 _response.Status = true;
                 _response.Title = "Created";
-                _response.Data = _mapper.Map<MenuDetailDTO>(_newMenuDetail);
+                _response.Data = list;
             }
             catch (Exception ex)
             {

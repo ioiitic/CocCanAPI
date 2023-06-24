@@ -1,5 +1,4 @@
-﻿using CocCanService.DTOs.Location;
-using CocCanService.DTOs.Menu;
+﻿using CocCanService.DTOs.Menu;
 using CocCanService.Services.Imp;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ namespace CocCanService.Services
     {
         Task<ServiceResponse<List<DTOs.Menu.MenuDTO>>> GetAllMenusAsync();
         Task<ServiceResponse<DTOs.Menu.MenuDTO>> CreateMenuAsync(CreateMenuDTO createMenuDTO);
-        Task<ServiceResponse<DTOs.Menu.MenuDTO>> UpdateMenuAsync(MenuDTO menuDTO);
+        Task<ServiceResponse<DTOs.Menu.MenuDTO>> UpdateMenuAsync(Guid id, UpdateMenuDTO updateMenuDTO);
         Task<ServiceResponse<DTOs.Menu.MenuDTO>> GetMenuByIdAsync(Guid id);
         Task<ServiceResponse<string>> SoftDeleteMenuAsync(Guid id);
     }

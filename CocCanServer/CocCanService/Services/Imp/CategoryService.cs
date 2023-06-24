@@ -151,12 +151,12 @@ namespace CocCanService.Services.Imp
             return _response;
         }
 
-        public async Task<ServiceResponse<CategoryDTO>> UpdateCategoryAsync(CategoryDTO categoryDTO)
+        public async Task<ServiceResponse<CategoryDTO>> UpdateCategoryAsync(Guid id, UpdateCategoryDTO updateCategoryDTO)
         {
             ServiceResponse<CategoryDTO> _response = new();
             try
             {
-                var _existingCategory = await _categoryRepo.GetCategoryByGUIDAsync(categoryDTO.Id);
+                var _existingCategory = await _categoryRepo.GetCategoryByGUIDAsync(id);
 
                 if (_existingCategory == null)
                 {
@@ -167,7 +167,7 @@ namespace CocCanService.Services.Imp
                     return _response;
                 }
 
-                _existingCategory.Name = categoryDTO.Name;
+                _existingCategory = _mapper.Map<Category>(updateCategoryDTO);
 
                 if (!await _categoryRepo.UpdateCategoryAsync(_existingCategory))
                 {

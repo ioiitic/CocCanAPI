@@ -13,7 +13,7 @@ namespace CocCanService.Services
     {
         Task<ServiceResponse<List<DTOs.Category.CategoryDTO>>> GetAllCategoriesAsync();
         Task<ServiceResponse<DTOs.Category.CategoryDTO>> CreateCategoryAsync(CreateCategoryDTO createCategoryDTO);
-        Task<ServiceResponse<DTOs.Category.CategoryDTO>> UpdateCategoryAsync(CategoryDTO categoryDTO);
+        Task<ServiceResponse<DTOs.Category.CategoryDTO>> UpdateCategoryAsync(Guid id, UpdateCategoryDTO updateCategoryDTO);
         Task<ServiceResponse<DTOs.Category.CategoryDTO>> GetCategoryByIdAsync(Guid id);
         Task<ServiceResponse<string>> SoftDeleteCategoryAsync(Guid id);
     }

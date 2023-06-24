@@ -90,11 +90,7 @@ namespace Repository.Entities
             {
                 entity.ToTable("Customer");
 
-<<<<<<< HEAD
-                entity.HasIndex(e => e.Email, "UQ__Customer__A9D10534DAA231B2")
-=======
-                entity.HasIndex(e => e.Email, "UQ__Customer__A9D1053449F6FE6E")
->>>>>>> NT2
+                entity.HasIndex(e => e.Email, "UQ__Customer__A9D10534683FDD45")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
@@ -152,6 +148,10 @@ namespace Repository.Entities
                 entity.ToTable("Menu");
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<MenuDetail>(entity =>
@@ -223,15 +223,6 @@ namespace Repository.Entities
                     .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ORDERDETAIL_ORDERID");
-<<<<<<< HEAD
-=======
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.OrderDetails)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ORDERDETAIL_PRODUCTID");
->>>>>>> NT2
             });
 
             modelBuilder.Entity<PickUpSpot>(entity =>
@@ -313,6 +304,10 @@ namespace Repository.Entities
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
+                entity.Property(e => e.Address)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
                 entity.Property(e => e.Image)
                     .IsRequired()
                     .HasMaxLength(200);
@@ -333,17 +328,10 @@ namespace Repository.Entities
             {
                 entity.ToTable("Staff");
 
-<<<<<<< HEAD
-                entity.HasIndex(e => e.Username, "UQ__Staff__536C85E432E55133")
+                entity.HasIndex(e => e.Username, "UQ__Staff__536C85E428041C3B")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Email, "UQ__Staff__A9D10534EB207A4C")
-=======
-                entity.HasIndex(e => e.Username, "UQ__Staff__536C85E43B85036B")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.Email, "UQ__Staff__A9D10534F6581A5C")
->>>>>>> NT2
+                entity.HasIndex(e => e.Email, "UQ__Staff__A9D105349F84025F")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");

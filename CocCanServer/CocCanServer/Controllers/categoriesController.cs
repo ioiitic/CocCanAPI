@@ -69,15 +69,14 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CategoryDTO categoryDTO)
+        public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] UpdateCategoryDTO updateCategoryDTO)
         {
-            if (categoryDTO == null || categoryDTO.Id != id)
+            if (updateCategoryDTO == null)
             {
                 return BadRequest(ModelState);
             }
 
-
-            var _updateCategory = await _categoryService.UpdateCategoryAsync(categoryDTO);
+            var _updateCategory = await _categoryService.UpdateCategoryAsync(id, updateCategoryDTO);
 
             if (_updateCategory.Status == false && _updateCategory.Title == "Error")
             {

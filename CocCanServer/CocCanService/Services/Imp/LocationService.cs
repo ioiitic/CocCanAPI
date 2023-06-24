@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CocCanService.DTOs.Category;
 using CocCanService.DTOs.Location;
 using CocCanService.DTOs.Store;
 using Repository.Entities;
@@ -27,13 +28,7 @@ namespace CocCanService.Services.Imp
             ServiceResponse<LocationDTO> _response = new();
             try
             {
-                Repository.Entities.Location _newLocation = new()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = createLocationDTO.Name,
-                    Address = createLocationDTO.Address,
-                    Status = createLocationDTO.Status
-                };
+                var _newLocation = _mapper.Map<Location>(createLocationDTO);
 
                 if (!await _locationRepo.CreateLocationAsync(_newLocation))
                 {
@@ -173,9 +168,7 @@ namespace CocCanService.Services.Imp
                     return _response;
                 }
 
-                _existingLocation.Name = locationDTO.Name;
-                _existingLocation.Address = locationDTO.Address;
-                _existingLocation.Status = locationDTO.Status;
+                _existingLocation = _mapper.Map<Location>(locationDTO);
 
                 if (!await _locationRepo.UpdateLocationAsync(_existingLocation))
                 {

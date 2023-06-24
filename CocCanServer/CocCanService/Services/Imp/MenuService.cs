@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CocCanService.DTOs.Menu;
+using CocCanService.DTOs.Store;
 using Repository.Entities;
 using Repository.repositories;
 using System;
@@ -26,11 +27,7 @@ namespace CocCanService.Services.Imp
             ServiceResponse<MenuDTO> _response = new();
             try
             {
-                Repository.Entities.Menu _newMenu = new()
-                {
-                    Id = Guid.NewGuid(),
-                    Status = createMenuDTO.Status
-                };
+                var _newMenu = _mapper.Map<Menu>(createMenuDTO);
 
                 if (!await _menuRepo.CreateMenuAsync(_newMenu))
                 {
@@ -154,12 +151,12 @@ namespace CocCanService.Services.Imp
             return _response;
         }
 
-        public async Task<ServiceResponse<MenuDTO>> UpdateMenuAsync(MenuDTO menuDTO)
+        public async Task<ServiceResponse<MenuDTO>> UpdateMenuAsync(Guid id, UpdateMenuDTO updateMenuDTO)
         {
             ServiceResponse<MenuDTO> _response = new();
             try
             {
-                var _existingMenu = await _menuRepo.GetMenuByGUIDAsync(menuDTO.Id);
+                var _existingMenu = await _menuRepo.GetMenuByGUIDAsync(id);
 
                 if (_existingMenu == null)
                 {
@@ -169,7 +166,8 @@ namespace CocCanService.Services.Imp
                     _response.Data = null;
                     return _response;
                 }
-                _existingMenu.Status = menuDTO.Status;
+
+                _existingMenu = _mapper.Map<Menu>(updateMenuDTO);
 
                 if (!await _menuRepo.UpdateMenuAsync(_existingMenu))
                 {

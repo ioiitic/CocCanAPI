@@ -11,8 +11,8 @@ namespace CocCanService.Services
     public interface IOrderDetailService
     {
         Task<ServiceResponse<List<DTOs.OrderDetail.OrderDetailDTO>>> GetAllOrderDetailsAsync();
-        Task<ServiceResponse<DTOs.OrderDetail.OrderDetailDTO>> CreateOrderDetailAsync(Guid oderID, List<CreateOrderDetailDTO> createOrderDetailDTOList);
-        Task<ServiceResponse<DTOs.OrderDetail.OrderDetailDTO>> UpdateOrderDetailAsync(OrderDetailDTO orderDetailDTO);
+        Task<ServiceResponse<List<CreateOrderDetailDTO>>> CreateOrderDetailAsync(Guid orderID, List<CreateOrderDetailDTO> createOrderDetailDTOList);
+        Task<ServiceResponse<DTOs.OrderDetail.OrderDetailDTO>> UpdateOrderDetailAsync(Guid id, UpdateOrderDetailDTO updateOrderDetailDTO);
         Task<ServiceResponse<DTOs.OrderDetail.OrderDetailDTO>> GetOrderDetailByIdAsync(Guid id);
         Task<ServiceResponse<string>> SoftDeleteOrderDetailAsync(Guid id);
     }

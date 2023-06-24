@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CocCanService.DTOs.OrderDetail;
+using Repository.Entities;
 using Repository.repositories;
 using System;
 using System.Collections.Generic;
@@ -20,22 +21,15 @@ namespace CocCanService.Services.Imp
             this._mapper = mapper;
         }
 
-        public async Task<ServiceResponse<OrderDetailDTO>> CreateOrderDetailAsync(Guid orderID, List<CreateOrderDetailDTO> createOrderDetailDTOList)
+        public async Task<ServiceResponse<List<CreateOrderDetailDTO>>> CreateOrderDetailAsync(Guid orderID, List<CreateOrderDetailDTO> createOrderDetailDTOList)
         {
-            ServiceResponse<OrderDetailDTO> _response = new();
+            ServiceResponse<List<CreateOrderDetailDTO>> _response = new();
             try
             {
-                foreach (var orderDetailDto in createOrderDetailDTOList)
+                List<CreateOrderDetailDTO> list = new List<CreateOrderDetailDTO>();
+                foreach (var orderDetailDTO in createOrderDetailDTOList)
                 {
-                    Repository.Entities.OrderDetail _newOrderDetail = new()
-                    {
-                        Id = Guid.NewGuid(),
-                        ProductId = orderDetailDto.ProductId,
-                        OrderId = orderID,
-                        Quantity = orderDetailDto.Quantity,
-                        Status = 1
-                    };
-
+                    var _newOrderDetail = _mapper.Map<OrderDetail>(orderDetailDTO);
                     if (!await _orderDetailRepo.CreateOrderDetailAsync(_newOrderDetail))
                     {
                         _response.Status = false;
@@ -45,10 +39,12 @@ namespace CocCanService.Services.Imp
                         return _response;
                     }
 
-                    _response.Status = true;
-                    _response.Title = "Created";
-                    _response.Data = _mapper.Map<OrderDetailDTO>(_newOrderDetail);
+                    list.Add(orderDetailDTO);
                 }
+
+                _response.Status = true;
+                _response.Title = "Created";
+                _response.Data = list;
 
             }
             catch (Exception ex)
@@ -159,12 +155,12 @@ namespace CocCanService.Services.Imp
             return _response;
         }
 
-        public async Task<ServiceResponse<OrderDetailDTO>> UpdateOrderDetailAsync(OrderDetailDTO orderDetailDTO)
+        public async Task<ServiceResponse<OrderDetailDTO>> UpdateOrderDetailAsync(Guid id, UpdateOrderDetailDTO updateorderDetailDTO)
         {
             ServiceResponse<OrderDetailDTO> _response = new();
             try
             {
-                var _existingOrderDetail = await _orderDetailRepo.GetOrderDetailByGUIDAsync(orderDetailDTO.Id);
+                var _existingOrderDetail = await _orderDetailRepo.GetOrderDetailByGUIDAsync(id);
 
                 if (_existingOrderDetail == null)
                 {
@@ -174,9 +170,8 @@ namespace CocCanService.Services.Imp
                     _response.Data = null;
                     return _response;
                 }
-                _existingOrderDetail.ProductId = orderDetailDTO.ProductId;
-                _existingOrderDetail.OrderId = orderDetailDTO.OrderId;
-                _existingOrderDetail.Status = orderDetailDTO.Status;
+
+                _existingOrderDetail = _mapper.Map<OrderDetail>(updateorderDetailDTO);
 
                 if (!await _orderDetailRepo.UpdateOrderDetailAsync(_existingOrderDetail))
                 {

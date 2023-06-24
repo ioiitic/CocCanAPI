@@ -70,15 +70,9 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateMenu(Guid id, [FromBody] MenuDTO menuDTO)
+        public async Task<IActionResult> UpdateMenu(Guid id, [FromBody] UpdateMenuDTO updateMenuDTO)
         {
-            if (menuDTO == null || menuDTO.Id != id)
-            {
-                return BadRequest(ModelState);
-            }
-
-
-            var _updateMenu = await _menuService.UpdateMenuAsync(menuDTO);
+            var _updateMenu = await _menuService.UpdateMenuAsync(id, updateMenuDTO);
 
             if (_updateMenu.Status == false && _updateMenu.Title == "RepoError")
             {

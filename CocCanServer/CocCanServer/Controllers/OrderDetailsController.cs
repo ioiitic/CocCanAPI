@@ -28,13 +28,13 @@ namespace CocCanAPI.Controllers
             return Ok(orderDetail);
         }
 
-        [HttpPost]
+        [HttpPost("{Guid:id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDetailDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<OrderDetailDTO>> Create(Guid orderID, [FromBody] List<CreateOrderDetailDTO> createOrderDetailDTOList)
+        public async Task<ActionResult<OrderDetailDTO>> Create(Guid id, [FromBody] List<CreateOrderDetailDTO> createOrderDetailDTOList)
         {
             if (createOrderDetailDTOList == null)
             {
@@ -43,7 +43,7 @@ namespace CocCanAPI.Controllers
 
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-            var _newOrderDetail = await _orderDetailService.CreateOrderDetailAsync(orderID, createOrderDetailDTOList);
+            var _newOrderDetail = await _orderDetailService.CreateOrderDetailAsync(id, createOrderDetailDTOList);
 
             if (_newOrderDetail.Status == false && _newOrderDetail.Title == "RepoError")
             {
@@ -70,15 +70,9 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateOrderDetail(Guid id, [FromBody] OrderDetailDTO orderDetailDTO)
+        public async Task<IActionResult> UpdateOrderDetail(Guid id, [FromBody] UpdateOrderDetailDTO updateOrderDetailDTO)
         {
-            if (orderDetailDTO == null || orderDetailDTO.Id != id)
-            {
-                return BadRequest(ModelState);
-            }
-
-
-            var _updateOrderDetail = await _orderDetailService.UpdateOrderDetailAsync(orderDetailDTO);
+            var _updateOrderDetail = await _orderDetailService.UpdateOrderDetailAsync(id, updateOrderDetailDTO);
 
             if (_updateOrderDetail.Status == false && _updateOrderDetail.Title == "RepoError")
             {

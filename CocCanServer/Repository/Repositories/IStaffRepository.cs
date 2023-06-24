@@ -9,7 +9,7 @@ namespace Repository.repositories
 {
     public interface IStaffRepository
     {
-        Task<ICollection<Staff>> GetAllStaffsAsync();
+        Task<ICollection<Repository.Entities.Staff>> GetAllStaffsAsync();
         Task<Staff> CheckStaffLoginsAsync(string Email, string Password);
         Task<bool> CreateStaffAsync(Staff staff);
         Task<bool> UpdateStaffAsync(Staff staff);
