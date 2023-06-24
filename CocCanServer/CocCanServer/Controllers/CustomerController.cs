@@ -9,8 +9,6 @@ using System;
 
 namespace CocCanAPI.Controllers
 {
-    public class CustomerController
-    {
         [Route("api/[controller]")]
         [ApiController]
         public class CustomersController : ControllerBase
@@ -115,5 +113,5 @@ namespace CocCanAPI.Controllers
 
             }
         }
-    }
+    
 }
