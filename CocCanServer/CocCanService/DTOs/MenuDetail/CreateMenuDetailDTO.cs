@@ -9,7 +9,6 @@ namespace CocCanService.DTOs.MenuDetail
     public class CreateMenuDetailDTO
     {
         public decimal Price { get; set; }
-        public Guid MenuId { get; set; }
         public Guid ProductId { get; set; }
 
     }
