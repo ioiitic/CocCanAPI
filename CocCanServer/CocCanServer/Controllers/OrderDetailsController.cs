@@ -28,7 +28,7 @@ namespace CocCanAPI.Controllers
             return Ok(orderDetail);
         }
 
-        [HttpPost("{Guid:id}")]
+        [HttpPost("{id:Guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDetailDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
