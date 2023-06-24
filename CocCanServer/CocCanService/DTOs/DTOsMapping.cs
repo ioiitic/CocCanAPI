@@ -369,12 +369,6 @@ namespace CocCanService.DTOs
                 .ForMember(
                     des => des.Status,
                     act => act.UseValue(1));
-            //MenuDetail
-            CreateMap<Repository.Entities.MenuDetail, MenuDetailDTO>().ReverseMap();
-            CreateMap<CreateStoreDTO, Repository.Entities.MenuDetail>()
-                .ForMember(
-                    des => des.Id,
-                    act => Guid.NewGuid());
 
 
             //CreateMap<UpdateStoreDTO, Repository.Entities.Store>()

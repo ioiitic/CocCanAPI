@@ -28,7 +28,7 @@ namespace CocCanAPI.Controllers
             return Ok(menuDetail);
         }
 
-        [HttpPost("{Guid:id}")]
+        [HttpPost("{id:Guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MenuDetailDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found

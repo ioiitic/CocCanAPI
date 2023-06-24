@@ -9,8 +9,8 @@ namespace CocCanService.DTOs.Location
 {
     public class LocationDTO
     {
-        [Required(ErrorMessage = "[Fullname] field is required!")]
-        [MaxLength(100, ErrorMessage = "[Fullname] field is 100 characters max length!")]
+        [Required(ErrorMessage = "[Id] field is required!")]
+        [MaxLength(100, ErrorMessage = "[Id] field is 100 characters max length!")]
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "[Name] field is required!")]
