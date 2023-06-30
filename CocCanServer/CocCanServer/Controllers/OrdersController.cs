@@ -24,6 +24,8 @@ namespace CocCanAPI.Controllers
         public async Task<IActionResult> GetAll()
         {
             var order = await _orderService.GetAllOrdersAsync();
+            HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
+            HttpContext.Response.Headers.Add("Content-Range", "stores 0-1/2");
             return Ok(order);
         }
 

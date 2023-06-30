@@ -23,7 +23,7 @@ namespace CocCanAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<TimeSlotDTO>))]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
             var _TimeSlots = await _TimeSlotService.GetAllTimeSlotsAsync();
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");

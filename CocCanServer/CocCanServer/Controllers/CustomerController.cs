@@ -24,7 +24,9 @@ namespace CocCanAPI.Controllers
             [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CustomerDTO>))]
             public async Task<IActionResult> GetAll(string filter, string range, string sort)
             {
-                var Customers = await _CustomerService.GetAllCustomersAsync();
+            HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
+            HttpContext.Response.Headers.Add("Content-Range", "stores 0-1/2");
+            var Customers = await _CustomerService.GetAllCustomersAsync();
                 if (Customers.Status == false && Customers.Title == "Error")
                 {
                     foreach (string error in Customers.ErrorMessages)

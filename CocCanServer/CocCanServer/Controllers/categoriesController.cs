@@ -25,6 +25,8 @@ namespace CocCanAPI.Controllers
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
             var categories = await _categoryService.GetAllCategoriesAsync();
+            HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
+            HttpContext.Response.Headers.Add("Content-Range", "stores 0-1/2");
             if (categories.Status == false && categories.Title == "Error")
             {
                 foreach (string error in categories.ErrorMessages)
