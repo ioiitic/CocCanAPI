@@ -26,6 +26,8 @@ namespace CocCanAPI.Controllers
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
             var companies = await _productService.GetAllProductsAsync();
+            HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
+            HttpContext.Response.Headers.Add("Content-Range", "products 0-1/2");
             return Ok(companies);
         }
         [HttpPost]

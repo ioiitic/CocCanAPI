@@ -21,11 +21,11 @@ namespace CocCanAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LocationDTO>))]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
             var locations = await _locationService.GetAllLocationsAsync();
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
-            HttpContext.Response.Headers.Add("Content-Range", "stores 0-1/2");
+            HttpContext.Response.Headers.Add("Content-Range", "locations 0-1/2");
             return Ok(locations);
         }
 

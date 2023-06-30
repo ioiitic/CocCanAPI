@@ -22,11 +22,11 @@ namespace CocCanAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MenuDetailDTO>))]
-        public async Task<IActionResult> GetAll(string filter)
+        public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
             var menuDetail = await _menuDetailService.GetAllMenuDetailsAsync(filter);
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
-            HttpContext.Response.Headers.Add("Content-Range", "stores 0-1/2");
+            HttpContext.Response.Headers.Add("Content-Range", "menuDetails 0-1/2");
 
             return Ok(menuDetail);
         }

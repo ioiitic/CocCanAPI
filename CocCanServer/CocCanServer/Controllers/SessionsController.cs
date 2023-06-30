@@ -26,11 +26,11 @@ namespace CocCanAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Session>))]
-        public async Task<IActionResult> GetAll(string filter)
+        public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
             var Sessions = await _SessionService.GetAllSessionsAsync(filter);
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
-            HttpContext.Response.Headers.Add("Content-Range", "stores 0-1/2");
+            HttpContext.Response.Headers.Add("Content-Range", "sessions 0-1/2");
             return Ok(Sessions);
         }
         [HttpPost]

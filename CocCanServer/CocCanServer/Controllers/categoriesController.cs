@@ -26,7 +26,7 @@ namespace CocCanAPI.Controllers
         {
             var categories = await _categoryService.GetAllCategoriesAsync();
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
-            HttpContext.Response.Headers.Add("Content-Range", "stores 0-1/2");
+            HttpContext.Response.Headers.Add("Content-Range", "categories 0-1/2");
             if (categories.Status == false && categories.Title == "Error")
             {
                 foreach (string error in categories.ErrorMessages)

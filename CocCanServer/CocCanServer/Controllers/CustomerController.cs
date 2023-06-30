@@ -25,7 +25,7 @@ namespace CocCanAPI.Controllers
             public async Task<IActionResult> GetAll(string filter, string range, string sort)
             {
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
-            HttpContext.Response.Headers.Add("Content-Range", "stores 0-1/2");
+            HttpContext.Response.Headers.Add("Content-Range", "customers 0-1/2");
             var Customers = await _CustomerService.GetAllCustomersAsync();
                 if (Customers.Status == false && Customers.Title == "Error")
                 {
