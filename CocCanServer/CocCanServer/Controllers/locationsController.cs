@@ -65,7 +65,7 @@ namespace CocCanAPI.Controllers
             return Ok(_newLocation);
         }
 
-        [HttpPatch("{id:Guid}", Name = "UpdateLocation")]
+        [HttpPut("{id:Guid}", Name = "UpdateLocation")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found

@@ -64,7 +64,7 @@ namespace CocCanAPI.Controllers
                 return Ok(_newCustomer.Data);
             }
 
-            [HttpPatch("{id:Guid}", Name = "UpdateCustomer")]
+            [HttpPut("{id:Guid}", Name = "UpdateCustomer")]
             [ProducesResponseType(StatusCodes.Status204NoContent)]
             [ProducesResponseType(StatusCodes.Status400BadRequest)]
             [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found

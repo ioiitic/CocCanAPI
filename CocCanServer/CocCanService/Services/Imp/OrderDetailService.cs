@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CocCanService.DTOs.Menu;
 using CocCanService.DTOs.OrderDetail;
 using Repository.Entities;
 using Repository.repositories;
@@ -21,30 +22,25 @@ namespace CocCanService.Services.Imp
             this._mapper = mapper;
         }
 
-        public async Task<ServiceResponse<List<CreateOrderDetailDTO>>> CreateOrderDetailAsync(Guid orderID, List<CreateOrderDetailDTO> createOrderDetailDTOList)
+        public async Task<ServiceResponse<OrderDetailDTO>> CreateOrderDetailAsync(CreateOrderDetailDTO createOrderDetailDTO)
         {
-            ServiceResponse<List<CreateOrderDetailDTO>> _response = new();
+            ServiceResponse<OrderDetailDTO> _response = new();
             try
             {
-                List<CreateOrderDetailDTO> list = new List<CreateOrderDetailDTO>();
-                foreach (var orderDetailDTO in createOrderDetailDTOList)
+                var _newOrderDetail = _mapper.Map<OrderDetail>(createOrderDetailDTO);
+                if (!await _orderDetailRepo.CreateOrderDetailAsync(_newOrderDetail))
                 {
-                    var _newOrderDetail = _mapper.Map<OrderDetail>(orderDetailDTO);
-                    if (!await _orderDetailRepo.CreateOrderDetailAsync(_newOrderDetail))
-                    {
-                        _response.Status = false;
-                        _response.Title = "Error";
-                        _response.ErrorMessages.Add("Some error occur in Category Repository when trying to create store!");
-                        _response.Data = null;
-                        return _response;
-                    }
-
-                    list.Add(orderDetailDTO);
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Some error occur in Category Repository when trying to create store!");
+                    _response.Data = null;
+                    return _response;
                 }
+
 
                 _response.Status = true;
                 _response.Title = "Created";
-                _response.Data = list;
+                _response.Data = _mapper.Map<OrderDetailDTO>(_newOrderDetail);
 
             }
             catch (Exception ex)

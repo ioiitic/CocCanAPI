@@ -73,9 +73,10 @@ namespace Repository.repositories.imp
                                     p => p.Id,
                                     md => md.ProductId,
                                     (p, md) => p),
-                            s => s.Id,
-                            p => p.StoreId,
-                            (s, p) => s);
+                                s => s.Id,
+                                p => p.StoreId,
+                                (s, p) => s)
+                                .Distinct();
                             break;
                         case "menu":
                             _stores = _stores
@@ -88,9 +89,10 @@ namespace Repository.repositories.imp
                                     p => p.Id,
                                     md => md.ProductId,
                                     (p, md) => p),
-                            s => s.Id,
-                            p => p.StoreId,
-                            (s, p) => s);
+                                s => s.Id,
+                                p => p.StoreId,
+                                (s, p) => s)
+                                .Distinct();
                             break;
                         case "name":
                             _stores = _stores.Where(s => filterIte.Value.Any(fi => s.Name == fi));
@@ -100,7 +102,9 @@ namespace Repository.repositories.imp
             return await _stores
                 .ToListAsync();
         }
+        //{"session":"d411a66c-0315-4d24-b659-100891ce2628"}
 
+        //a6cef7e2-96e5-4110-99a6-05461a4ad5bc
         public async Task<Store> GetStoreByGUIDAsync(Guid id)
         {
             return await _dataContext.Stores

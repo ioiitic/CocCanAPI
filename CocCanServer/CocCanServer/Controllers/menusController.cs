@@ -65,7 +65,7 @@ namespace CocCanAPI.Controllers
             return Ok(_newMenu);
         }
 
-        [HttpPatch("{id:Guid}", Name = "UpdateMenu")]
+        [HttpPut("{id:Guid}", Name = "UpdateMenu")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
