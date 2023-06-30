@@ -22,29 +22,25 @@ namespace CocCanService.Services.Imp
             this._mapper = mapper;
         }
 
-        public async Task<ServiceResponse<List<CreateMenuDetailDTO>>> CreateMenuDetailAsync(Guid menuID, List<CreateMenuDetailDTO> createMenuDetailDTOList)
+        public async Task<ServiceResponse<MenuDetailDTO>> CreateMenuDetailAsync(CreateMenuDetailDTO createMenuDetailDTO)
         {
-            ServiceResponse<List<CreateMenuDetailDTO>> _response = new();
+            ServiceResponse<MenuDetailDTO> _response = new();
             try
             {
-                List<CreateMenuDetailDTO> list = new List<CreateMenuDetailDTO>();
-                foreach (var createMenuDetailDTO in  createMenuDetailDTOList)
-                {
-                    var _newMenuDetail = _mapper.Map<MenuDetail>(createMenuDetailDTO);
+                var _newMenuDetail = _mapper.Map<MenuDetail>(createMenuDetailDTO);
 
-                    if (!await _menuDetailRepo.CreateMenuDetailAsync(_newMenuDetail))
-                    {
-                        _response.Status = false;
-                        _response.Title = "Error";
-                        _response.ErrorMessages.Add("Some error occur in Category Repository when trying to create store!");
-                        _response.Data = null;
-                        return _response;
-                    }
+                if (!await _menuDetailRepo.CreateMenuDetailAsync(_newMenuDetail))
+                {
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Some error occur in Category Repository when trying to create store!");
+                    _response.Data = null;
+                    return _response;
                 }
 
                 _response.Status = true;
                 _response.Title = "Created";
-                _response.Data = list;
+                _response.Data = _mapper.Map<MenuDetailDTO>(_newMenuDetail);
             }
             catch (Exception ex)
             {
@@ -56,12 +52,19 @@ namespace CocCanService.Services.Imp
             return _response;
         }
 
-        public async Task<ServiceResponse<List<MenuDetailDTO>>> GetAllMenuDetailsAsync()
+        public async Task<ServiceResponse<List<MenuDetailDTO>>> GetAllMenuDetailsAsync(string filter)
         {
+            //{"session":"d411a66c-0315-4d24-b659-100891ce2628","store":"a6cef7e2-96e5-4110-99a6-05461a4ad5bc"}
             ServiceResponse<List<MenuDetailDTO>> _response = new();
             try
             {
-                var _MenuDetailList = await _menuDetailRepo.GetAllMenuDetailsAsync();
+                Dictionary<string, string> _filter = null;
+
+                if (filter != null)
+                    _filter = System.Text.Json.JsonSerializer
+                        .Deserialize<Dictionary<string, string>>(filter);
+
+                var _MenuDetailList = await _menuDetailRepo.GetAllMenuDetailsAsync(_filter);
 
                 var _MenuDetailListDTO = new List<MenuDetailDTO>();
 
@@ -172,7 +175,6 @@ namespace CocCanService.Services.Imp
                     return _response;
                 }
                 _existingMenuDetail.Price = menuDetailDTO.Price;
-                _existingMenuDetail.ProductId = menuDetailDTO.ProductId;
                 _existingMenuDetail.MenuId = menuDetailDTO.MenuId;
 
                 if (!await _menuDetailRepo.UpdateMenuDetailAsync(_existingMenuDetail))

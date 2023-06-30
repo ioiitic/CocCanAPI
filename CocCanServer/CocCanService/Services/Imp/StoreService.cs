@@ -120,6 +120,8 @@ namespace CocCanService.Services.Imp
             ServiceResponse<StoreDTO> _response = new ServiceResponse<StoreDTO>();
             try
             {
+                Dictionary<string, string> _filter = null;
+
                 var _StoreList = await _storeRepo.GetStoreByGUIDAsync(id);
 
                 if (_StoreList == null)

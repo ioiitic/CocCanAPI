@@ -63,7 +63,7 @@ namespace CocCanAPI.Controllers
             return Ok(_newPickUpSpot);
         }
 
-        [HttpPatch("{id:Guid}", Name = "UpdatePickUpSpot")]
+        [HttpPut("{id:Guid}", Name = "UpdatePickUpSpot")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found

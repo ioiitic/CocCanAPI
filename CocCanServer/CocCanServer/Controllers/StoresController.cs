@@ -165,7 +165,7 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<StoreDTO>> GetByGUID(Guid id)
+        public async Task<ActionResult<StoreDTO>> GetByGUID(Guid id, string filter)
         {
             var _store = await _storeService.GetStoreByIdAsync(id);
 

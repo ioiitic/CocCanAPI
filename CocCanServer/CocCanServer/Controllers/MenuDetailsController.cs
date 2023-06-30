@@ -22,19 +22,22 @@ namespace CocCanAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MenuDetailDTO>))]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(string filter)
         {
-            var menuDetail = await _menuDetailService.GetAllMenuDetailsAsync();
+            var menuDetail = await _menuDetailService.GetAllMenuDetailsAsync(filter);
+            HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
+            HttpContext.Response.Headers.Add("Content-Range", "stores 0-1/2");
+
             return Ok(menuDetail);
         }
 
-        [HttpPost("{id:Guid}")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MenuDetailDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<MenuDetailDTO>> CreateMenuDetail(Guid id, [FromBody] List<CreateMenuDetailDTO> createMenuDetailDTO)
+        public async Task<ActionResult<MenuDetailDTO>> CreateMenuDetail([FromBody] CreateMenuDetailDTO createMenuDetailDTO)
         {
             if (createMenuDetailDTO == null)
             {
@@ -43,7 +46,7 @@ namespace CocCanAPI.Controllers
 
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-            var _newMenuDetail = await _menuDetailService.CreateMenuDetailAsync(id, createMenuDetailDTO);
+            var _newMenuDetail = await _menuDetailService.CreateMenuDetailAsync(createMenuDetailDTO);
 
             if (_newMenuDetail.Status == false && _newMenuDetail.Title == "RepoError")
             {
@@ -65,7 +68,7 @@ namespace CocCanAPI.Controllers
             return Ok(_newMenuDetail);
         }
 
-        [HttpPatch("{id:Guid}", Name = "UpdateMenuDetail")]
+        [HttpPut("{id:Guid}", Name = "UpdateMenuDetail")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found

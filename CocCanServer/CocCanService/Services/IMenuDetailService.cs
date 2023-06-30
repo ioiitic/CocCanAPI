@@ -12,8 +12,8 @@ namespace CocCanService.Services
 {
     public interface IMenuDetailService 
     {
-        Task<ServiceResponse<List<DTOs.MenuDetail.MenuDetailDTO>>> GetAllMenuDetailsAsync();
-        Task<ServiceResponse<List<CreateMenuDetailDTO>>> CreateMenuDetailAsync(Guid menuID, List<CreateMenuDetailDTO> createMenuDetailDTOList);
+        Task<ServiceResponse<List<DTOs.MenuDetail.MenuDetailDTO>>> GetAllMenuDetailsAsync(string filter);
+        Task<ServiceResponse<MenuDetailDTO>> CreateMenuDetailAsync(CreateMenuDetailDTO createMenuDetailDTO);
         Task<ServiceResponse<DTOs.MenuDetail.MenuDetailDTO>> UpdateMenuDetailAsync(MenuDetailDTO menuDetailDTO);
         Task<ServiceResponse<DTOs.MenuDetail.MenuDetailDTO>> GetMenuDetailByIdAsync(Guid id);
         Task<ServiceResponse<string>> HardDeleteMenuDetailAsync(Guid id);

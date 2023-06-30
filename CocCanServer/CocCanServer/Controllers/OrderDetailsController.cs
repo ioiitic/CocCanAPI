@@ -28,13 +28,13 @@ namespace CocCanAPI.Controllers
             return Ok(orderDetail);
         }
 
-        [HttpPost("{id:Guid}")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDetailDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<OrderDetailDTO>> Create(Guid id, [FromBody] List<CreateOrderDetailDTO> createOrderDetailDTOList)
+        public async Task<ActionResult<OrderDetailDTO>> Create([FromBody] CreateOrderDetailDTO createOrderDetailDTOList)
         {
             if (createOrderDetailDTOList == null)
             {
@@ -43,7 +43,7 @@ namespace CocCanAPI.Controllers
 
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-            var _newOrderDetail = await _orderDetailService.CreateOrderDetailAsync(id, createOrderDetailDTOList);
+            var _newOrderDetail = await _orderDetailService.CreateOrderDetailAsync(createOrderDetailDTOList);
 
             if (_newOrderDetail.Status == false && _newOrderDetail.Title == "RepoError")
             {
@@ -65,7 +65,7 @@ namespace CocCanAPI.Controllers
             return Ok(_newOrderDetail);
         }
 
-        [HttpPatch("{id:Guid}", Name = "UpdateOrderDetail")]
+        [HttpPut("{id:Guid}", Name = "UpdateOrderDetail")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
