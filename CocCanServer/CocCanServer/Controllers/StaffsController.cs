@@ -1,5 +1,6 @@
 ﻿using CocCanService.DTOs.Staff;
 using CocCanService.Services;
+using CocCanService.Services.Imp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Repository.repositories;
@@ -20,13 +21,13 @@ namespace CocCanAPI.Controllers
             _staffService = staffService;
         }
 
-        //[HttpGet]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StaffDTO>))]
-        //public async Task<IActionResult> GetAll()
-        //{
-        //    var companies = await _staffService.GetAllStaffsAsync();
-        //    return Ok(companies);
-        //}
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StaffDTO>))]
+        public async Task<IActionResult> GetAll()
+        {
+            var staffs = await _staffService.GetAllStaffsAsync();
+            return Ok(staffs);
+        }
 
         //[HttpPost("Authen")]
         //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StaffDTO))]
@@ -50,78 +51,109 @@ namespace CocCanAPI.Controllers
 
         //}
 
-        //[HttpPost]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StaffDTO))]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[ProducesDefaultResponseType]
-        //public async Task<ActionResult<StaffDTO>> CreateStaff([FromBody] CreateStaffDTO createStaffDTO)
-        //{
-        //    if (createStaffDTO == null)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StaffDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<StaffDTO>> CreateStaff([FromBody] CreateStaffDTO createStaffDTO)
+        {
+            if (createStaffDTO == null)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    if (!ModelState.IsValid) { return BadRequest(ModelState); }
+            if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-        //    var _newStaff = await _staffService.CreateStaffAsync(createStaffDTO);
+            var _newStaff = await _staffService.CreateStaffAsync(createStaffDTO);
 
-        //    if (_newStaff.Success == false && _newStaff.Message == "Exist")
-        //    {
-        //        return Ok(_newStaff);
-        //    }
-
-
-        //    if (_newStaff.Success == false && _newStaff.Message == "RepoError")
-        //    {
-        //        ModelState.AddModelError("", $"Some thing went wrong in respository layer when adding staff {createStaffDTO}");
-        //        return StatusCode(500, ModelState);
-        //    }
-
-        //    if (_newStaff.Success == false && _newStaff.Message == "Error")
-        //    {
-        //        ModelState.AddModelError("", $"Some thing went wrong in service layer when adding staff {createStaffDTO}");
-        //        return StatusCode(500, ModelState);
-        //    }
-
-        //    //Return new company created
-        //    return Ok(_newStaff);
-        //}
-        
-        //[HttpPatch("{id:Guid}", Name = "UpdateStaff")]
-        //[ProducesResponseType(StatusCodes.Status204NoContent)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<IActionResult> UpdateStaff(Guid id, [FromBody] StaffDTO staffDTO)
-        //{
-        //    if (staffDTO == null || staffDTO.Id != id)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+            if (_newStaff.Status == false && _newStaff.Title == "Exist")
+            {
+                return Ok(_newStaff);
+            }
 
 
-        //    var _updateCompany = await _staffService.UpdateStaffAsync(staffDTO);
+            if (_newStaff.Status == false && _newStaff.Title == "RepoError")
+            {
+                ModelState.AddModelError("", $"Some thing went wrong in respository layer when adding staff {createStaffDTO}");
+                return StatusCode(500, ModelState);
+            }
 
-        //    if (_updateCompany.Success == false && _updateCompany.Message == "NotFound")
-        //    {
-        //        return Ok(_updateCompany);
-        //    }
+            if (_newStaff.Status == false && _newStaff.Title == "Error")
+            {   
+                ModelState.AddModelError("", $"Some thing went wrong in service layer when adding staff {createStaffDTO}");
+                return StatusCode(500, ModelState);
+            }
 
-        //    if (_updateCompany.Success == false && _updateCompany.Message == "RepoError")
-        //    {
-        //        ModelState.AddModelError("", $"Some thing went wrong in respository layer when updating company {staffDTO}");
-        //        return StatusCode(500, ModelState);
-        //    }
+            //Return new Staff created
+            return Ok(_newStaff);
+        }
 
-        //    if (_updateCompany.Success == false && _updateCompany.Message == "Error")
-        //    {
-        //        ModelState.AddModelError("", $"Some thing went wrong in service layer when updating company {staffDTO}");
-        //        return StatusCode(500, ModelState);
-        //    } 
+        [HttpPatch("{id:Guid}", Name = "UpdateStaff")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateStaff(Guid id, [FromBody] StaffDTO staffDTO)
+        {
+            if (staffDTO == null || staffDTO.Id != id)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    return Ok(_updateCompany);
-        //}
+
+            var _updateStaff = await _staffService.UpdateStaffAsync(staffDTO);
+
+            if (_updateStaff.Status == false && _updateStaff.Title == "NotFound")
+            {
+                return Ok(_updateStaff);
+            }
+
+            if (_updateStaff.Status == false && _updateStaff.Title == "RepoError")
+            {
+                ModelState.AddModelError("", $"Some thing went wrong in respository layer when updating Staff {staffDTO}");
+                return StatusCode(500, ModelState);
+            }
+
+            if (_updateStaff.Status == false && _updateStaff.Title == "Error")
+            {
+                ModelState.AddModelError("", $"Some thing went wrong in service layer when updating Staff {staffDTO}");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok(_updateStaff);
+        }
+
+        [HttpDelete("{id:Guid}", Name = "DeleteStaff")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
+        [ProducesResponseType(StatusCodes.Status409Conflict)] //Can not be removed 
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteStaff(Guid id)
+        {
+
+            var _deleteStaff = await _staffService.SoftDeleteStaffAsync(id);
+
+            if (_deleteStaff.Status == false && _deleteStaff.Title == "RepoError")
+            {
+                foreach (string error in _deleteStaff.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
+
+            if (_deleteStaff.Status == false && _deleteStaff.Title == "Error")
+            {
+                foreach (string error in _deleteStaff.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+
+        }
     }
 }

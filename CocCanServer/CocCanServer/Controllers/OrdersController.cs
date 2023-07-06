@@ -28,6 +28,13 @@ namespace CocCanAPI.Controllers
             HttpContext.Response.Headers.Add("Content-Range", "orders 0-1/2");
             return Ok(order);
         }
+        [HttpGet("{id:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDTO>))]
+        public async Task<IActionResult> GetAllOrderByOrderId(Guid id)
+        {
+            var order = await _orderService.GetAllOrdersByCustomerIdAsync(id);
+            return Ok(order);
+        }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDTO))]

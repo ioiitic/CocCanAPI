@@ -30,6 +30,14 @@ namespace CocCanAPI.Controllers
             return Ok(orderDetail);
         }
 
+        [HttpGet("{id:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDetailDTO>))]
+        public async Task<IActionResult> GetOrderDetailByOrderIdAll(Guid id)
+        {
+            var orderDetail = await _orderDetailService.GetAllOrderDetailsByOrderIDAsync(id);
+            return Ok(orderDetail);
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDetailDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

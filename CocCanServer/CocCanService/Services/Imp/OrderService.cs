@@ -87,7 +87,36 @@ namespace CocCanService.Services.Imp
                 _response.Data = null;
             }
             return _response;
-        } 
+        }
+
+        public async Task<ServiceResponse<List<OrderDTO>>> GetAllOrdersByCustomerIdAsync(Guid customerId)
+        {
+            ServiceResponse<List<OrderDTO>> _response = new();
+            try
+            {
+                var _OrderList = await _orderRepo.GetAllOrdersByCustomerAsync(customerId);
+
+                var _OderListDTO = new List<OrderDTO>();
+
+                foreach (var item in _OrderList)
+                {
+                    _OderListDTO.Add(_mapper.Map<OrderDTO>(item));
+                }
+
+                _response.Status = true;
+                _response.Title = "Got all categories";
+                _response.Data = _OderListDTO;
+            }
+            catch (Exception ex)
+            {
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
+                _response.Data = null;
+            }
+            return _response;
+        }
+
         public async Task<ServiceResponse<OrderDTO>> GetOrderByIdAsync(Guid id)
         {
             ServiceResponse<OrderDTO> _response = new();

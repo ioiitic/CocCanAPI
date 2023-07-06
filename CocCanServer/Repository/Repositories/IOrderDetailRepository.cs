@@ -10,6 +10,7 @@ namespace Repository.repositories
     public interface IOrderDetailRepository
     {
         Task<ICollection<OrderDetail>> GetAllOrderDetailsAsync();
+        Task<ICollection<OrderDetail>> GetAllOrderDetailsByOrderIDAsync(Guid orderId);
         Task<bool> CreateOrderDetailAsync(OrderDetail orderDetail);
         Task<bool> UpdateOrderDetailAsync(OrderDetail orderDetail);
         Task<bool> SoftDeleteOrderDetailAsync(Guid id);
