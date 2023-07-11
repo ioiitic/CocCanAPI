@@ -64,7 +64,7 @@ namespace CocCanAPI.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok(_newMenu);
+            return Ok(_newMenu.Data);
         }
 
         [HttpPut("{id:Guid}", Name = "UpdateMenu")]
@@ -94,7 +94,7 @@ namespace CocCanAPI.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok(_updateMenu);
+            return Ok(_updateMenu.Data);
         }
 
         [HttpDelete("{id:Guid}", Name = "DeleteMenu")]

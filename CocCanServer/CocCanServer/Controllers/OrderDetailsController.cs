@@ -35,7 +35,7 @@ namespace CocCanAPI.Controllers
         public async Task<IActionResult> GetOrderDetailByOrderIdAll(Guid id)
         {
             var orderDetail = await _orderDetailService.GetAllOrderDetailsByOrderIDAsync(id);
-            return Ok(orderDetail);
+            return Ok(orderDetail.Data);
         }
 
         [HttpPost]
@@ -72,7 +72,7 @@ namespace CocCanAPI.Controllers
                 }
                 return StatusCode(500, ModelState);
             }
-            return Ok(_newOrderDetail);
+            return Ok(_newOrderDetail.Data);
         }
 
         [HttpPut("{id:Guid}", Name = "UpdateOrderDetail")]
@@ -101,7 +101,7 @@ namespace CocCanAPI.Controllers
                 }
                 return StatusCode(500, ModelState);
             }
-            return Ok(_updateOrderDetail);
+            return Ok(_updateOrderDetail.Data);
         }
 
         [HttpDelete("{id:Guid}", Name = "DeleteOrderDetail")]

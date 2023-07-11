@@ -87,7 +87,7 @@ namespace CocCanAPI.Controllers
             }
 
             //Return new Staff created
-            return Ok(_newStaff);
+            return Ok(_newStaff.Data);
         }
 
         [HttpPatch("{id:Guid}", Name = "UpdateStaff")]
@@ -122,7 +122,7 @@ namespace CocCanAPI.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok(_updateStaff);
+            return Ok(_updateStaff.Data);
         }
 
         [HttpDelete("{id:Guid}", Name = "DeleteStaff")]

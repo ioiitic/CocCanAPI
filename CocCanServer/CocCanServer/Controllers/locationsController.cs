@@ -64,7 +64,7 @@ namespace CocCanAPI.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok(_newLocation);
+            return Ok(_newLocation.Data);
         }
 
         [HttpPut("{id:Guid}", Name = "UpdateLocation")]
@@ -100,7 +100,7 @@ namespace CocCanAPI.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok(_updateLocation);
+            return Ok(_updateLocation.Data);
         }
 
         [HttpDelete("{id:Guid}", Name = "DeleteLocation")]

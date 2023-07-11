@@ -99,7 +99,7 @@ namespace CocCanAPI.Controllers
                 }
                 return StatusCode(500, ModelState);
             }
-            return Ok(_updateProduct);
+            return Ok(_updateProduct.Data);
         }
 
         [HttpGet("{id:Guid}")]
@@ -123,7 +123,7 @@ namespace CocCanAPI.Controllers
                 return NotFound();
             }
 
-            return Ok(product);
+            return Ok(product.Data);
         }
 
         [HttpDelete("{id:Guid}")]

@@ -89,7 +89,7 @@ namespace CocCanAPI.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok(_updateCategory);
+            return Ok(_updateCategory.Data);
         }
 
         [HttpDelete("{id:Guid}", Name = "DeleteCategory")]

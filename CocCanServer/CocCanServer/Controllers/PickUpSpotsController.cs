@@ -62,7 +62,7 @@ namespace CocCanAPI.Controllers
                 }
                 return StatusCode(500, ModelState);
             }
-            return Ok(_newPickUpSpot);
+            return Ok(_newPickUpSpot.Data);
         }
 
         [HttpPut("{id:Guid}", Name = "UpdatePickUpSpot")]
@@ -96,7 +96,7 @@ namespace CocCanAPI.Controllers
                 }
                 return StatusCode(500, ModelState);
             }
-            return Ok(_updatePickUpSpot);
+            return Ok(_updatePickUpSpot.Data);
         }
 
         [HttpDelete("{id:Guid}", Name = "DeletePickUpSpot")]
