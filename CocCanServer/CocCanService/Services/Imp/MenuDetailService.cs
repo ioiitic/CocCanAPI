@@ -58,11 +58,22 @@ namespace CocCanService.Services.Imp
             ServiceResponse<List<MenuDetailDTO>> _response = new();
             try
             {
-                Dictionary<string, string> _filter = null;
+                Dictionary<string, List<string>> _filter = null;
 
-                if (filter != null)
-                    _filter = System.Text.Json.JsonSerializer
+                try
+                {
+                    if (filter != null)
+                        _filter = System.Text.Json.JsonSerializer
+                            .Deserialize<Dictionary<string, List<string>>>(filter);
+                }
+                catch
+                {
+                    var raw = System.Text.Json.JsonSerializer
                         .Deserialize<Dictionary<string, string>>(filter);
+                    _filter = new Dictionary<string, List<string>>();
+                    foreach (var item in raw)
+                        _filter.Add(item.Key, new List<string>() { item.Value });
+                }
 
                 var _MenuDetailList = await _menuDetailRepo.GetAllMenuDetailsAsync(_filter);
 

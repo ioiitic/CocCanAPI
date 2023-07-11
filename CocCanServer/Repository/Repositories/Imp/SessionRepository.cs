@@ -28,7 +28,7 @@ namespace Repository.repositories.imp
                 _dataContext.Sessions
                 .Where(s => s.Status == 1);
 
-            if (filter != null)
+            if (filter != null && filter.ContainsKey("timeslot") && filter.ContainsKey("location"))
                 _sessions = _sessions
                     .Join(_dataContext.TimeSlots.Where(ts => ts.Id.ToString() == filter["timeslot"][0]),
                     s => s.TimeSlotId,

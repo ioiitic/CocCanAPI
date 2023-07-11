@@ -26,7 +26,7 @@ namespace CocCanAPI.Controllers
             var pickUpSpot = await _pickUpSpotService.GetAllPickUpSpotsAsync();
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "pickUpSpots 0-1/2");
-            return Ok(pickUpSpot);
+            return Ok(pickUpSpot.Data);
         }
 
         [HttpPost]

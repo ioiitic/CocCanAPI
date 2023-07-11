@@ -28,7 +28,7 @@ namespace CocCanAPI.Controllers
             var companies = await _productService.GetAllProductsAsync();
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "products 0-1/2");
-            return Ok(companies);
+            return Ok(companies.Data);
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDTO))]

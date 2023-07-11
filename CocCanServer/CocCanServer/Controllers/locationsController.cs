@@ -26,7 +26,7 @@ namespace CocCanAPI.Controllers
             var locations = await _locationService.GetAllLocationsAsync();
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "locations 0-1/2");
-            return Ok(locations);
+            return Ok(locations.Data);
         }
 
         [HttpPost]

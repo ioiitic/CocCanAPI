@@ -27,8 +27,15 @@ namespace CocCanAPI.Controllers
             var menuDetail = await _menuDetailService.GetAllMenuDetailsAsync(filter);
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "menuDetails 0-1/2");
-
-            return Ok(menuDetail);
+            if (menuDetail.Status == false && menuDetail.Title == "Error")
+            {
+                foreach (string error in menuDetail.ErrorMessages)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
+            return Ok(menuDetail.Data);
         }
 
         [HttpPost]

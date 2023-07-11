@@ -26,7 +26,7 @@ namespace CocCanAPI.Controllers
             var menu = await _menuService.GetAllMenusAsync();
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "menus 0-1/2");
-            return Ok(menu);
+            return Ok(menu.Data);
         }
 
         [HttpPost]

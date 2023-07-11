@@ -31,7 +31,7 @@ namespace CocCanAPI.Controllers
             var Sessions = await _SessionService.GetAllSessionsAsync(filter);
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "sessions 0-1/2");
-            return Ok(Sessions);
+            return Ok(Sessions.Data);
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SessionDTO))]

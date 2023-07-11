@@ -27,7 +27,7 @@ namespace CocCanAPI.Controllers
             var orderDetail = await _orderDetailService.GetAllOrderDetailsAsync();
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "orderDetails 0-1/2");
-            return Ok(orderDetail);
+            return Ok(orderDetail.Data);
         }
 
         [HttpPost]
