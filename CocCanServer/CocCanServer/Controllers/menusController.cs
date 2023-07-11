@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using CocCanService.DTOs.Menu;
+using CocCanService.DTOs.OrderDetail;
+using CocCanService.Services.Imp;
 
 namespace CocCanAPI.Controllers
 {
@@ -27,6 +29,14 @@ namespace CocCanAPI.Controllers
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "menus 0-1/2");
             return Ok(menu.Data);
+        }
+
+        [HttpGet("{id:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MenuDTO>))]
+        public async Task<IActionResult> GetMenuByIdAll(Guid id)
+        {
+            var orderDetail = await _menuService.GetMenuByIdAsync(id);
+            return Ok(orderDetail.Data);
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
-﻿using CocCanService.DTOs.Staff;
+﻿using CocCanService.DTOs.PickUpSpot;
+using CocCanService.DTOs.Staff;
 using CocCanService.Services;
 using CocCanService.Services.Imp;
 using Microsoft.AspNetCore.Http;
@@ -23,11 +24,22 @@ namespace CocCanAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StaffDTO>))]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
             var staffs = await _staffService.GetAllStaffsAsync();
+            HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
+            HttpContext.Response.Headers.Add("Content-Range", "staffs 0-1/2");
             return Ok(staffs);
         }
+
+        [HttpGet("{id:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StaffDTO>))]
+        public async Task<IActionResult> GetStaffByIdAll(Guid id)
+        {
+            var orderDetail = await _staffService.GetStaffByGUIDAsync(id);
+            return Ok(orderDetail.Data);
+        }
+
 
         //[HttpPost("Authen")]
         //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StaffDTO))]

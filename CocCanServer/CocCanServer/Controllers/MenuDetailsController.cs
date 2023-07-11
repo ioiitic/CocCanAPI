@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using CocCanService.DTOs.MenuDetail;
+using CocCanService.DTOs.OrderDetail;
+using CocCanService.Services.Imp;
 
 namespace CocCanAPI.Controllers
 {
@@ -36,6 +38,14 @@ namespace CocCanAPI.Controllers
                 return StatusCode(500, ModelState);
             }
             return Ok(menuDetail.Data);
+        }
+
+        [HttpGet("{id:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MenuDetailDTO>))]
+        public async Task<IActionResult> GetMenuDetailByIdAll(Guid id)
+        {
+            var orderDetail = await _menuDetailService.GetMenuDetailByIdAsync(id);
+            return Ok(orderDetail.Data);
         }
 
         [HttpPost]

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System;
 using Repository.Entities;
 using CocCanService.DTOs.Category;
+using CocCanService.DTOs.OrderDetail;
+using CocCanService.Services.Imp;
 
 namespace CocCanAPI.Controllers
 {
@@ -35,6 +37,13 @@ namespace CocCanAPI.Controllers
                 }
                 return StatusCode(500, ModelState);
             }
+            return Ok(categories.Data);
+        }
+        [HttpGet("{id:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CategoryDTO>))]
+        public async Task<IActionResult> GetCategoryByIdAll(Guid id)
+        {
+            var categories = await _categoryService.GetCategoryByIdAsync(id);
             return Ok(categories.Data);
         }
 

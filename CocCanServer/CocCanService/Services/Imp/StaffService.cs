@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CocCanService.DTOs.Session;
 using CocCanService.DTOs.Staff;
 using Repository.Entities;
 using Repository.repositories;
@@ -184,6 +185,41 @@ namespace CocCanService.Services.Imp
             }
             return _response;
         }
+        public async Task<ServiceResponse<StaffDTO>> GetStaffByGUIDAsync(Guid id)
+        {
+            ServiceResponse<StaffDTO> _response = new();
 
+            try
+            {
+
+                var _Staff = await _staffRepo.GetStaffByGUIDAsync(id);
+
+                if (_Staff == null)
+                {
+                    _response.Status = false;
+                    _response.Title = "Error";
+                    _response.ErrorMessages.Add("Not Found!");
+                    _response.Data = null;
+                    return _response;
+                }
+
+                var _StaffDto = _mapper.Map<StaffDTO>(_Staff);
+
+                _response.Status = true;
+                _response.Title = "Got Staff";
+                _response.Data = _StaffDto;
+
+
+            }
+            catch (Exception ex)
+            {
+                _response.Status = false;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
+                _response.Data = null;
+            }
+
+            return _response;
+        }
     }
 }

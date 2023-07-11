@@ -32,7 +32,7 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDTO>))]
         public async Task<IActionResult> GetAllOrderByOrderId(Guid id)
         {
-            var order = await _orderService.GetAllOrdersByCustomerIdAsync(id);
+            var order = await _orderService.GetOrderByIdAsync(id);
             return Ok(order);
         }
 

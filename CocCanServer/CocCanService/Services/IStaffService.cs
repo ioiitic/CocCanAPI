@@ -1,4 +1,5 @@
-﻿using CocCanService.DTOs.Staff;
+﻿using CocCanService.DTOs.Session;
+using CocCanService.DTOs.Staff;
 using CocCanService.Services.Imp;
 using Repository.Entities;
 using System;
@@ -16,5 +17,6 @@ namespace CocCanService.Services
         Task<ServiceResponse<StaffDTO>> CreateStaffAsync(CreateStaffDTO createStaffDTO);
         Task<ServiceResponse<StaffDTO>> UpdateStaffAsync(StaffDTO staffDTO);  
         Task<ServiceResponse<string>> SoftDeleteStaffAsync(Guid id);
+        Task<ServiceResponse<StaffDTO>> GetStaffByGUIDAsync(Guid id);
     }
 }
