@@ -21,9 +21,33 @@ namespace Repository.repositories.imp
             return await Save();
         }
 
-        public async Task<ICollection<OrderDetail>> GetAllOrderDetailsAsync()
+        public async Task<ICollection<OrderDetail>> GetAllOrderDetailsAsync(Dictionary<string, List<string>> filter, int from, int to, string orderBy, bool ascending)
         {
-            return await _dataContext.OrderDetails.Where(e => e.Status==1).ToListAsync();
+            IQueryable<OrderDetail> _orderdetails =
+                _dataContext.OrderDetails.Where(s => s.Status == 1);
+
+            //var stores = _stores
+            //    .Join(_dataContext.Products, s => s.Id, p => p.StoreId, (s,p) => new { s = s, p = p });
+
+
+
+            if (from <= to & from > 0)
+                _orderdetails = _orderdetails.Skip(from - 1).Take(to - from + 1);
+
+            if (filter != null)
+                foreach (KeyValuePair<string, List<string>> filterIte in filter)
+                {
+                    switch (filterIte.Key)
+                    {
+                        case "orderid":
+                            _orderdetails = _orderdetails
+                                .Where(m => filterIte.Value.Any(fi => m.OrderId.ToString() == fi))
+                                .Distinct();
+                            break;
+                    }
+                }
+            return await _orderdetails
+                .ToListAsync();
         }
 
         public async Task<bool> HardDeleteOrderDetailAsync(OrderDetail orderDetail)
