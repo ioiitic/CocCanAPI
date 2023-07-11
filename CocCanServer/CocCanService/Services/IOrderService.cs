@@ -11,7 +11,7 @@ namespace CocCanService.Services
 {
     public interface IOrderService
     {
-        Task<ServiceResponse<List<DTOs.Order.OrderDTO>>> GetAllOrdersAsync();  
+        Task<ServiceResponse<List<DTOs.Order.OrderDTO>>> GetAllOrdersAsync(string filter, string range, string sort);  
         Task<ServiceResponse<List<DTOs.Order.OrderDTO>>> GetAllOrdersByCustomerIdAsync(Guid customerId);
         Task<ServiceResponse<DTOs.Order.OrderDTO>> CreateOrderAsync(CreateOrderDTO createOrderDTO);
         Task<ServiceResponse<DTOs.Order.OrderDTO>> UpdateOrderAsync(OrderDTO orderDTO);

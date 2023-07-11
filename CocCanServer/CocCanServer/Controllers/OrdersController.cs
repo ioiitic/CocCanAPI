@@ -23,7 +23,7 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDTO>))]
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
-            var order = await _orderService.GetAllOrdersAsync();
+            var order = await _orderService.GetAllOrdersAsync(filter,range,sort);
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "orders 0-1/2");
             return Ok(order.Data);

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CocCanService.DTOs.Order;
+using CocCanService.DTOs.Store;
 using Repository.Entities;
 using Repository.repositories;
 using System;
@@ -61,23 +62,52 @@ namespace CocCanService.Services.Imp
             return _response;
         }
 
-        public async Task<ServiceResponse<List<OrderDTO>>> GetAllOrdersAsync()
+        public async Task<ServiceResponse<List<OrderDTO>>> GetAllOrdersAsync(string filter, string range, string sort)
         {
             ServiceResponse<List<OrderDTO>> _response = new();
+            
             try
             {
-                var _OrderList = await _orderRepo.GetAllOrdersAsync();
+                Dictionary<string, List<string>> _filter = null;
+                List<int> _range;
+                List<string> _sort;
+                try
+                {
+                    if (filter != null)
+                        _filter = System.Text.Json.JsonSerializer
+                            .Deserialize<Dictionary<string, List<string>>>(filter);
+                }
+                catch
+                {
+                    var raw = System.Text.Json.JsonSerializer
+                        .Deserialize<Dictionary<string, string>>(filter);
+                    _filter = new Dictionary<string, List<string>>();
+                    foreach (var item in raw)
+                        _filter.Add(item.Key, new List<string>() { item.Value });
+                }
+                if (range != null)
+                    _range = System.Text.Json.JsonSerializer.Deserialize<List<int>>(range);
+                else
+                    _range = new List<int>() { -1, -1 };
+                if (sort != null)
+                    _sort = System.Text.Json.JsonSerializer.Deserialize<List<string>>(sort);
+                else
+                    _sort = new List<string>() { "default", "" };
 
-                var _OderListDTO = new List<OrderDTO>();
+                var _OrderList = await _orderRepo
+                    .GetAllOrdersAsync(
+                        _filter, _range[0] + 1, _range[1] + 1, _sort[0], (_sort[1] == "ASC")
+                    );
+                var _OrderListDTO = new List<OrderDTO>();
 
                 foreach (var item in _OrderList)
                 {
-                    _OderListDTO.Add(_mapper.Map<OrderDTO>(item));
+                    _OrderListDTO.Add(_mapper.Map<OrderDTO>(item));
                 }
 
                 _response.Status = true;
-                _response.Title = "Got all categories";
-                _response.Data = _OderListDTO;
+                _response.Title = "Got all stores";
+                _response.Data = _OrderListDTO;
             }
             catch (Exception ex)
             {
