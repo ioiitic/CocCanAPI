@@ -310,6 +310,7 @@ namespace CocCanService.DTOs
             //    .ForMember(
             //        des => des.Status,
             //        act => act.UseValue(1));
+            CreateMap<Repository.Entities.Staff, StaffDTO>().ReverseMap();
 
             //Product
             CreateMap<Repository.Entities.Product, ProductDTO>().ReverseMap()

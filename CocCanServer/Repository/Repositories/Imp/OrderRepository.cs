@@ -53,7 +53,7 @@ namespace Repository.repositories.imp
         public async Task<Order> GetOrderByGUIDAsync(Guid id)
         {
             return await _dataContext.Orders
-                .Where(s => s.Status == 1)
+                //.Where(s => s.Status == 1)
                 .Include(s => s.Customer)
                 .SingleOrDefaultAsync(s => s.Id == id);
         }
