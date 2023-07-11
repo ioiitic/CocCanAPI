@@ -24,7 +24,7 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDetailDTO>))]
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
-            var orderDetail = await _orderDetailService.GetAllOrderDetailsAsync();
+            var orderDetail = await _orderDetailService.GetAllOrderDetailsAsync(filter,range,sort);
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "orderDetails 0-1/2");
             return Ok(orderDetail.Data);
@@ -34,8 +34,8 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDetailDTO>))]
         public async Task<IActionResult> GetOrderDetailByOrderIdAll(Guid id)
         {
-            var orderDetail = await _orderDetailService.GetAllOrderDetailsByOrderIDAsync(id);
-            return Ok(orderDetail);
+            var orderDetail = await _orderDetailService.GetOrderDetailByIdAsync(id);
+            return Ok(orderDetail.Data);
         }
 
         [HttpPost]

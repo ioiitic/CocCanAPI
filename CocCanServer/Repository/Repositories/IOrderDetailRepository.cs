@@ -9,7 +9,7 @@ namespace Repository.repositories
 {
     public interface IOrderDetailRepository
     {
-        Task<ICollection<OrderDetail>> GetAllOrderDetailsAsync();
+        Task<ICollection<OrderDetail>> GetAllOrderDetailsAsync(Dictionary<string, List<string>> filter, int from, int to, string orderBy, bool ascending);
         Task<ICollection<OrderDetail>> GetAllOrderDetailsByOrderIDAsync(Guid orderId);
         Task<bool> CreateOrderDetailAsync(OrderDetail orderDetail);
         Task<bool> UpdateOrderDetailAsync(OrderDetail orderDetail);
