@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace CocCanService.DTOs.Batch
 {
-    internal class UpdateBatchDTO
+    public class UpdateBatchDTO
     {
+        public Guid StaffId { get; set; }
+        public Guid SessionId { get; set; }
+        public Guid StoreId { get; set; }
+        public int Status { get; set; }
     }
 }

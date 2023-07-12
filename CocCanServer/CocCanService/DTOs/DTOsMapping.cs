@@ -17,6 +17,7 @@ using CocCanService.DTOs.TimeSlot;
 using CocCanService.DTOs.Session;
 using CocCanService.DTOs.PickUpSpot;
 using CocCanService.DTOs.Customer;
+using CocCanService.DTOs.Batch;
 
 namespace CocCanService.DTOs
 {
@@ -416,8 +417,12 @@ namespace CocCanService.DTOs
             //        act => act.UseValue(1));
             //Menu
             //CreateMap<Repository.Entities.Menu, MenuDTO>().ReverseMap();
+
             //PickUpSpot
             CreateMap<Repository.Entities.PickUpSpot, PickUpSpotDTO>().ReverseMap();
+
+            //Batch
+            CreateMap<Repository.Entities.Batch, BatchDTO>().ReverseMap();
 
         }
     }
