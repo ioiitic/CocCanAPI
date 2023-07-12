@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using CocCanService.DTOs.Location;
+using CocCanService.DTOs.OrderDetail;
+using CocCanService.Services.Imp;
 
 namespace CocCanAPI.Controllers
 {
@@ -27,6 +29,14 @@ namespace CocCanAPI.Controllers
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "locations 0-1/2");
             return Ok(locations.Data);
+        }
+
+        [HttpGet("{id:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<LocationDTO>))]
+        public async Task<IActionResult> GetLocationByIdAll(Guid id)
+        {
+            var location = await _locationService.GetLocationByIdAsync(id);
+            return Ok(location.Data);
         }
 
         [HttpPost]

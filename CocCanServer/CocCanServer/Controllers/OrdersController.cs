@@ -32,8 +32,13 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDTO>))]
         public async Task<IActionResult> GetAllOrderByOrderId(Guid id)
         {
+<<<<<<< HEAD
             var order = await _orderService.GetAllOrdersByCustomerIdAsync(id);
             return Ok(order.Data);
+=======
+            var order = await _orderService.GetOrderByIdAsync(id);
+            return Ok(order);
+>>>>>>> NT4
         }
 
         [HttpPost]

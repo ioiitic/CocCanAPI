@@ -1,5 +1,7 @@
-﻿using CocCanService.DTOs.PickUpSpot;
+﻿using CocCanService.DTOs.OrderDetail;
+using CocCanService.DTOs.PickUpSpot;
 using CocCanService.Services;
+using CocCanService.Services.Imp;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -27,6 +29,14 @@ namespace CocCanAPI.Controllers
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "pickUpSpots 0-1/2");
             return Ok(pickUpSpot.Data);
+        }
+
+        [HttpGet("{id:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<PickUpSpotDTO>))]
+        public async Task<IActionResult> GetPickUpSpotByIdAll(Guid id)
+        {
+            var orderDetail = await _pickUpSpotService.GetPickUpSpotByIdAsync(id);
+            return Ok(orderDetail.Data);
         }
 
         [HttpPost]

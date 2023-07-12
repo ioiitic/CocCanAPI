@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System;
+using CocCanService.DTOs.OrderDetail;
+using CocCanService.Services.Imp;
 
 namespace CocCanAPI.Controllers
 {
@@ -38,7 +40,15 @@ namespace CocCanAPI.Controllers
                 return Ok(Customers.Data);
             }
 
-            [HttpPost]
+        [HttpGet("{id:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CustomerDTO>))]
+        public async Task<IActionResult> GetCustomerByIdAll(Guid id)
+        {
+            var customer = await _CustomerService.GetCustomerByIdAsync(id);
+            return Ok(customer.Data);
+        }
+
+        [HttpPost]
             [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDTO))]
             [ProducesResponseType(StatusCodes.Status400BadRequest)]
             [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
