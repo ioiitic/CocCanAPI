@@ -34,11 +34,7 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDetailDTO>))]
         public async Task<IActionResult> GetOrderDetailByOrderIdAll(Guid id)
         {
-<<<<<<< HEAD
-            var orderDetail = await _orderDetailService.GetAllOrderDetailsByOrderIDAsync(id);
-=======
             var orderDetail = await _orderDetailService.GetOrderDetailByIdAsync(id);
->>>>>>> fb1b2c5416ec7d12b92b2fd3a9e41a3c8169f605
             return Ok(orderDetail.Data);
         }
 
