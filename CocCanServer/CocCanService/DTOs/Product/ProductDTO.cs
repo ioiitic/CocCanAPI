@@ -22,6 +22,8 @@ namespace CocCanService.DTOs.Product
         [MaxLength(200, ErrorMessage = "[Image] field is 200 characters max length!")]
         public string Image { get; set; }
 
+        public Guid StoreId { get; set; }
+
         [Required(ErrorMessage = "[Categories] field is required!")]
         public virtual CategoryDTO Category { get; set; }
     }

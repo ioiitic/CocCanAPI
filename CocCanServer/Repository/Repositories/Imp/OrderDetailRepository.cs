@@ -88,5 +88,10 @@ namespace Repository.repositories.imp
         {
             return await _dataContext.OrderDetails.Where(e => e.OrderId == orderId).ToListAsync();
         }
+
+        public int CountAllItemAsync(Guid id)
+        {
+            return  _dataContext.OrderDetails.Where(e => e.OrderId == id).Sum(o=>o.Quantity);
+        }
     }
 }
