@@ -42,12 +42,17 @@ namespace Repository.repositories.imp
                     {
                         case "customerid":
                             _orders = _orders
-                                .Where(m => filterIte.Value.Any(fi => m.CustomerId.ToString() == fi))
+                    .Where(m => filterIte.Value.Any(fi => m.CustomerId.ToString() == fi))
                                 .Distinct();
                             break;
                     }
                 }
-            return await _orders
+            return await _orders.
+                                Include(s => s.Session)
+                                    .ThenInclude(p => p.Location)
+                                .Include(m => m.PickUpSpot)
+                                .Include(s => s.Session)
+                                    .ThenInclude(p => p.TimeSlot)
                 .ToListAsync();
         }
 

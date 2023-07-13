@@ -14,11 +14,13 @@ namespace CocCanService.Services.Imp
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepo;      
+        private readonly IOrderDetailRepository _orderDetailRepo;
         private readonly IMapper _mapper;
         
-        public OrderService(IOrderRepository orderRepo, IMapper mapper)
+        public OrderService(IOrderRepository orderRepo,IOrderDetailRepository orderDetail, IMapper mapper)
         {
             this._orderRepo = orderRepo;
+            this._orderDetailRepo = orderDetail;
             this._mapper = mapper;
         }
 
@@ -102,11 +104,29 @@ namespace CocCanService.Services.Imp
 
                 foreach (var item in _OrderList)
                 {
-                    _OrderListDTO.Add(_mapper.Map<OrderDTO>(item));
+
+                   
+                    OrderDTO orderDTO = new OrderDTO();
+                    orderDTO.Id = item.Id;
+                    orderDTO.OrderTime = item.OrderTime;
+                    orderDTO.ServiceFee = item.ServiceFee;
+                    orderDTO.TotalPrice = item.TotalPrice;
+                    orderDTO.CustomerId = item.CustomerId;
+                    orderDTO.SessionId = item.SessionId;
+                    orderDTO.PickUpSpotId = item.PickUpSpotId;
+                    orderDTO.PickUpSpotFullName = item.PickUpSpot.Fullname;
+                    orderDTO.LocationID = item.Session.LocationId;
+                    orderDTO.LocationName = item.Session.Location.Name;
+                    orderDTO.TimeSlotID = item.Session.TimeSlotId;
+                    orderDTO.TimeSlotStart = item.Session.TimeSlot.StartTime.ToString();
+                    orderDTO.TimeSlotEnd = item.Session.TimeSlot.EndTime.ToString();
+                    orderDTO.OrderDetailCount = _orderDetailRepo.CountAllItemAsync(item.Id);
+                    orderDTO.Status = item.Status;
+                    _OrderListDTO.Add(orderDTO);
                 }
 
                 _response.Status = true;
-                _response.Title = "Got all stores";
+                _response.Title = "Got all Orders";
                 _response.Data = _OrderListDTO;
             }
             catch (Exception ex)

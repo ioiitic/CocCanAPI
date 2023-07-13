@@ -15,6 +15,7 @@ namespace Repository.repositories
         Task<bool> UpdateOrderDetailAsync(OrderDetail orderDetail);
         Task<bool> SoftDeleteOrderDetailAsync(Guid id);
         Task<bool> HardDeleteOrderDetailAsync(OrderDetail orderDetail);
+        public int CountAllItemAsync(Guid id);
         Task<OrderDetail> GetOrderDetailByGUIDAsync(Guid id);
     }
 }
