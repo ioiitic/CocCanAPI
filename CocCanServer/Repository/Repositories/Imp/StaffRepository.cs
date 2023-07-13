@@ -32,15 +32,9 @@ namespace Repository.repositories.imp
             return await _dataContext.Staffs.ToListAsync();
         }
 
-        public async Task<bool> HardDeleteStaffAsync(Staff staff)
-        {
-            _dataContext.Staffs.Remove(staff);
-            return await Save();
-        }
-
         public async Task<bool> SoftDeleteStaffAsync(Guid id)
         {
-            var _existingStaff = await GetStaffByGUIDAsync(id);
+            var _existingStaff = await GetStaffAsync(id);
             
             if (_existingStaff != null)
             {
@@ -56,7 +50,7 @@ namespace Repository.repositories.imp
             return await Save();
         }
 
-        public async Task<Staff> GetStaffByGUIDAsync(Guid id)
+        public async Task<Staff> GetStaffAsync(Guid id)
         {
             return await _dataContext.Staffs.SingleOrDefaultAsync(s => s.Id == id);
         }

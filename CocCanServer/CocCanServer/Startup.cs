@@ -60,7 +60,7 @@ namespace CocCanServer
             services.AddSingleton(mapper); 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddDbContext<Repository.Entities.CocCanDBContext>(option =>
+            services.AddDbContext<CocCanDBContext>(option =>
             {
                 option.UseSqlServer(Configuration.GetConnectionString("MyDb"));
             }); 

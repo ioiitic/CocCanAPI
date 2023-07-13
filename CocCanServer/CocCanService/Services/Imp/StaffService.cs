@@ -114,7 +114,7 @@ namespace CocCanService.Services.Imp
             ServiceResponse<string> _response = new();
             try
             {
-                var _existingStaff = await _staffRepo.GetStaffByGUIDAsync(id);
+                var _existingStaff = await _staffRepo.GetStaffAsync(id);
                 if (_existingStaff == null)
                 {
                     _response.Status = false;
@@ -150,7 +150,7 @@ namespace CocCanService.Services.Imp
             ServiceResponse<StaffDTO> _response = new();
             try
             {
-                var _existingStaff = await _staffRepo.GetStaffByGUIDAsync(staffDTO.Id)
+                var _existingStaff = await _staffRepo.GetStaffAsync(staffDTO.Id)
                     ;
                 if (_existingStaff == null)
                 {
@@ -192,7 +192,7 @@ namespace CocCanService.Services.Imp
             try
             {
 
-                var _Staff = await _staffRepo.GetStaffByGUIDAsync(id);
+                var _Staff = await _staffRepo.GetStaffAsync(id);
 
                 if (_Staff == null)
                 {

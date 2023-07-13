@@ -14,8 +14,7 @@ namespace Repository.repositories
         Task<bool> CreateStaffAsync(Staff staff);
         Task<bool> UpdateStaffAsync(Staff staff);
         Task<bool> SoftDeleteStaffAsync(Guid id);
-        Task<bool> HardDeleteStaffAsync(Staff staff);
-        Task<Staff> GetStaffByGUIDAsync(Guid id);
+        Task<Staff> GetStaffAsync(Guid id);
 
     }
 }

@@ -29,7 +29,7 @@ namespace CocCanAPI.Controllers
             var staffs = await _staffService.GetAllStaffsAsync();
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "staffs 0-1/2");
-            return Ok(staffs);
+            return Ok(staffs.Data);
         }
 
         [HttpGet("{id:Guid}")]
@@ -102,7 +102,7 @@ namespace CocCanAPI.Controllers
             return Ok(_newStaff.Data);
         }
 
-        [HttpPatch("{id:Guid}", Name = "UpdateStaff")]
+        [HttpPut("{id:Guid}", Name = "UpdateStaff")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found

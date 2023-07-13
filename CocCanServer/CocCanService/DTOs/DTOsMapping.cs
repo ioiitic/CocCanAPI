@@ -296,20 +296,20 @@ namespace CocCanService.DTOs
                     });
 
             //Staff
-            //CreateMap<Repository.Entities.Staff, StaffDTO>()
-            //    .ForMember(
-            //        des => des.Role,
-            //        act => act.MapFrom(src => (Enum.RoleType)src.Role));
-            //CreateMap<CreateStaffDTO, Repository.Entities.Staff>()
-            //    .ForMember(
-            //        des => des.Id,
-            //        act => Guid.NewGuid())
-            //    .ForMember(
-            //        des => des.Role,
-            //        act => act.UseValue(0))
-            //    .ForMember(
-            //        des => des.Status,
-            //        act => act.UseValue(1));
+            CreateMap<Repository.Entities.Staff, StaffDTO>()
+                .ForMember(
+                    des => des.Role,
+                    act => act.MapFrom(src => (Enum.RoleType)src.Role));
+            CreateMap<CreateStaffDTO, Repository.Entities.Staff>()
+                .ForMember(
+                    des => des.Id,
+                    act => Guid.NewGuid())
+                .ForMember(
+                    des => des.Role,
+                    act => act.UseValue(0))
+                .ForMember(
+                    des => des.Status,
+                    act => act.UseValue(1));
             CreateMap<Repository.Entities.Staff, StaffDTO>().ReverseMap();
 
             //Product
