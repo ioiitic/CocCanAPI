@@ -18,6 +18,7 @@ using CocCanService.DTOs.Session;
 using CocCanService.DTOs.PickUpSpot;
 using CocCanService.DTOs.Customer;
 using CocCanService.DTOs.Batch;
+using CocCanService.DTOs.Enum;
 
 namespace CocCanService.DTOs
 {
@@ -300,18 +301,18 @@ namespace CocCanService.DTOs
             CreateMap<Repository.Entities.Staff, StaffDTO>()
                 .ForMember(
                     des => des.Role,
-                    act => act.MapFrom(src => (Enum.RoleType)src.Role));
+                    act => act.MapFrom(src => ((Enum.RoleType)src.Role).ToString()));
             CreateMap<CreateStaffDTO, Repository.Entities.Staff>()
                 .ForMember(
                     des => des.Id,
                     act => Guid.NewGuid())
                 .ForMember(
                     des => des.Role,
-                    act => act.UseValue(0))
+                    act => act.MapFrom(src => (int) (RoleType) System.Enum.Parse(typeof(RoleType), src.Role)))
                 .ForMember(
                     des => des.Status,
                     act => act.UseValue(1));
-            CreateMap<Repository.Entities.Staff, StaffDTO>().ReverseMap();
+            //CreateMap<Repository.Entities.Staff, StaffDTO>().ReverseMap();
 
             //Product
             CreateMap<Repository.Entities.Product, ProductDTO>().ReverseMap()
