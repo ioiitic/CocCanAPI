@@ -12,7 +12,7 @@ namespace CocCanService.Services
 {
     public interface IMenuDetailService 
     {
-        Task<ServiceResponse<List<DTOs.MenuDetail.MenuDetailDTO>>> GetAllMenuDetailsAsync(string filter);
+        Task<ServiceResponse<List<DTOs.MenuDetail.MenuDetailDTO>>> GetAllMenuDetailsAsync(string filter, string range, string sort);
         Task<ServiceResponse<MenuDetailDTO>> CreateMenuDetailAsync(CreateMenuDetailDTO createMenuDetailDTO);
         Task<ServiceResponse<DTOs.MenuDetail.MenuDetailDTO>> UpdateMenuDetailAsync(MenuDetailDTO menuDetailDTO);
         Task<ServiceResponse<DTOs.MenuDetail.MenuDetailDTO>> GetMenuDetailByIdAsync(Guid id);
