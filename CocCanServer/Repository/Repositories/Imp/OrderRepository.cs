@@ -30,8 +30,25 @@ namespace Repository.repositories.imp
             //var stores = _stores
             //    .Join(_dataContext.Products, s => s.Id, p => p.StoreId, (s,p) => new { s = s, p = p });
 
-            
 
+            switch (orderBy)
+            {
+                case "ordertime":
+                    if (ascending)
+                        _orders = _orders.OrderBy(s => s.OrderTime);
+                    else
+                        _orders = _orders.OrderByDescending(s => s.OrderTime);
+                    break;
+                case "default":
+                    _orders = _orders.OrderBy(s => s.Id);
+                    break;
+                default:
+                    if (ascending)
+                        _orders = _orders.OrderBy(s => s.Id);
+                    else
+                        _orders = _orders.OrderByDescending(s => s.Id);
+                    break;
+            }
             if (from <= to & from > 0)
                 _orders = _orders.Skip(from - 1).Take(to - from + 1);
 
@@ -44,7 +61,7 @@ namespace Repository.repositories.imp
                             _orders = _orders
                     .Where(m => filterIte.Value.Any(fi => m.CustomerId.ToString() == fi))
                                 .Distinct();
-                            break;
+                            break;                      
                     }
                 }
             return await _orders.

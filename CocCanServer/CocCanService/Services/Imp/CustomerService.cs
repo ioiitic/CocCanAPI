@@ -164,10 +164,9 @@ namespace CocCanService.Services.Imp
                     _response.ErrorMessages.Add("Not Found!");
                     _response.Data = null;
                     return _response;
-                }
-
+                }                
                 _existingCustomer = _mapper.Map<Customer>(updateCustomerDTO);
-
+                
                 if (!await _CustomerRepo.UpdateCustomerAsync(_existingCustomer))
                 {
                     _response.Status = false;
