@@ -9,7 +9,7 @@ namespace Repository.repositories
 {
     public interface IMenuDetailRepository
     {
-        Task<ICollection<MenuDetail>> GetAllMenuDetailsAsync(Dictionary<string, List<string>> filter);
+        Task<ICollection<MenuDetail>> GetAllMenuDetailsAsync(Dictionary<string, List<string>> filter, int from, int to, string orderBy, bool ascending);
         Task<bool> CreateMenuDetailAsync(MenuDetail menuDetail);
         Task<bool> UpdateMenuDetailAsync(MenuDetail menuDetail);
         //Task<bool> SoftDeleteMenuDetailAsync(Guid id);

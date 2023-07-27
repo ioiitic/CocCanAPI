@@ -26,7 +26,7 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MenuDetailDTO>))]
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
-            var menuDetail = await _menuDetailService.GetAllMenuDetailsAsync(filter);
+            var menuDetail = await _menuDetailService.GetAllMenuDetailsAsync(filter,range,sort);
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "menuDetails 0-1/2");
             if (menuDetail.Status == false && menuDetail.Title == "Error")

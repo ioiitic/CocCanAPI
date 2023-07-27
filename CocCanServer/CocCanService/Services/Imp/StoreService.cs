@@ -92,7 +92,12 @@ namespace CocCanService.Services.Imp
                         _filter, _range[0] + 1, _range[1] + 1, _sort[0], (_sort[1] == "ASC")
                     );
                 if (_filter != null && _filter.ContainsKey("search"))
+                {
                     _StoreList = _StoreList.Where(s => _filter["search"].Any(f => s.Name.ToLower().Contains(f.ToLower()))).ToList();
+                    //if(_StoreList == null)
+                    //    _StoreList =  _StoreList.Where(s => s.Products.Any(p => _filter["search"].Any(f => p.Name.ToLower().Contains(f.ToLower())))).ToList();
+                }
+                    
 
                 var _StoreListDTO = new List<StoreDTO>();   
 

@@ -46,21 +46,19 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<StaffDTO>> CheckStaffLogin(string Email, string Password)
+        public async Task<ActionResult<StaffDTO>> CheckStaffLogin(string UserName, string Password)
         {
-            if (Email == "" || Password == "" || Email == null || Password == null)
+            if (UserName == "" || Password == "" || UserName == null || Password == null)
             {
                 return BadRequest();
             }
-            var StaffFound = await _staffService.CheckStaffLoginsAsync(Email, Password);
+            var StaffFound = await _staffService.CheckStaffLoginsAsync(UserName, Password);
 
             if (StaffFound.Data == null)
             {
                 return NotFound();
             }
-                
-            return Ok(StaffFound);
-
+            return Ok(StaffFound.Data);
         }
 
         [HttpPost]

@@ -16,9 +16,9 @@ namespace Repository.repositories.imp
             this._dataContext = dataContext;
         }
 
-        public async Task<Staff> CheckStaffLoginsAsync(string Email, string Password)
+        public async Task<Staff> CheckStaffLoginsAsync(string UserName, string Password)
         {
-            return await _dataContext.Staffs.SingleOrDefaultAsync(sta => sta.Email == Email && sta.Password == Password);
+            return await _dataContext.Staffs.SingleOrDefaultAsync(sta => sta.Username == UserName && sta.Password == Password);
         }
 
         public async Task<bool> CreateStaffAsync(Staff staff)

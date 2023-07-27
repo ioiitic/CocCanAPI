@@ -22,10 +22,29 @@ namespace Repository.repositories.imp
         }
         //d411a66c-0315-4d24-b659-100891ce2628
         //7c25b7a9-26ca-4d08-84f6-cda301e862ef
-        public async Task<ICollection<MenuDetail>> GetAllMenuDetailsAsync(Dictionary<string, List<string>> filter)
+        public async Task<ICollection<MenuDetail>> GetAllMenuDetailsAsync(Dictionary<string, List<string>> filter, int from, int to, string orderBy, bool ascending)
         {
             IQueryable<MenuDetail> menuDetails =
                 _dataContext.MenuDetails.Where(s => s.Status == 1);
+            switch (orderBy)
+            {
+                case "menuid":
+                    if (ascending)
+                        menuDetails = menuDetails.OrderBy(s => s.MenuId);
+                    else
+                        menuDetails = menuDetails.OrderByDescending(s => s.MenuId);
+                    break;
+                case "default":
+                    menuDetails = menuDetails.OrderBy(s => s.Id);
+                    break;
+                default:
+                    if (ascending)
+                        menuDetails = menuDetails.OrderBy(s => s.Id);
+                    else
+                        menuDetails = menuDetails.OrderByDescending(s => s.Id);
+                    break;
+            }
+
             if (filter != null)
                 foreach (KeyValuePair<string, List<string>> filterIte in filter)
                 {

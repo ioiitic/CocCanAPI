@@ -52,13 +52,15 @@ namespace CocCanService.Services.Imp
             return _response;
         }
 
-        public async Task<ServiceResponse<List<MenuDetailDTO>>> GetAllMenuDetailsAsync(string filter)
+        public async Task<ServiceResponse<List<MenuDetailDTO>>> GetAllMenuDetailsAsync(string filter, string range, string sort)
         {
             //{"session":"d411a66c-0315-4d24-b659-100891ce2628","store":"a6cef7e2-96e5-4110-99a6-05461a4ad5bc"}
             ServiceResponse<List<MenuDetailDTO>> _response = new();
             try
             {
                 Dictionary<string, List<string>> _filter = null;
+                List<int> _range;
+                List<string> _sort;
 
                 try
                 {
@@ -74,8 +76,18 @@ namespace CocCanService.Services.Imp
                     foreach (var item in raw)
                         _filter.Add(item.Key, new List<string>() { item.Value });
                 }
+                if (range != null)
+                    _range = System.Text.Json.JsonSerializer.Deserialize<List<int>>(range);
+                else
+                    _range = new List<int>() { -1, -1 };
+                if (sort != null)
+                    _sort = System.Text.Json.JsonSerializer.Deserialize<List<string>>(sort);
+                else
+                    _sort = new List<string>() { "default", "" };
 
-                var _MenuDetailList = await _menuDetailRepo.GetAllMenuDetailsAsync(_filter);
+                var _MenuDetailList = await _menuDetailRepo
+                    .GetAllMenuDetailsAsync(
+                        _filter, _range[0] + 1, _range[1] + 1, _sort[0], (_sort[1] == "ASC"));
 
                 var _MenuDetailListDTO = new List<MenuDetailDTO>();
 
