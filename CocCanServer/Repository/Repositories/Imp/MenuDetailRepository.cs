@@ -28,7 +28,7 @@ namespace Repository.repositories.imp
                 _dataContext.MenuDetails.Where(s => s.Status == 1);
             switch (orderBy)
             {
-                case "menuid":
+                case "menuId":
                     if (ascending)
                         menuDetails = menuDetails.OrderBy(s => s.MenuId);
                     else

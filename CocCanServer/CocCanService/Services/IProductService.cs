@@ -10,11 +10,11 @@ namespace CocCanService.Services
 {
     public interface IProductService
     {
-        Task<ServiceResponse<List<ProductDTO>>> GetAllProductsAsync();
+        Task<ServiceResponse<List<ProductDTO>>> GetAllProductsAsync(string filter, string range, string sort);
         Task<ServiceResponse<ProductDTO>> CreateProductAsync(CreateProductDTO createProductDTO);
         Task<ServiceResponse<ProductDTO>> UpdateProductAsync(ProductDTO productDTO);
         Task<ServiceResponse<string>> SoftDeleteProductAsync(Guid id);
         Task<ServiceResponse<bool>> HardDeleteProductAsync(ProductDTO productDTO);
-        Task<ServiceResponse<ProductDTO>> GetProductByGUIDAsync(Guid id);
+        Task<ServiceResponse<ProductDTO>> GetProductByGUIDAsync(Guid id); 
     }
 }

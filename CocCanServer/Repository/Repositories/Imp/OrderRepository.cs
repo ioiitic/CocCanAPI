@@ -33,11 +33,41 @@ namespace Repository.repositories.imp
 
             switch (orderBy)
             {
-                case "ordertime":
+                case "orderTime":
                     if (ascending)
                         _orders = _orders.OrderBy(s => s.OrderTime);
                     else
                         _orders = _orders.OrderByDescending(s => s.OrderTime);
+                    break;
+                case "totalPrice":
+                    if (ascending)
+                        _orders = _orders.OrderBy(s => s.TotalPrice);
+                    else
+                        _orders = _orders.OrderByDescending(s => s.TotalPrice);
+                    break;
+                case "customerId":
+                    if (ascending)
+                        _orders = _orders.OrderBy(s => s.CustomerId);
+                    else
+                        _orders = _orders.OrderByDescending(s => s.CustomerId);
+                    break;
+                case "sessionId":
+                    if (ascending)
+                        _orders = _orders.OrderBy(s => s.SessionId);
+                    else
+                        _orders = _orders.OrderByDescending(s => s.SessionId);
+                    break;
+                case "pickUpSpotId":
+                    if (ascending)
+                        _orders = _orders.OrderBy(s => s.PickUpSpotId);
+                    else
+                        _orders = _orders.OrderByDescending(s => s.PickUpSpotId);
+                    break;
+                case "status":
+                    if (ascending)
+                        _orders = _orders.OrderBy(s => s.OrderStatus);
+                    else
+                        _orders = _orders.OrderByDescending(s => s.OrderStatus);
                     break;
                 case "default":
                     _orders = _orders.OrderBy(s => s.Id);

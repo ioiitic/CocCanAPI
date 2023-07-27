@@ -24,11 +24,48 @@ namespace Repository.repositories.imp
         }
 
         public async Task<ICollection<Product>> 
-            GetAllProductsAsync()
+            GetAllProductsAsync(Dictionary<string, List<string>> filter, int from, int to, string orderBy, bool ascending)
         {
             IQueryable<Product> _products = 
                 _dataContext.Products
                 .Where(p => p.Status == 1);
+
+            switch (orderBy)
+            {
+                case "name":
+                    if (ascending)
+                        _products = _products.OrderBy(s => s.Name);
+                    else
+                        _products = _products.OrderByDescending(s => s.Name);
+                    break;
+                case "category.name":
+                    if (ascending)
+                        _products = _products.OrderBy(s => s.Category.Name);   
+                    else
+                        _products = _products.OrderByDescending(s => s.Category.Name);
+                    break;
+                case "storeId":
+                    if (ascending)
+                        _products = _products.OrderBy(s => s.StoreId);
+                    else
+                        _products = _products.OrderByDescending(s => s.StoreId);
+                    break;               
+                case "default":
+                    _products = _products.OrderBy(s => s.Id);
+                    break;
+                default:
+                    if (ascending)
+                        _products = _products.OrderBy(s => s.Id);
+                    else
+                        _products = _products.OrderByDescending(s => s.Id);
+                    break;
+            }
+            if (from <= to & from > 0)
+                _products = _products.Skip(from - 1).Take(to - from + 1);          
+
+            if (from <= to & from > 0)
+                _products = _products.Skip(from - 1).Take(to - from + 1);
+           
 
             return await _products
                 .Include(p => p.Store)
