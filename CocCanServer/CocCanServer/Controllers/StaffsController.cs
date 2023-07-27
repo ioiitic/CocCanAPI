@@ -41,27 +41,27 @@ namespace CocCanAPI.Controllers
         }
 
 
-        //[HttpPost("Authen")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StaffDTO))]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[ProducesDefaultResponseType]
-        //public async Task<ActionResult<StaffDTO>> CheckStaffLogin(string Email, string Password)
-        //{
-        //    if (Email == "" || Password == "" || Email == null || Password == null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    var StaffFound = await _staffService.CheckStaffLoginsAsync(Email, Password);
+        [HttpPost("Authen")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StaffDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<StaffDTO>> CheckStaffLogin(string Email, string Password)
+        {
+            if (Email == "" || Password == "" || Email == null || Password == null)
+            {
+                return BadRequest();
+            }
+            var StaffFound = await _staffService.CheckStaffLoginsAsync(Email, Password);
 
-        //    if (StaffFound.Data == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (StaffFound.Data == null)
+            {
+                return NotFound();
+            }
+                
+            return Ok(StaffFound);
 
-        //    return Ok(StaffFound);
-
-        //}
+        }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StaffDTO))]

@@ -3,23 +3,23 @@ using CocCanAPI.Filter;
 using CocCanService.DTOs;
 using CocCanService.Services;
 using CocCanService.Services.Imp;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder.Extensions;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Repository.Entities;
 using Repository.repositories;
 using Repository.repositories.imp;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace CocCanServer
 {
@@ -35,6 +35,7 @@ namespace CocCanServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddCors(options =>
             {
                 options.AddPolicy("_myAllowSpecificOrigins",
@@ -44,7 +45,7 @@ namespace CocCanServer
                         .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
-                       
+
                     });
             });
 
@@ -57,14 +58,14 @@ namespace CocCanServer
             });
 
             IMapper mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper); 
+            services.AddSingleton(mapper);
             services.AddAutoMapper(typeof(Startup));
 
             services.AddDbContext<CocCanDBContext>(option =>
             {
                 option.UseSqlServer(Configuration.GetConnectionString("MyDb"));
-            }); 
-            
+            });
+
             services.AddScoped<IStaffRepository, StaffRepository>();
             services.AddScoped<IStaffService, StaffService>();
             services.AddScoped<IProductRepository, ProductRepository>();
@@ -97,11 +98,60 @@ namespace CocCanServer
             services.AddScoped<IBatchRepository, BatchRepository>();
             services.AddScoped<IBatchService, BatchService>();
 
+            services.Configure<AppSetting>(Configuration.GetSection("AppSettings"));
+
+            var secretKey = Configuration["AppSettings:SecretKey"];
+            var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt =>
+                {
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
             services.AddControllers(
                 options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CocCanServer", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type=ReferenceType.SecurityScheme,
+                                Id="Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
+            });
+
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile("firebase_admin_sdk.json"),
             });
         }
 
@@ -117,9 +167,11 @@ namespace CocCanServer
 
             app.UseHttpsRedirection();
 
-            app.UseRouting(); 
+            app.UseRouting();
 
             app.UseCors("_myAllowSpecificOrigins");
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

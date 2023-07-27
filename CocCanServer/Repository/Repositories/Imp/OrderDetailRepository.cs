@@ -29,11 +29,6 @@ namespace Repository.repositories.imp
             //var stores = _stores
             //    .Join(_dataContext.Products, s => s.Id, p => p.StoreId, (s,p) => new { s = s, p = p });
 
-
-
-            if (from <= to & from > 0)
-                _orderdetails = _orderdetails.Skip(from - 1).Take(to - from + 1);
-
             if (filter != null)
                 foreach (KeyValuePair<string, List<string>> filterIte in filter)
                 {
@@ -46,6 +41,10 @@ namespace Repository.repositories.imp
                             break;
                     }
                 }
+
+            if (from <= to & from > 0)
+                _orderdetails = _orderdetails.Skip(from - 1).Take(to - from + 1);
+
             return await _orderdetails
                 .ToListAsync();
         }

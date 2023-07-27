@@ -30,10 +30,6 @@ namespace Repository.repositories.imp
             //var stores = _stores
             //    .Join(_dataContext.Products, s => s.Id, p => p.StoreId, (s,p) => new { s = s, p = p });
 
-            
-
-            if (from <= to & from > 0)
-                _orders = _orders.Skip(from - 1).Take(to - from + 1);
 
             if (filter != null)
                 foreach (KeyValuePair<string, List<string>> filterIte in filter)
@@ -47,6 +43,10 @@ namespace Repository.repositories.imp
                             break;
                     }
                 }
+
+            if (from <= to & from > 0)
+                _orders = _orders.Skip(from - 1).Take(to - from + 1);
+
             return await _orders.
                                 Include(s => s.Session)
                                     .ThenInclude(p => p.Location)
@@ -82,9 +82,12 @@ namespace Repository.repositories.imp
 
         public async Task<Order> GetOrderByGUIDAsync(Guid id)
         {
-            return await _dataContext.Orders
-                //.Where(s => s.Status == 1)
-                .Include(s => s.Customer)
+            return await _dataContext.Orders.
+                                Include(s => s.Session)
+                                    .ThenInclude(p => p.Location)
+                                .Include(m => m.PickUpSpot)
+                                .Include(s => s.Session)
+                                    .ThenInclude(p => p.TimeSlot)
                 .SingleOrDefaultAsync(s => s.Id == id);
         }
 

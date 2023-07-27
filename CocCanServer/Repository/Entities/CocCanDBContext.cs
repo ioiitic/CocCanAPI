@@ -90,7 +90,7 @@ namespace Repository.Entities
             {
                 entity.ToTable("Customer");
 
-                entity.HasIndex(e => e.Email, "UQ__Customer__A9D10534683FDD45")
+                entity.HasIndex(e => e.Email, "UQ__Customer__A9D10534481ABC94")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
@@ -181,7 +181,20 @@ namespace Repository.Entities
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
 
+                entity.Property(e => e.CartTotalAmount).HasColumnType("money");
+
+                entity.Property(e => e.DeliveryFee).HasColumnType("money");
+
+                entity.Property(e => e.Note)
+                    .IsRequired()
+                    .HasMaxLength(2000);
+
                 entity.Property(e => e.OrderTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Phone)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsFixedLength(true);
 
                 entity.Property(e => e.ServiceFee).HasColumnType("money");
 
@@ -328,10 +341,10 @@ namespace Repository.Entities
             {
                 entity.ToTable("Staff");
 
-                entity.HasIndex(e => e.Username, "UQ__Staff__536C85E428041C3B")
+                entity.HasIndex(e => e.Username, "UQ__Staff__536C85E48538B6A1")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Email, "UQ__Staff__A9D105349F84025F")
+                entity.HasIndex(e => e.Email, "UQ__Staff__A9D10534A955581F")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasDefaultValueSql("(newid())");

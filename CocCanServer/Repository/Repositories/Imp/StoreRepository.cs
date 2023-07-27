@@ -50,9 +50,6 @@ namespace Repository.repositories.imp
                     break;
             }
 
-            if (from <= to & from > 0)
-                _stores = _stores.Skip(from - 1).Take(to - from + 1);
-
             if (filter != null)
                 foreach (KeyValuePair<string, List<string>> filterIte in filter)
                 {
@@ -99,6 +96,9 @@ namespace Repository.repositories.imp
                             break;
                     }
                 }
+
+            if (from <= to & from > 0)
+                _stores = _stores.Skip(from - 1).Take(to - from + 1);
             return await _stores
                 .ToListAsync();
         }

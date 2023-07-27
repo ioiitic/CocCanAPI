@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
-using Repository.Entities;
 using CocCanService.DTOs.Category;
-using CocCanService.DTOs.OrderDetail;
-using CocCanService.Services.Imp;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CocCanAPI.Controllers
 {
@@ -48,6 +46,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpPost]
+        //[Authorize(Roles = "0")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found

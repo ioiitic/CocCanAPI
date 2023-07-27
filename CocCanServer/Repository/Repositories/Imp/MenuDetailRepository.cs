@@ -94,7 +94,10 @@ namespace Repository.repositories.imp
 
         public async Task<MenuDetail> GetMenuDetailByGUIDAsync(Guid id)
         {
-            return await _dataContext.MenuDetails.SingleOrDefaultAsync(s => s.Id == id);
+            return await _dataContext.MenuDetails
+                .Include(md => md.Product)
+                    .ThenInclude(p => p.Category)
+                .SingleOrDefaultAsync(s => s.Id == id);
         }
 
         private async Task<bool> Save()

@@ -167,7 +167,7 @@ namespace CocCanService.Services.Imp
                     return _response;
                 }
 
-                _existingCategory = _mapper.Map<Category>(updateCategoryDTO);
+                _existingCategory = _mapper.Map<UpdateCategoryDTO, Category>(updateCategoryDTO, _existingCategory);
 
                 if (!await _categoryRepo.UpdateCategoryAsync(_existingCategory))
                 {

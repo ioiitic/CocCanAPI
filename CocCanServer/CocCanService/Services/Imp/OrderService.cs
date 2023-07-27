@@ -6,6 +6,7 @@ using Repository.repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,7 +39,12 @@ namespace CocCanService.Services.Imp
                     CustomerId = createOrderDTO.CustomerId,
                     SessionId = createOrderDTO.SessionId,
                     PickUpSpotId = createOrderDTO.PickUpSpotId,
-                    Status = createOrderDTO.Status
+                    Note = createOrderDTO.Note,
+                    Phone = createOrderDTO.Phone,
+                    DeliveryFee = createOrderDTO.DeliveryFee,
+                    CartTotalAmount = createOrderDTO.CartTotalAmount,
+                    OrderStatus = 0,
+                    Status = 1
                 };
 
                 if (!await _orderRepo.CreateOrderAsync(_newOrder))
@@ -110,6 +116,10 @@ namespace CocCanService.Services.Imp
                     orderDTO.Id = item.Id;
                     orderDTO.OrderTime = item.OrderTime;
                     orderDTO.ServiceFee = item.ServiceFee;
+                    orderDTO.Note = item.Note;
+                    orderDTO.Phone = item.Phone;
+                    orderDTO.DeliveryFee = item.DeliveryFee;
+                    orderDTO.CartTotalAmount = item.CartTotalAmount;
                     orderDTO.TotalPrice = item.TotalPrice;
                     orderDTO.CustomerId = item.CustomerId;
                     orderDTO.SessionId = item.SessionId;
@@ -121,7 +131,7 @@ namespace CocCanService.Services.Imp
                     orderDTO.TimeSlotStart = item.Session.TimeSlot.StartTime.ToString();
                     orderDTO.TimeSlotEnd = item.Session.TimeSlot.EndTime.ToString();
                     orderDTO.OrderDetailCount = _orderDetailRepo.CountAllItemAsync(item.Id);
-                    orderDTO.Status = item.Status;
+                    orderDTO.OrderStatus = item.OrderStatus;
                     _OrderListDTO.Add(orderDTO);
                 }
 
@@ -172,9 +182,9 @@ namespace CocCanService.Services.Imp
             ServiceResponse<OrderDTO> _response = new();
             try
             {
-                var _orderList = await _orderRepo.GetOrderByGUIDAsync(id);
+                var item = await _orderRepo.GetOrderByGUIDAsync(id);
 
-                if (_orderList == null)
+                if (item == null)
                 {
                     _response.Status = false;
                     _response.Title = "Error";
@@ -183,11 +193,30 @@ namespace CocCanService.Services.Imp
                     return _response;
                 }
 
-                var _orderDto = _mapper.Map<OrderDTO>(_orderList);
+                OrderDTO orderDTO = new OrderDTO();
+                orderDTO.Id = item.Id;
+                orderDTO.OrderTime = item.OrderTime;
+                orderDTO.ServiceFee = item.ServiceFee;
+                orderDTO.Note = item.Note;
+                orderDTO.Phone = item.Phone;
+                orderDTO.DeliveryFee = item.DeliveryFee;
+                orderDTO.CartTotalAmount = item.CartTotalAmount;
+                orderDTO.TotalPrice = item.TotalPrice;
+                orderDTO.CustomerId = item.CustomerId;
+                orderDTO.SessionId = item.SessionId;
+                orderDTO.PickUpSpotId = item.PickUpSpotId;
+                orderDTO.PickUpSpotFullName = item.PickUpSpot.Fullname;
+                orderDTO.LocationID = item.Session.LocationId;
+                orderDTO.LocationName = item.Session.Location.Name;
+                orderDTO.TimeSlotID = item.Session.TimeSlotId;
+                orderDTO.TimeSlotStart = item.Session.TimeSlot.StartTime.ToString();
+                orderDTO.TimeSlotEnd = item.Session.TimeSlot.EndTime.ToString();
+                orderDTO.OrderDetailCount = _orderDetailRepo.CountAllItemAsync(item.Id);
+                orderDTO.OrderStatus = item.OrderStatus;
 
                 _response.Status = true;
                 _response.Title = "Got store";
-                _response.Data = _orderDto;
+                _response.Data = orderDTO;
 
             }
             catch (Exception ex)
@@ -255,11 +284,15 @@ namespace CocCanService.Services.Imp
                 }
                 _existingOrder.OrderTime = orderDTO.OrderTime;
                 _existingOrder.ServiceFee = orderDTO.ServiceFee;
+                _existingOrder.DeliveryFee = orderDTO.DeliveryFee;
+                _existingOrder.CartTotalAmount = orderDTO.CartTotalAmount;
+                _existingOrder.Note = orderDTO.Note;
+                _existingOrder.Phone = orderDTO.Phone;
                 _existingOrder.TotalPrice = orderDTO.TotalPrice;
                 _existingOrder.CustomerId = orderDTO.CustomerId;
                 _existingOrder.SessionId = orderDTO.SessionId;
                 _existingOrder.PickUpSpotId = orderDTO.PickUpSpotId;
-                _existingOrder.Status = orderDTO.Status;
+                _existingOrder.OrderStatus = orderDTO.OrderStatus;
 
                 if (!await _orderRepo.UpdateOrderAsync(_existingOrder))
                 {

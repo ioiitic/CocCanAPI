@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using System;
 using CocCanService.DTOs.OrderDetail;
 using CocCanService.Services.Imp;
+using CocCanService.DTOs.Staff;
 
 namespace CocCanAPI.Controllers
 {
@@ -38,7 +39,29 @@ namespace CocCanAPI.Controllers
                     return StatusCode(500, ModelState);
                 }
                 return Ok(Customers.Data);
+        }
+
+
+
+        [HttpPost("Authen")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StaffDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<StaffDTO>> CheckCustomerLogin(string token, CreateCustomerDTO createCustomerDTO)
+        {
+            var StaffFound = await _CustomerService.CheckCustomerLoginsAsync(token, createCustomerDTO);
+
+            if (StaffFound.Data == null)
+            {
+                return NotFound();
             }
+
+            return Ok(StaffFound);
+
+        }
+
+
 
         [HttpGet("{id:Guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CustomerDTO>))]

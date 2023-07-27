@@ -38,6 +38,12 @@ namespace Repository.repositories.imp
                 .Where(s => s.Status == 1)
                 .SingleOrDefaultAsync(s => s.Id == id);
         }
+        public async Task<Customer> GetCustomerByEmailAsync(string email)
+        {
+            return await _dataContext.Customers
+                .Where(s => s.Status == 1)
+                .SingleOrDefaultAsync(s => s.Email == email);
+        }
 
         public async Task<bool> SoftDeleteCustomerAsync(Guid id)
         {

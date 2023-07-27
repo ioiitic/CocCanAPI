@@ -204,7 +204,7 @@ namespace CocCanService.Services.Imp
                     return _response;
                 }
 
-                _existingStore = _mapper.Map<Store>(updateStoreDTO);
+                _existingStore = _mapper.Map<UpdateStoreDTO, Store>(updateStoreDTO, _existingStore);
 
                 if (!await _storeRepo.UpdateStoreAsync(_existingStore))
                 {

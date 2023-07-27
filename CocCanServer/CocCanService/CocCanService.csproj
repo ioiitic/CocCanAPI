@@ -8,12 +8,12 @@
     <Folder Include="DTOs\LocationStore\" />
     <Folder Include="DTOs\Product\" />
     <Folder Include="DTOs\Session\" />
-    <Folder Include="DTOs\Staff\" />
     <Folder Include="DTOs\TimeSlot\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="FirebaseAdmin" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>

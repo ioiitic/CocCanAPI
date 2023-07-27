@@ -11,9 +11,12 @@ namespace CocCanService.DTOs.Order
         public DateTime OrderTime { get; set; }
         public decimal ServiceFee { get; set; }
         public decimal TotalPrice { get; set; }
+        public decimal DeliveryFee { get; set; }
+        public decimal CartTotalAmount { get; set; }
+        public string Note { get; set; }
+        public string Phone { get; set; }
         public Guid CustomerId { get; set; }
         public Guid SessionId { get; set; }
         public Guid PickUpSpotId { get; set; }
-        public int Status { get; set; }
     }
 }

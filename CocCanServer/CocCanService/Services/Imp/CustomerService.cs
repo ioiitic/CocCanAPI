@@ -1,10 +1,18 @@
 ﻿using AutoMapper;
+using CocCanService.DTOs;
 using CocCanService.DTOs.Customer;
+using CocCanService.DTOs.Staff;
+using FirebaseAdmin.Auth;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using Repository.Entities;
 using Repository.repositories;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,11 +22,13 @@ namespace CocCanService.Services.Imp
     {
         private readonly ICustomerRepository _CustomerRepo;
         private readonly IMapper _mapper;
+        private readonly AppSetting _appSetting;
 
-        public CustomerService(ICustomerRepository CustomerRepo, IMapper mapper)
+        public CustomerService(ICustomerRepository CustomerRepo, IMapper mapper, IOptionsMonitor<AppSetting> appSetting)
         {
             this._CustomerRepo = CustomerRepo;
             this._mapper = mapper;
+            _appSetting = appSetting.CurrentValue;
         }
 
         public async Task<ServiceResponse<CustomerDTO>> CreateCustomerAsync(CreateCustomerDTO createCustomerDTO)
@@ -166,7 +176,7 @@ namespace CocCanService.Services.Imp
                     return _response;
                 }
 
-                _existingCustomer = _mapper.Map<Customer>(updateCustomerDTO);
+                _existingCustomer = _mapper.Map<UpdateCustomerDTO, Customer>(updateCustomerDTO, _existingCustomer);
 
                 if (!await _CustomerRepo.UpdateCustomerAsync(_existingCustomer))
                 {
@@ -189,6 +199,64 @@ namespace CocCanService.Services.Imp
                 _response.Data = null;
             }
             return _response;
+        }
+        public async Task<ServiceResponse<LoginCustomerDTO>> CheckCustomerLoginsAsync(string token, CreateCustomerDTO createCustomerDTO)
+        {
+            ServiceResponse<LoginCustomerDTO> _response = new();
+            try
+            {
+                FirebaseToken decodedToken = await FirebaseAuth.DefaultInstance
+                    .VerifyIdTokenAsync(token);
+                string uid = decodedToken.Uid;
+                if (uid == null)
+                {
+                    _response.Status = false;
+                    _response.Title = "Not Found!";
+                    return _response;
+                }
+                else
+                {
+                    var _newCustomer = await CreateCustomerAsync(createCustomerDTO);
+                    var customer = await _CustomerRepo.GetCustomerByEmailAsync(createCustomerDTO.Email);
+                    var loginCustomerDTO = new LoginCustomerDTO()
+                    {
+                        customerDTO = _mapper.Map<CustomerDTO>(customer),
+                        token = GenerateToken()
+                    };
+                    _response.Status = true;
+                    _response.Title = "OK";
+                    _response.Data = loginCustomerDTO;
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Status = false;
+                _response.Data = null;
+                _response.Title = "Error";
+                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
+            }
+            return _response;
+        }
+
+        private string GenerateToken()
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+
+            var secretKeyBytes = Encoding.UTF8.GetBytes(_appSetting.SecretKey);
+
+            var tokenDescription = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Role, "User"),
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(30),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey
+                    (secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
+            };
+
+            var token = jwtTokenHandler.CreateToken(tokenDescription);
+            return jwtTokenHandler.WriteToken(token);
         }
     }
 }

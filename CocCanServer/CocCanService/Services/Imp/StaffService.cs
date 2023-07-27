@@ -1,11 +1,16 @@
 ﻿using AutoMapper;
+using CocCanService.DTOs;
 using CocCanService.DTOs.Session;
 using CocCanService.DTOs.Staff;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Repository.Entities;
 using Repository.repositories;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,16 +20,18 @@ namespace CocCanService.Services.Imp
     {
         private readonly IStaffRepository _staffRepo;
         private readonly IMapper _mapper;
+        private readonly AppSetting _appSetting;
 
-        public StaffService(IStaffRepository staffRepo, IMapper mapper)
+        public StaffService(IStaffRepository staffRepo, IMapper mapper, IOptionsMonitor<AppSetting> appSetting)
         {
             _staffRepo = staffRepo;
             _mapper = mapper;
+            _appSetting = appSetting.CurrentValue;
         }
 
-        public async Task<ServiceResponse<StaffDTO>> CheckStaffLoginsAsync(string Email, string Password)
+        public async Task<ServiceResponse<LoginStaffDTO>> CheckStaffLoginsAsync(string Email, string Password)
         {
-            ServiceResponse<StaffDTO> _response = new();
+            ServiceResponse<LoginStaffDTO> _response = new();
             try
             {
                 var _Staff = await _staffRepo.CheckStaffLoginsAsync(Email, Password);
@@ -36,11 +43,14 @@ namespace CocCanService.Services.Imp
                 }
                 else
                 {
-                    var _StaffDTO = _mapper.Map<StaffDTO>(_Staff);
-
+                    var loginStaffDTO = new LoginStaffDTO() 
+                    { 
+                        staffDTO = _mapper.Map<StaffDTO>(_Staff),
+                        token = GenerateToken(_Staff)
+                    };
                     _response.Status = true;
                     _response.Title = "OK";
-                    _response.Data= _StaffDTO;
+                    _response.Data= loginStaffDTO;
                 }
             }
             catch (Exception ex)
@@ -220,6 +230,30 @@ namespace CocCanService.Services.Imp
             }
 
             return _response;
+        }
+
+        private string GenerateToken(Staff staff)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+
+            var secretKeyBytes = Encoding.UTF8.GetBytes(_appSetting.SecretKey);
+
+            var tokenDescription = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Role, "Staff"),
+                    new Claim(ClaimTypes.Role, "User"),
+                    new Claim(ClaimTypes.Role, staff.Role.ToString()),
+                    new Claim("TokenId", Guid.NewGuid().ToString())
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(30),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey
+                    (secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
+            };
+
+            var token = jwtTokenHandler.CreateToken(tokenDescription);
+            return jwtTokenHandler.WriteToken(token);
         }
     }
 }

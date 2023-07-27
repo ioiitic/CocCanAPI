@@ -112,7 +112,7 @@ namespace CocCanService.DTOs
                     })
                 .ForMember(
                     des => des.Id,
-                    act =>
+                    act =>  
                     {
                         act.UseDestinationValue();
                         act.Ignore();
@@ -198,7 +198,8 @@ namespace CocCanService.DTOs
                         act.UseDestinationValue();
                         act.Ignore();
                     });
-
+            //Order
+            CreateMap<Repository.Entities.Order, OrderDTO>().ReverseMap();
             //OrderDetail
             CreateMap<Repository.Entities.OrderDetail, OrderDetailDTO>().ReverseMap();
             CreateMap<CreateOrderDetailDTO, Repository.Entities.OrderDetail>()
@@ -338,6 +339,37 @@ namespace CocCanService.DTOs
                 .ForMember(
                     des => des.Status,
                     act => act.UseValue(1));
+            CreateMap<UpdateStoreDTO, Repository.Entities.Store>()
+                .ForMember(
+                    des => des.Name,
+                    act =>
+                    {
+                        act.UseDestinationValue();
+                        act.PreCondition(src => src.Name != "");
+                        act.MapFrom(src => src.Name);
+                    })
+                .ForMember(
+                    des => des.Image,
+                    act =>
+                    {
+                        act.UseDestinationValue();
+                        act.PreCondition(src => src.Image != "");
+                        act.MapFrom(src => src.Image);
+                    })
+                .ForMember(
+                    des => des.Id,
+                    act =>
+                    {
+                        act.UseDestinationValue();
+                        act.Ignore();
+                    })
+                .ForMember(
+                    des => des.Status,
+                    act =>
+                    {
+                        act.UseDestinationValue();
+                        act.Ignore();
+                    });
             //TimeSlot
             CreateMap<Repository.Entities.TimeSlot, TimeSlotDTO>().ReverseMap()
                 .ForMember(
@@ -374,37 +406,7 @@ namespace CocCanService.DTOs
                     act => act.UseValue(1));
 
 
-            //CreateMap<UpdateStoreDTO, Repository.Entities.Store>()
-            //    .ForMember(
-            //        des => des.Name,
-            //        act =>
-            //            {
-            //                act.UseDestinationValue();
-            //                act.PreCondition(src => src.Name != "");
-            //                act.MapFrom(src => src.Name);
-            //            })
-            //    .ForMember(
-            //        des => des.Image,
-            //        act =>
-            //        {
-            //            act.UseDestinationValue();
-            //            act.PreCondition(src => src.Image != "");
-            //            act.MapFrom(src => src.Image);
-            //        })
-            //    .ForMember(
-            //        des => des.Id,
-            //        act =>
-            //            {
-            //                act.UseDestinationValue();
-            //                act.Ignore();
-            //            })
-            //    .ForMember(
-            //        des => des.Status,
-            //        act =>
-            //        {
-            //            act.UseDestinationValue();
-            //            act.Ignore();
-            //        });
+
             //Location
             //CreateMap<Repository.Entities.Location, LocationDTO>().ReverseMap();
             //Category

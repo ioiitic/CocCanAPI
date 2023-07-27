@@ -167,7 +167,7 @@ namespace CocCanService.Services.Imp
                     return _response;
                 }
 
-                _existingMenu = _mapper.Map<Menu>(updateMenuDTO);
+                _existingMenu = _mapper.Map<UpdateMenuDTO, Menu>(updateMenuDTO, _existingMenu);
 
                 if (!await _menuRepo.UpdateMenuAsync(_existingMenu))
                 {

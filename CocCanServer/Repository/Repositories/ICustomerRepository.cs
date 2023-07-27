@@ -11,6 +11,7 @@ namespace Repository.repositories
     {
         Task<ICollection<Customer>>
             GetAllCustomersWithStatusAsync();
+        Task<Customer> GetCustomerByEmailAsync(string email);
         Task<bool> CreateCustomerAsync(Customer customer);
         Task<bool> UpdateCustomerAsync(Customer customer);
         Task<bool> SoftDeleteCustomerAsync(Guid id);

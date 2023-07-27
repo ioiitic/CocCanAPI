@@ -225,7 +225,7 @@ namespace CocCanService.Services.Imp
                     return _response;
                 }
 
-                _existingOrderDetail = _mapper.Map<OrderDetail>(updateorderDetailDTO);
+                _existingOrderDetail = _mapper.Map<UpdateOrderDetailDTO, OrderDetail>(updateorderDetailDTO, _existingOrderDetail);
 
                 if (!await _orderDetailRepo.UpdateOrderDetailAsync(_existingOrderDetail))
                 {

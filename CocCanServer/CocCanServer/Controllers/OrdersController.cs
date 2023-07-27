@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using CocCanService.DTOs.Order;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CocCanAPI.Controllers
 {
@@ -37,6 +38,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpPost]
+        //[Authorize(Roles = "User")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
