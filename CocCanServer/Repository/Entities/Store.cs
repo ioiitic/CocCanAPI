@@ -17,6 +17,7 @@ namespace Repository.Entities
         public string Name { get; set; }
         public string Image { get; set; }
         public string Address { get; set; }
+        public string? Phone { get; set; }
         public int Status { get; set; }
 
         public virtual ICollection<Batch> Batches { get; set; }

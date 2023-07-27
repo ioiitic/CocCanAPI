@@ -325,6 +325,11 @@ namespace Repository.Entities
                     .IsRequired()
                     .HasMaxLength(200);
 
+                entity.Property(e => e.Phone)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsFixedLength(true);
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(100);

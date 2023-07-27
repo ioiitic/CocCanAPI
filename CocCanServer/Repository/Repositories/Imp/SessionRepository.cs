@@ -26,7 +26,7 @@ namespace Repository.repositories.imp
         {
             IQueryable<Session> _sessions =
                 _dataContext.Sessions
-                .Where(s => s.Status == 1);
+                .Where(s => s.Status == 1 && s.Date == DateTime.Today);
 
             if (filter != null && filter.ContainsKey("timeslot") && filter.ContainsKey("location"))
                 _sessions = _sessions

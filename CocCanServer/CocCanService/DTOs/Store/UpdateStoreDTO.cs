@@ -20,5 +20,6 @@ namespace CocCanService.DTOs.Store
         [Required(ErrorMessage = "[Address] field is required!")]
         [MaxLength(200, ErrorMessage = "[Address] field is 200 characters max length!")]
         public string Address { get; set; }
+        public string Phone { get; set; }
     }
 }
