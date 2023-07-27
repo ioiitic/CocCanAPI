@@ -2,4 +2,3 @@ CocCanServer/.vs
 CocCanServer/Tester
 **/bin
 **/obj
-**/*.json
