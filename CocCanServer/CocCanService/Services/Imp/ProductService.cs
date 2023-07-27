@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using CocCanService.DTOs.Category;
 using CocCanService.DTOs.Product;
-using CocCanService.DTOs.Staff;
+using Google.Api.Gax;
 using Repository.Entities;
 using Repository.repositories;
 using System;
@@ -33,7 +32,7 @@ namespace CocCanService.Services.Imp
                 {
                     _response.Status = false;
                     _response.Title = "Error";
-                    _response.ErrorMessages.Add("Some error occur in Category Repository when trying to create store!");
+                    _response.ErrorMessages.Add("Some error occur in Category Repository when trying to create product!");
                     _response.Data = null;
                     return _response;
                 }
@@ -52,23 +51,59 @@ namespace CocCanService.Services.Imp
             return _response;
         }
 
-        public async Task<ServiceResponse<List<ProductDTO>>> GetAllProductsAsync()
+        public async Task<ServiceResponse<List<ProductDTO>>> GetAllProductsAsync(string filter, string range, string sort)
         {
-            ServiceResponse<List<ProductDTO>> _response = new();
+            ServiceResponse<List<ProductDTO>> _response = new ServiceResponse<List<ProductDTO>>();
             try
             {
-                var _productList = await _productRepo.GetAllProductsAsync();
-
-                var _productListDTO = new List<ProductDTO>();
-
-                foreach (var item in _productList)
+                Dictionary<string, List<string>> _filter = null;
+                List<int> _range;
+                List<string> _sort;
+                try
                 {
-                    _productListDTO.Add(_mapper.Map<ProductDTO>(item));
+                    if (filter != null)
+                        _filter = System.Text.Json.JsonSerializer
+                            .Deserialize<Dictionary<string, List<string>>>(filter);
+                }
+                catch
+                {
+                    var raw = System.Text.Json.JsonSerializer
+                        .Deserialize<Dictionary<string, string>>(filter);
+                    _filter = new Dictionary<string, List<string>>();
+                    foreach (var item in raw)
+                        _filter.Add(item.Key, new List<string>() { item.Value });
+                }
+                if (range != null)
+                    _range = System.Text.Json.JsonSerializer.Deserialize<List<int>>(range);
+                else
+                    _range = new List<int>() { -1, -1 };
+                if (sort != null)
+                    _sort = System.Text.Json.JsonSerializer.Deserialize<List<string>>(sort);
+                else
+                    _sort = new List<string>() { "default", "" };
+
+                var _ProductList = await _productRepo
+                    .GetAllProductsAsync(
+                        _filter, _range[0] + 1, _range[1] + 1, _sort[0], (_sort[1] == "ASC")
+                    );
+                if (_filter != null && _filter.ContainsKey("search"))
+                {
+                    _ProductList = _ProductList.Where(s => _filter["search"].Any(f => s.Name.ToLower().Contains(f.ToLower()))).ToList();
+                    //if(_productList == null)
+                    //    _productList =  _productList.Where(s => s.Products.Any(p => _filter["search"].Any(f => p.Name.ToLower().Contains(f.ToLower())))).ToList();
+                }
+
+
+                var _ProductListDTO = new List<ProductDTO>();
+
+                foreach (var item in _ProductList)
+                {
+                    _ProductListDTO.Add(_mapper.Map<ProductDTO>(item));
                 }
 
                 _response.Status = true;
                 _response.Title = "Got all products";
-                _response.Data = _productListDTO;
+                _response.Data = _ProductListDTO;
             }
             catch (Exception ex)
             {
@@ -79,7 +114,7 @@ namespace CocCanService.Services.Imp
             }
             return _response;
         }
-
+      
         public async Task<ServiceResponse<ProductDTO>> GetProductByGUIDAsync(Guid id)
         {
             ServiceResponse<ProductDTO> _response = new();
@@ -141,7 +176,7 @@ namespace CocCanService.Services.Imp
                 {
                     _response.Status = false;
                     _response.Title = "Error";
-                    _response.ErrorMessages.Add("Some error occur in Store Repository when trying to delete category!");
+                    _response.ErrorMessages.Add("Some error occur in product Repository when trying to delete category!");
                     _response.Data = null;
                     return _response;
                 }
@@ -183,7 +218,7 @@ namespace CocCanService.Services.Imp
                 {
                     _response.Status = false;
                     _response.Title = "Error";
-                    _response.ErrorMessages.Add("Some error occur in Store Repository when trying to update category!");
+                    _response.ErrorMessages.Add("Some error occur in product Repository when trying to update category!");
                     _response.Data = null;
                     return _response;
                 }

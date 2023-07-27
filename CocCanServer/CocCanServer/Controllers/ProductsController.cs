@@ -25,7 +25,7 @@ namespace CocCanAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductDTO>))]
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
-            var companies = await _productService.GetAllProductsAsync();
+            var companies = await _productService.GetAllProductsAsync(filter,range,sort);
             HttpContext.Response.Headers.Add("Access-Control-Expose-Headers", "Content-Range");
             HttpContext.Response.Headers.Add("Content-Range", "products 0-1/2");
             return Ok(companies.Data);
