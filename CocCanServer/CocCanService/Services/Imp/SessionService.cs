@@ -96,6 +96,7 @@ namespace CocCanService.Services.Imp
             }
             return _response;
         }
+
         public async Task<ServiceResponse<SessionDTO>> GetSessionByGUIDAsync(Guid id)
         {
             ServiceResponse<SessionDTO> _response = new();
