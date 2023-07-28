@@ -27,9 +27,12 @@ namespace Repository.repositories.imp
             var date = DateTime.Today.AddHours(7);
             IQueryable<Session> _sessions =
                 _dataContext.Sessions
-                .Where(s => s.Status == 1 && s.Date == date);
+                .Where(s => s.Status == 1)
+                .OrderByDescending(s => s.Date);
 
             if (filter != null && filter.ContainsKey("timeslot") && filter.ContainsKey("location"))
+            {
+                _sessions = _dataContext.Sessions.Where(s => s.Date == date);
                 _sessions = _sessions
                     .Join(_dataContext.TimeSlots.Where(ts => ts.Id.ToString() == filter["timeslot"][0]),
                     s => s.TimeSlotId,
@@ -39,6 +42,8 @@ namespace Repository.repositories.imp
                     s => s.LocationId,
                     ts => ts.Id,
                     (s, ts) => s);
+
+            }
 
             _sessions = _sessions
                 .Include(s => s.Menu);

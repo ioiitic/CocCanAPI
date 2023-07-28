@@ -59,9 +59,7 @@ namespace Repository.repositories.imp
                     else
                         _products = _products.OrderByDescending(s => s.Id);
                     break;
-            }
-            if (from <= to & from > 0)
-                _products = _products.Skip(from - 1).Take(to - from + 1);          
+            }   
 
             if (from <= to & from > 0)
                 _products = _products.Skip(from - 1).Take(to - from + 1);
