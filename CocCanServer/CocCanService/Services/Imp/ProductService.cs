@@ -92,7 +92,12 @@ namespace CocCanService.Services.Imp
                     //if(_productList == null)
                     //    _productList =  _productList.Where(s => s.Products.Any(p => _filter["search"].Any(f => p.Name.ToLower().Contains(f.ToLower())))).ToList();
                 }
-
+                if (_filter != null && _filter.ContainsKey("q"))
+                {
+                    _ProductList = _ProductList.Where(s => _filter["search"].Any(f => s.Name.ToLower().Contains(f.ToLower()))).ToList();
+                    //if(_productList == null)
+                    //    _productList =  _productList.Where(s => s.Products.Any(p => _filter["search"].Any(f => p.Name.ToLower().Contains(f.ToLower())))).ToList();
+                }
 
                 var _ProductListDTO = new List<ProductDTO>();
 
