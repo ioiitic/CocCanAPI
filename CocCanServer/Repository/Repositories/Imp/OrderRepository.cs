@@ -74,9 +74,9 @@ namespace Repository.repositories.imp
                     break;
                 default:
                     if (ascending)
-                        _orders = _orders.OrderBy(s => s.Id);
+                        _orders = _orders.OrderBy(s => s.OrderStatus);
                     else
-                        _orders = _orders.OrderByDescending(s => s.Id);
+                        _orders = _orders.OrderByDescending(s => s.OrderStatus);
                     break;
             }
             if (from <= to & from > 0)
