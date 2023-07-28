@@ -19,5 +19,6 @@ namespace CocCanService.DTOs.Session
         [Required(ErrorMessage = "[MenuId] field is required!")]
         public Guid MenuId { get; set; }
         public DateTime Date { get; set; }
+        public int? SessionStatus { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace Repository.Entities
         public int Quantity { get; set; }
         public Guid MenuDetailId { get; set; }
         public Guid OrderId { get; set; }
+        public decimal? SinglePrice { get; set; }
         public int Status { get; set; }
 
         public virtual MenuDetail MenuDetail { get; set; }

@@ -18,6 +18,7 @@ namespace Repository.Entities
         public Guid TimeSlotId { get; set; }
         public Guid LocationId { get; set; }
         public Guid MenuId { get; set; }
+        public int? SessionStatus { get; set; }
         public int Status { get; set; }
 
         public virtual Location Location { get; set; }

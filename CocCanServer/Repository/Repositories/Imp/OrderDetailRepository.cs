@@ -87,6 +87,40 @@ namespace Repository.repositories.imp
         {
             return await _dataContext.OrderDetails.Where(e => e.OrderId == orderId).ToListAsync();
         }
+        public async Task<ICollection<OrderDetail>> GetOrderDetailByBatch(Guid sessionId, Guid storeId)
+        {
+            IQueryable<OrderDetail> _orderDetails =
+                _dataContext.OrderDetails.Where(s => s.Status == 1);
+
+            _orderDetails = _orderDetails
+                                .Join(_dataContext.Orders
+                                    .Join(_dataContext.Sessions.Where(s => s.Id == sessionId),
+                                    m => m.SessionId,
+                                    s => s.Id,
+                                    (s, m) => s),
+                                md => md.OrderId,
+                                m => m.Id,
+                                (m, md) => m)
+                                .Join(_dataContext.MenuDetails
+                                    .Join(_dataContext.Products
+                                        .Join(_dataContext.Stores.Where(s => s.Id == storeId),
+                                        m => m.StoreId,
+                                        s => s.Id,
+                                        (s, m) => s),
+                                    m => m.ProductId,
+                                    s => s.Id,
+                                    (s, m) => s),
+                                md => md.MenuDetailId,
+                                m => m.Id,
+                                (m, md) => m)
+                                .Distinct();
+
+            _orderDetails = _orderDetails
+                .Include(o => o.MenuDetail)
+                    .ThenInclude(o => o.Product);
+
+            return await _orderDetails.ToListAsync();
+        }
 
         public int CountAllItemAsync(Guid id)
         {

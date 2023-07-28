@@ -7,7 +7,6 @@
   <ItemGroup>
     <Folder Include="DTOs\LocationStore\" />
     <Folder Include="DTOs\Product\" />
-    <Folder Include="DTOs\Session\" />
     <Folder Include="DTOs\TimeSlot\" />
   </ItemGroup>
 

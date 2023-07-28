@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CocCanAPI.Filter;
+using CocCanService.DTOs.OrderDetail;
 using CocCanService.DTOs.Session;
 using CocCanService.Services;
 using CocCanService.Services.Imp;
@@ -150,7 +151,6 @@ namespace CocCanAPI.Controllers
             return NoContent();
 
         }
-
 
         [HttpGet("{id:Guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SessionDTO))]

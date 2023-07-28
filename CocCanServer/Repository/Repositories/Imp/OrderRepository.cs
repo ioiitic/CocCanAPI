@@ -30,6 +30,25 @@ namespace Repository.repositories.imp
             //var stores = _stores
             //    .Join(_dataContext.Products, s => s.Id, p => p.StoreId, (s,p) => new { s = s, p = p });
 
+            if (from <= to & from > 0)
+                _orders = _orders.Skip(from - 1).Take(to - from + 1);
+
+            if (filter != null)
+                foreach (KeyValuePair<string, List<string>> filterIte in filter)
+                {
+                    switch (filterIte.Key)
+                    {
+                        case "customerid":
+                            _orders = _orders
+                                .Where(m => filterIte.Value.Any(fi => m.CustomerId.ToString() == fi))
+                                .Distinct();
+                            break;                      
+                    }
+                }
+
+            if (from <= to & from > 0)
+                _orders = _orders.Skip(from - 1).Take(to - from + 1);
+
 
             switch (orderBy)
             {
@@ -79,25 +98,6 @@ namespace Repository.repositories.imp
                         _orders = _orders.OrderByDescending(s => s.Id);
                     break;
             }
-            if (from <= to & from > 0)
-                _orders = _orders.Skip(from - 1).Take(to - from + 1);
-
-            if (filter != null)
-                foreach (KeyValuePair<string, List<string>> filterIte in filter)
-                {
-                    switch (filterIte.Key)
-                    {
-                        case "customerid":
-                            _orders = _orders
-                    .Where(m => filterIte.Value.Any(fi => m.CustomerId.ToString() == fi))
-                                .Distinct();
-                            break;                      
-                    }
-                }
-
-            if (from <= to & from > 0)
-                _orders = _orders.Skip(from - 1).Take(to - from + 1);
-
             return await _orders.
                                 Include(s => s.Session)
                                     .ThenInclude(p => p.Location)

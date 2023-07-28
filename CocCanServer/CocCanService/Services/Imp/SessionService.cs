@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CocCanService.DTOs.Session;
 using CocCanService.DTOs.Store;
-using CocCanService.DTOs.Session;
 using Repository.Entities;
 using Repository.repositories;
 using System;
@@ -9,18 +8,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CocCanService.DTOs.OrderDetail;
+using CocCanService.DTOs.Product;
 
 namespace CocCanService.Services.Imp
 {
     public class SessionService : ISessionService
     {
+        private readonly IStoreRepository _storeRepo;
+        private readonly IOrderDetailRepository _orderDetailRepo;
         private readonly ISessionRepository _SessionRepo;
         private readonly IMapper _mapper;
 
-        public SessionService(ISessionRepository SessionRepo, IMapper mapper)
+        public SessionService(ISessionRepository SessionRepo, IOrderDetailRepository _orderDetailRepo, IStoreRepository _storeRepo, IMapper mapper)
         {
             this._SessionRepo = SessionRepo;
             this._mapper = mapper;
+            this._storeRepo = _storeRepo;
+            this._orderDetailRepo = _orderDetailRepo;
         }
 
         public async Task<ServiceResponse<SessionDTO>> CreateSessionAsync(CreateSessionDTO createSessionDTO)
@@ -103,9 +108,37 @@ namespace CocCanService.Services.Imp
 
             try
             {
-
                 var _Session = await _SessionRepo.GetSessionByGUIDAsync(id);
 
+                Dictionary<string, List<string>> _filter = System.Text.Json.JsonSerializer
+                            .Deserialize<Dictionary<string, List<string>>>("{\"session\":[\"" + id.ToString() + "\"]}");
+                var _stores = await _storeRepo
+                    .GetAllStoresWithStatusAsync(
+                        _filter, 0, 0, "", true
+                    );
+
+                List<OrderDetailBatchDTO> _orderDetailBatchDTOs = new List<OrderDetailBatchDTO>();
+
+                foreach (var item in _stores)
+                {
+                    var _orderDetailList = await _orderDetailRepo.GetOrderDetailByBatch(id, item.Id);
+
+                    var _orderDetailListDTO = new List<OrderDetailDTO>();
+
+                    foreach (var item2 in _orderDetailList)
+                    {
+                        _orderDetailListDTO.Add(_mapper.Map<OrderDetailDTO>(item2));
+                        _orderDetailListDTO[_orderDetailListDTO.Count - 1].Product = _mapper.Map<ProductDTO>(item2.MenuDetail.Product);
+                    }
+
+                    OrderDetailBatchDTO orderDetailBatchDTO = new OrderDetailBatchDTO()
+                    {
+                        storeDTO = _mapper.Map<StoreDTO>(item),
+                        orderDetailDTOs = _orderDetailListDTO
+                    };
+
+                    _orderDetailBatchDTOs.Add(orderDetailBatchDTO);
+                }
                 if (_Session == null)
                 {
                     _response.Status = false;
@@ -116,7 +149,7 @@ namespace CocCanService.Services.Imp
                 }
 
                 var _SessionDto = _mapper.Map<SessionDTO>(_Session);
-
+                _SessionDto.SessionBatchDTO = _orderDetailBatchDTOs;
                 _response.Status = true;
                 _response.Title = "Got Session";
                 _response.Data = _SessionDto;

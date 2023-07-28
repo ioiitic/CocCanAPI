@@ -12,6 +12,7 @@ namespace CocCanService.Services
     {
         Task<ServiceResponse<List<DTOs.OrderDetail.OrderDetailDTO>>> GetAllOrderDetailsAsync(string filter, string range, string sort);
         Task<ServiceResponse<List<DTOs.OrderDetail.OrderDetailDTO>>> GetAllOrderDetailsByOrderIDAsync(Guid orderID);
+        Task<ServiceResponse<List<DTOs.OrderDetail.OrderDetailBatchDTO>>> GetOrderDetailByBatch(Guid orderID);
         Task<ServiceResponse<OrderDetailDTO>> CreateOrderDetailAsync(CreateOrderDetailDTO createOrderDetailDTO);
         Task<ServiceResponse<DTOs.OrderDetail.OrderDetailDTO>> UpdateOrderDetailAsync(Guid id, UpdateOrderDetailDTO updateOrderDetailDTO);
         Task<ServiceResponse<DTOs.OrderDetail.OrderDetailDTO>> GetOrderDetailByIdAsync(Guid id);

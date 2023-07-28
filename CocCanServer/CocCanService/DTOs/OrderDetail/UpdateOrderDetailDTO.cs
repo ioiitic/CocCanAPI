@@ -17,5 +17,6 @@ namespace CocCanService.DTOs.OrderDetail
 
         [Required(AllowEmptyStrings = true)]
         public Guid OrderId { get; set; }
+        public decimal SinglePrice { get; set; }
     }
 }

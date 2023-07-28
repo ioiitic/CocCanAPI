@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CocCanService.DTOs.Product;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,5 +21,7 @@ namespace CocCanService.DTOs.OrderDetail
 
         [Required(ErrorMessage = "[OrderId] field is required!")]
         public Guid OrderId { get; set; }
+        public decimal? SinglePrice { get; set; }
+        public virtual ProductDTO Product { get; set; }
     }
 }

@@ -159,7 +159,6 @@ namespace CocCanAPI.Controllers
 
         }
 
-
         [HttpGet("{id:Guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StoreDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

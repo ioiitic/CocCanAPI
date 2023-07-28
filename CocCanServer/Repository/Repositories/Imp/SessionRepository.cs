@@ -24,9 +24,10 @@ namespace Repository.repositories.imp
         public async Task<ICollection<Session>>
             GetAllSessionsWithStatusAsync(Dictionary<string, List<string>> filter)
         {
+            var date = DateTime.Today.AddHours(7);
             IQueryable<Session> _sessions =
                 _dataContext.Sessions
-                .Where(s => s.Status == 1 && s.Date == DateTime.Today);
+                .Where(s => s.Status == 1 && s.Date == date);
 
             if (filter != null && filter.ContainsKey("timeslot") && filter.ContainsKey("location"))
                 _sessions = _sessions
