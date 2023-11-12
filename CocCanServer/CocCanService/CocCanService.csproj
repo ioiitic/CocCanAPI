@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\LocationStore\" />
+    <Compile Remove="DTOs\LocationStore\**" />
+    <EmbeddedResource Remove="DTOs\LocationStore\**" />
+    <None Remove="DTOs\LocationStore\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="DTOs\Product\" />
     <Folder Include="DTOs\TimeSlot\" />
   </ItemGroup>

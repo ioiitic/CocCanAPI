@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CocCanService.DTOs.Customer
 {
-    public class LoginCustomerDTO
+    public class TokenCustomer
     {
-        public string UserName { get; set; }
-        public string Password { get; set; }
+        public CustomerDTO customerDTO { get; set; }
+        public string token { get; set; }
     }
 }

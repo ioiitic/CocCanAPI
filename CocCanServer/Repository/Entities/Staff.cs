@@ -9,7 +9,6 @@ namespace Repository.Entities
     {
         public Staff()
         {
-            Batches = new HashSet<Batch>();
         }
 
         public Guid Id { get; set; }
@@ -21,7 +20,5 @@ namespace Repository.Entities
         public string Phone { get; set; }
         public int Role { get; set; }
         public int Status { get; set; }
-
-        public virtual ICollection<Batch> Batches { get; set; }
     }
 }

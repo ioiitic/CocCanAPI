@@ -16,8 +16,6 @@ namespace Repository.Entities
             : base(options)
         {
         }
-
-        public virtual DbSet<Batch> Batches { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
@@ -38,38 +36,13 @@ namespace Repository.Entities
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=localhost,1433;Initial Catalog=CocCanDB;User ID=sa;Password=12345");
+                optionsBuilder.UseSqlServer("workstation id=DB_Test_Khoi.mssql.somee.com;packet size=4096;user id=khoitm_SQLLogin_2;pwd=c2pgkdw5h1;data source=DB_Test_Khoi.mssql.somee.com;persist security info=False;initial catalog=DB_Test_Khoi");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
-
-            modelBuilder.Entity<Batch>(entity =>
-            {
-                entity.ToTable("Batch");
-
-                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
-
-                entity.HasOne(d => d.Session)
-                    .WithMany(p => p.Batches)
-                    .HasForeignKey(d => d.SessionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BATCH_SESSIONID");
-
-                entity.HasOne(d => d.Staff)
-                    .WithMany(p => p.Batches)
-                    .HasForeignKey(d => d.StaffId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BATCH_STAFFID");
-
-                entity.HasOne(d => d.Store)
-                    .WithMany(p => p.Batches)
-                    .HasForeignKey(d => d.StoreId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_BATCH_STOREID");
-            });
 
             modelBuilder.Entity<Category>(entity =>
             {
@@ -111,6 +84,14 @@ namespace Repository.Entities
                     .IsRequired()
                     .HasMaxLength(10)
                     .IsFixedLength(true);
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Username)
+                    .IsRequired()
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<Location>(entity =>

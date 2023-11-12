@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CocCanService.DTOs.OrderDetail;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,5 +19,6 @@ namespace CocCanService.DTOs.Order
         public Guid CustomerId { get; set; }
         public Guid SessionId { get; set; }
         public Guid PickUpSpotId { get; set; }
+        public List<CreateOrderDetailDTO> CreateOrderDetailDTOs { get; set; }
     }
 }

@@ -63,6 +63,12 @@ namespace Repository.repositories.imp
             return await Save();
         }
 
+        public async Task<Customer> CheckCustomerLoginsAsync(string UserName, string Password)
+        {
+            return await _dataContext.Customers.SingleOrDefaultAsync(sta => sta.Username == UserName && sta.Password == Password);
+        }
+
+
         private async Task<bool> Save()
         {
             return await _dataContext.SaveChangesAsync() >= 0 ? true : false;

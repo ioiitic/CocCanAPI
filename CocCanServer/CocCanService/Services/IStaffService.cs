@@ -1,4 +1,5 @@
-﻿using CocCanService.DTOs.Session;
+﻿using CocCanService.DTOs.Customer;
+using CocCanService.DTOs.Session;
 using CocCanService.DTOs.Staff;
 using CocCanService.Services.Imp;
 using Repository.Entities;
@@ -13,7 +14,7 @@ namespace CocCanService.Services
     public interface IStaffService
     {
         Task<ServiceResponse<List<StaffDTO>>> GetAllStaffsAsync();
-        Task<ServiceResponse<LoginStaffDTO>> CheckStaffLoginsAsync(string Email, string Password);
+        Task<ServiceResponse<TokenStaff>> CheckStaffLoginsAsync(string Email, string Password);
         Task<ServiceResponse<StaffDTO>> CreateStaffAsync(CreateStaffDTO createStaffDTO);
         Task<ServiceResponse<StaffDTO>> UpdateStaffAsync(StaffDTO staffDTO);  
         Task<ServiceResponse<string>> SoftDeleteStaffAsync(Guid id);

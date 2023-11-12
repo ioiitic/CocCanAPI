@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CocCanService.DTOs;
 using CocCanService.DTOs.Customer;
-using CocCanService.DTOs.Staff;
+using CocCanService.DTOs.Customer;
 using FirebaseAdmin.Auth;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using Repository.Entities;
 using Repository.repositories;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -200,15 +201,14 @@ namespace CocCanService.Services.Imp
             }
             return _response;
         }
-        public async Task<ServiceResponse<LoginCustomerDTO>> CheckCustomerLoginsAsync(string token, CreateCustomerDTO createCustomerDTO)
+
+        public async Task<ServiceResponse<TokenCustomer>> CheckCustomerLoginsAsync(string Email, string Password)
         {
-            ServiceResponse<LoginCustomerDTO> _response = new();
+            ServiceResponse<TokenCustomer> _response = new();
             try
             {
-                FirebaseToken decodedToken = await FirebaseAuth.DefaultInstance
-                    .VerifyIdTokenAsync(token);
-                string uid = decodedToken.Uid;
-                if (uid == null)
+                var _Customer = await _CustomerRepo.CheckCustomerLoginsAsync(Email, Password);
+                if (_Customer == null)
                 {
                     _response.Status = false;
                     _response.Title = "Not Found!";
@@ -216,16 +216,14 @@ namespace CocCanService.Services.Imp
                 }
                 else
                 {
-                    var _newCustomer = await CreateCustomerAsync(createCustomerDTO);
-                    var customer = await _CustomerRepo.GetCustomerByEmailAsync(createCustomerDTO.Email);
-                    var loginCustomerDTO = new LoginCustomerDTO()
+                    var tokenCustomer = new TokenCustomer()
                     {
-                        customerDTO = _mapper.Map<CustomerDTO>(customer),
-                        token = GenerateToken()
+                        customerDTO = _mapper.Map<CustomerDTO>(_Customer),
+                        token = GenerateToken(_Customer)
                     };
                     _response.Status = true;
                     _response.Title = "OK";
-                    _response.Data = loginCustomerDTO;
+                    _response.Data = tokenCustomer;
                 }
             }
             catch (Exception ex)
@@ -238,7 +236,7 @@ namespace CocCanService.Services.Imp
             return _response;
         }
 
-        private string GenerateToken()
+        private string GenerateToken(Customer customer)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -249,6 +247,7 @@ namespace CocCanService.Services.Imp
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Role, "User"),
+                    new Claim("TokenId", Guid.NewGuid().ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey

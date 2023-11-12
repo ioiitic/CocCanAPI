@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System;
 using CocCanAPI.Filter;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace CocCanAPI.Controllers
 {
@@ -22,6 +24,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StoreDTO>))]
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
@@ -42,6 +45,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StoreDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -80,6 +84,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpPut("{id:Guid}", Name = "UpdateStore")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
@@ -119,6 +124,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpDelete("{id:Guid}", Name = "DeleteStore")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status409Conflict)] //Can not be removed 
@@ -160,6 +166,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpGet("{id:Guid}")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StoreDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found

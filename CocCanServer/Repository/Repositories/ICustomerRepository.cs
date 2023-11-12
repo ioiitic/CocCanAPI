@@ -16,5 +16,6 @@ namespace Repository.repositories
         Task<bool> UpdateCustomerAsync(Customer customer);
         Task<bool> SoftDeleteCustomerAsync(Guid id);
         Task<Customer> GetCustomerByGUIDAsync(Guid id);
+        Task<Customer> CheckCustomerLoginsAsync(string Email, string Password);
     }
 }

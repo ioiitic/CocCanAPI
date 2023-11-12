@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using CocCanService.DTOs;
+using CocCanService.DTOs.Customer;
+using CocCanService.DTOs.Enum;
 using CocCanService.DTOs.Session;
 using CocCanService.DTOs.Staff;
 using Microsoft.Extensions.Options;
@@ -29,9 +31,9 @@ namespace CocCanService.Services.Imp
             _appSetting = appSetting.CurrentValue;
         }
 
-        public async Task<ServiceResponse<LoginStaffDTO>> CheckStaffLoginsAsync(string Email, string Password)
+        public async Task<ServiceResponse<TokenStaff>> CheckStaffLoginsAsync(string Email, string Password)
         {
-            ServiceResponse<LoginStaffDTO> _response = new();
+            ServiceResponse<TokenStaff> _response = new();
             try
             {
                 var _Staff = await _staffRepo.CheckStaffLoginsAsync(Email, Password);
@@ -43,14 +45,14 @@ namespace CocCanService.Services.Imp
                 }
                 else
                 {
-                    var loginStaffDTO = new LoginStaffDTO() 
+                    var tokenStaff = new TokenStaff() 
                     { 
                         staffDTO = _mapper.Map<StaffDTO>(_Staff),
                         token = GenerateToken(_Staff)
                     };
                     _response.Status = true;
                     _response.Title = "OK";
-                    _response.Data= loginStaffDTO;
+                    _response.Data= tokenStaff;
                 }
             }
             catch (Exception ex)
@@ -242,9 +244,9 @@ namespace CocCanService.Services.Imp
             {
                 Subject = new ClaimsIdentity(new[]
                 {
+                    new Claim(ClaimTypes.Role, ((RoleType) Enum.Parse(typeof(RoleType),  staff.Role.ToString())).ToString()),
                     new Claim(ClaimTypes.Role, "Staff"),
                     new Claim(ClaimTypes.Role, "User"),
-                    new Claim(ClaimTypes.Role, staff.Role.ToString()),
                     new Claim("TokenId", Guid.NewGuid().ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),

@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace CocCanAPI.Controllers
 {
@@ -22,6 +24,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<TimeSlotDTO>))]
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
@@ -42,6 +45,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TimeSlotDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -80,6 +84,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpPut("{id:Guid}", Name = "UpdateTimeSlot")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
@@ -119,6 +124,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpDelete("{id:Guid}", Name = "DeleteTimeSlot")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status409Conflict)] //Can not be removed 
@@ -161,6 +167,7 @@ namespace CocCanAPI.Controllers
 
 
         [HttpGet("{id:Guid}")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TimeSlotDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found

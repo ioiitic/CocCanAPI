@@ -9,6 +9,7 @@ namespace CocCanService.DTOs.Customer
 {
     public class UpdateCustomerDTO
     {
+        public Guid Id { get; set; }
         [Required(AllowEmptyStrings = true)]
         [MaxLength(100, ErrorMessage = "[Fullname] field is 100 characters max length!")]
         public string Fullname { get; set; }
@@ -23,5 +24,7 @@ namespace CocCanService.DTOs.Customer
 
         [Required(AllowEmptyStrings = true)]
         public string Phone { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

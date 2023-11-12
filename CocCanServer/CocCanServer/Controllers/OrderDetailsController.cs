@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using CocCanService.DTOs.Order;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CocCanAPI.Controllers
 {
@@ -21,6 +22,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDetailDTO>))]
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
@@ -31,6 +33,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpGet("{id:Guid}")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDetailDTO>))]
         public async Task<IActionResult> GetOrderDetailByOrderIdAll(Guid id)
         {
@@ -38,44 +41,8 @@ namespace CocCanAPI.Controllers
             return Ok(orderDetail.Data);
         }
 
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDetailDTO))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult<OrderDetailDTO>> Create([FromBody] CreateOrderDetailDTO createOrderDetailDTOList)
-        {
-            if (createOrderDetailDTOList == null)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (!ModelState.IsValid) { return BadRequest(ModelState); }
-
-            var _newOrderDetail = await _orderDetailService.CreateOrderDetailAsync(createOrderDetailDTOList);
-
-            if (_newOrderDetail.Status == false && _newOrderDetail.Title == "RepoError")
-            {
-                foreach (string error in _newOrderDetail.ErrorMessages)
-                {
-                    ModelState.AddModelError("", error);
-                }
-                return StatusCode(500, ModelState);
-            }
-
-            if (_newOrderDetail.Status == false && _newOrderDetail.Title == "Error")
-            {
-                foreach (string error in _newOrderDetail.ErrorMessages)
-                {
-                    ModelState.AddModelError("", error);
-                }
-                return StatusCode(500, ModelState);
-            }
-            return Ok(_newOrderDetail.Data);
-        }
-
         [HttpPut("{id:Guid}", Name = "UpdateOrderDetail")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
@@ -105,6 +72,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpDelete("{id:Guid}", Name = "DeleteOrderDetail")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status409Conflict)] //Can not be removed 

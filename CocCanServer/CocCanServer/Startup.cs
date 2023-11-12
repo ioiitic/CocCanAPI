@@ -95,8 +95,6 @@ namespace CocCanServer
             services.AddScoped<IPickUpSpotService, PickUpSpotService>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<ICustomerService, CustomerService>();
-            services.AddScoped<IBatchRepository, BatchRepository>();
-            services.AddScoped<IBatchService, BatchService>();
 
             services.Configure<AppSetting>(Configuration.GetSection("AppSettings"));
 
@@ -147,11 +145,6 @@ namespace CocCanServer
                         new string[]{}
                     }
                 });
-            });
-
-            FirebaseApp.Create(new AppOptions()
-            {
-                Credential = GoogleCredential.FromFile("firebase_admin_sdk.json"),
             });
         }
 

@@ -7,6 +7,8 @@ using System;
 using CocCanService.DTOs.Menu;
 using CocCanService.DTOs.OrderDetail;
 using CocCanService.Services.Imp;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace CocCanAPI.Controllers
 {
@@ -22,6 +24,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MenuDTO>))]
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
@@ -40,6 +43,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MenuDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
@@ -78,6 +82,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpPut("{id:Guid}", Name = "UpdateMenu")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
@@ -108,6 +113,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpDelete("{id:Guid}", Name = "DeleteMenu")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status409Conflict)] //Can not be removed 

@@ -2,11 +2,13 @@
 using CocCanService.DTOs.Staff;
 using CocCanService.Services;
 using CocCanService.Services.Imp;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Repository.repositories;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace CocCanAPI.Controllers
@@ -23,6 +25,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StaffDTO>))]
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
@@ -33,6 +36,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpGet("{id:Guid}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StaffDTO>))]
         public async Task<IActionResult> GetStaffByIdAll(Guid id)
         {
@@ -40,19 +44,18 @@ namespace CocCanAPI.Controllers
             return Ok(orderDetail.Data);
         }
 
-
         [HttpPost("Authen")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StaffDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<StaffDTO>> CheckStaffLogin(string UserName, string Password)
-        {
-            if (UserName == "" || Password == "" || UserName == null || Password == null)
+        public async Task<ActionResult<StaffDTO>> CheckStaffLogin([FromBody] LoginStaffDTO loginStaff)
+        {   
+            if (loginStaff.UserName == "" || loginStaff.Password == "" || loginStaff.UserName == null || loginStaff.Password == null)
             {
                 return BadRequest();
             }
-            var StaffFound = await _staffService.CheckStaffLoginsAsync(UserName, Password);
+            var StaffFound = await _staffService.CheckStaffLoginsAsync(loginStaff.UserName, loginStaff.Password);
 
             if (StaffFound.Data == null)
             {
@@ -62,6 +65,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StaffDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
@@ -101,6 +105,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpPut("{id:Guid}", Name = "UpdateStaff")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
@@ -133,37 +138,6 @@ namespace CocCanAPI.Controllers
             }
 
             return Ok(_updateStaff.Data);
-        }
-
-        [HttpDelete("{id:Guid}", Name = "DeleteStaff")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
-        [ProducesResponseType(StatusCodes.Status409Conflict)] //Can not be removed 
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> DeleteStaff(Guid id)
-        {
-
-            var _deleteStaff = await _staffService.SoftDeleteStaffAsync(id);
-
-            if (_deleteStaff.Status == false && _deleteStaff.Title == "RepoError")
-            {
-                foreach (string error in _deleteStaff.ErrorMessages)
-                {
-                    ModelState.AddModelError("", error);
-                }
-                return StatusCode(500, ModelState);
-            }
-
-            if (_deleteStaff.Status == false && _deleteStaff.Title == "Error")
-            {
-                foreach (string error in _deleteStaff.ErrorMessages)
-                {
-                    ModelState.AddModelError("", error);
-                }
-                return StatusCode(500, ModelState);
-            }
-            return NoContent();
-
         }
     }
 }

@@ -27,12 +27,13 @@ namespace CocCanService.Services.Imp
             this._mapper = mapper;
         }
 
-        public async Task<ServiceResponse<OrderDetailDTO>> CreateOrderDetailAsync(CreateOrderDetailDTO createOrderDetailDTO)
+        public async Task<ServiceResponse<OrderDetailDTO>> CreateOrderDetailAsync(CreateOrderDetailDTO createOrderDetailDTO, Guid id)
         {
             ServiceResponse<OrderDetailDTO> _response = new();
             try
             {
                 var _newOrderDetail = _mapper.Map<OrderDetail>(createOrderDetailDTO);
+                _newOrderDetail.OrderId = id;
                 if (!await _orderDetailRepo.CreateOrderDetailAsync(_newOrderDetail))
                 {
                     _response.Status = false;

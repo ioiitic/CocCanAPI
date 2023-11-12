@@ -6,10 +6,6 @@ using CocCanService.DTOs.Menu;
 using CocCanService.DTOs.Staff;
 using CocCanService.DTOs.Store;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CocCanService.DTOs.Order;
 using CocCanService.DTOs.OrderDetail;
 using CocCanService.DTOs.MenuDetail;
@@ -17,7 +13,6 @@ using CocCanService.DTOs.TimeSlot;
 using CocCanService.DTOs.Session;
 using CocCanService.DTOs.PickUpSpot;
 using CocCanService.DTOs.Customer;
-using CocCanService.DTOs.Batch;
 using CocCanService.DTOs.Enum;
 
 namespace CocCanService.DTOs
@@ -423,9 +418,6 @@ namespace CocCanService.DTOs
 
             //PickUpSpot
             CreateMap<Repository.Entities.PickUpSpot, PickUpSpotDTO>().ReverseMap();
-
-            //Batch
-            CreateMap<Repository.Entities.Batch, BatchDTO>().ReverseMap();
 
         }
     }

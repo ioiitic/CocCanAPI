@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System;
 using CocCanService.DTOs.Order;
 using Microsoft.AspNetCore.Authorization;
+using CocCanService.DTOs.OrderDetail;
+using CocCanService.Services.Imp;
 
 namespace CocCanAPI.Controllers
 {
@@ -14,13 +16,16 @@ namespace CocCanAPI.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly IOrderDetailService _orderDetailService;
 
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService, IOrderDetailService orderDetailService)
         {
             _orderService = orderService;
+            _orderDetailService = orderDetailService;
         }
 
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDTO>))]
         public async Task<IActionResult> GetAll(string filter, string range, string sort)
         {
@@ -30,6 +35,7 @@ namespace CocCanAPI.Controllers
             return Ok(order.Data);
         }
         [HttpGet("{id:Guid}")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDTO>))]
         public async Task<IActionResult> GetAllOrderByOrderId(Guid id)
         {
@@ -38,7 +44,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "User")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
@@ -50,7 +56,7 @@ namespace CocCanAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+                
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
             var _newOrder = await _orderService.CreateOrderAsync(createOrderDTO);
@@ -72,10 +78,33 @@ namespace CocCanAPI.Controllers
                 }
                 return StatusCode(500, ModelState);
             }
+            foreach (CreateOrderDetailDTO detail in createOrderDTO.CreateOrderDetailDTOs)
+            {
+                var _newOrderDetail = await _orderDetailService.CreateOrderDetailAsync(detail, _newOrder.Data.Id);
+
+                if (_newOrderDetail.Status == false && _newOrderDetail.Title == "RepoError")
+                {
+                    foreach (string error in _newOrderDetail.ErrorMessages)
+                    {
+                        ModelState.AddModelError("", error);
+                    }
+                    return StatusCode(500, ModelState);
+                }
+
+                if (_newOrderDetail.Status == false && _newOrderDetail.Title == "Error")
+                {
+                    foreach (string error in _newOrderDetail.ErrorMessages)
+                    {
+                        ModelState.AddModelError("", error);
+                    }
+                    return StatusCode(500, ModelState);
+                }
+            }
             return Ok(_newOrder.Data);
         }
 
         [HttpPut("{id:Guid}", Name = "UpdateOrder")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
@@ -112,6 +141,7 @@ namespace CocCanAPI.Controllers
         }
 
         [HttpDelete("{id:Guid}", Name = "DeleteOrder")]
+        [Authorize(Roles = "Staff")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)] //Not found
         [ProducesResponseType(StatusCodes.Status409Conflict)] //Can not be removed 

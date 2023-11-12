@@ -11,12 +11,8 @@ namespace CocCanService.DTOs.OrderDetail
     {
         [Required(ErrorMessage = "[Quantity] field is required!")]
         public int Quantity { get; set; }
-
         [Required(ErrorMessage = "[ProductId] field is required!")]
         public Guid MenuDetailId { get; set; }
-
-        [Required(ErrorMessage = "[OrderId] field is required!")]
-        public Guid OrderId { get; set; }
         public decimal SinglePrice { get; set; }
     }
 }

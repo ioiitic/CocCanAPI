@@ -26,5 +26,6 @@ namespace CocCanService.DTOs.Customer
 
         [Required(ErrorMessage = "[Phone] field is required!")]
         public string Phone { get; set; }
+        public string Username { get; set; }
     }
 }
